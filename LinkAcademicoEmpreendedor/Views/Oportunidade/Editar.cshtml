@@ -8,7 +8,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-success text-white">
-                    <h4 class="mb-0"><i class="bi bi-pencil"></i> Editar Oportunidade</h4>
+                    <h4 class="mb-0"><i class="bi bi-pencil"></i> Editar oportunidade</h4>
                 </div>
                 <div class="card-body">
                     <form asp-action="Editar" method="post">
@@ -18,13 +18,13 @@
                         <input type="hidden" asp-for="Ativa" />
 
                         <div class="mb-3">
-                            <label asp-for="Titulo" class="form-label">Titulo da Vaga *</label>
+                            <label asp-for="Titulo" class="form-label">Título da vaga *</label>
                             <input asp-for="Titulo" class="form-control" />
                             <span asp-validation-for="Titulo" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Descricao" class="form-label">Descricao *</label>
+                            <label asp-for="Descricao" class="form-label">Descrição *</label>
                             <textarea asp-for="Descricao" class="form-control" rows="5"></textarea>
                             <span asp-validation-for="Descricao" class="text-danger"></span>
                         </div>
@@ -34,7 +34,7 @@
                                 <label asp-for="Tipo" class="form-label">Tipo</label>
                                 <select asp-for="Tipo" class="form-select">
                                     <option value="">Selecione...</option>
-                                    <option value="Estagio">Estagio</option>
+                                    <option value="Estagio">Estágio</option>
                                     <option value="CLT">CLT</option>
                                     <option value="PJ">PJ</option>
                                     <option value="Freelancer">Freelancer</option>
@@ -46,11 +46,11 @@
                                     <option value="">Selecione...</option>
                                     <option value="Presencial">Presencial</option>
                                     <option value="Remoto">Remoto</option>
-                                    <option value="Hibrido">Hibrido</option>
+                                    <option value="Hibrido">Híbrido</option>
                                 </select>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label asp-for="Salario" class="form-label">Salario (R$)</label>
+                                <label asp-for="Salario" class="form-label">Salário (R$)</label>
                                 <input asp-for="Salario" type="number" step="0.01" class="form-control" />
                             </div>
                         </div>
@@ -66,7 +66,7 @@
                                 <input asp-for="Local" class="form-control" />
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label asp-for="DataExpiracao" class="form-label">Data de Expiracao</label>
+                                <label asp-for="DataExpiracao" class="form-label">Data de expiração</label>
                                 <input asp-for="DataExpiracao" type="date" class="form-control" />
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                                 Cancelar
                             </a>
                             <button type="submit" class="btn btn-success">
-                                <i class="bi bi-check-lg"></i> Salvar Alteracoes
+                                <i class="bi bi-check-lg"></i> Salvar alterações
                             </button>
                         </div>
                     </form>

@@ -4,19 +4,19 @@
 }
 
 <div class="container py-4">
-    <h2 class="mb-4"><i class="bi bi-search text-success"></i> Buscar Talentos</h2>
+    <h2 class="mb-4"><i class="bi bi-search text-success"></i> Buscar talentos</h2>
 
     <!-- Filtros -->
     <div class="card shadow-sm mb-4 border-success">
         <div class="card-header bg-success text-white">
-            <h5 class="mb-0"><i class="bi bi-funnel"></i> Filtros de Busca</h5>
+            <h5 class="mb-0"><i class="bi bi-funnel"></i> Filtros de busca</h5>
         </div>
         <div class="card-body">
             <form method="get" class="row g-3">
                 <div class="col-md-3">
-                    <label class="form-label">Nome ou Instituicao</label>
+                    <label class="form-label">Nome ou instituição</label>
                     <input type="text" name="busca" class="form-control"
-                           placeholder="Buscar..."
+                           placeholder="Pesquisar..."
                            value="@ViewBag.Busca" />
                 </div>
                 <div class="col-md-3">
@@ -28,12 +28,12 @@
                 <div class="col-md-3">
                     <label class="form-label">Curso</label>
                     <input type="text" name="curso" class="form-control"
-                           placeholder="Ex: Ciencia da Computacao"
+                           placeholder="Ex: Ciência da Computação"
                            value="@ViewBag.Curso" />
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
                     <button type="submit" class="btn btn-success w-100">
-                        <i class="bi bi-search"></i> Buscar Talentos
+                        <i class="bi bi-search"></i> Buscar talentos
                     </button>
                 </div>
             </form>
@@ -45,14 +45,14 @@
     {
         <div class="text-center py-5">
             <i class="bi bi-person-x display-1 text-muted"></i>
-            <p class="lead text-muted mt-3">Nenhum talento encontrado com os filtros aplicados</p>
-            <p class="text-muted">Tente ajustar os criterios de busca</p>
+            <p class="lead text-muted mt-3">Nenhum talento encontrado com os filtros aplicados.</p>
+            <p class="text-muted">Tente ajustar os critérios de busca.</p>
         </div>
     }
     else
     {
         <p class="text-muted mb-3">
-            <i class="bi bi-info-circle"></i> @Model.Count talento(s) encontrado(s)
+            <i class="bi bi-info-circle"></i> @Model.Count resultado(s) encontrado(s)
         </p>
 
         <div class="row">
@@ -103,7 +103,7 @@
                             <div class="d-grid gap-2">
                                 <a asp-controller="Aluno" asp-action="Perfil" asp-route-id="@aluno.Id"
                                    class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-person"></i> Ver Perfil Completo
+                                    <i class="bi bi-person"></i> Ver perfil
                                 </a>
                             </div>
                         </div>

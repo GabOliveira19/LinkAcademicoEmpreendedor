@@ -7,23 +7,56 @@ namespace LinkAcademicoEmpreendedor.Services
     public class AvaliacaoService
     {
         private readonly ApplicationDbContext _context;
+        private static readonly TimeSpan PeriodoEntreAvaliacoes = TimeSpan.FromDays(182); // ~6 meses
 
         public AvaliacaoService(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // Verificar se ja avaliou
+        // Verificar se ja avaliou (retorna a avaliacao mais recente)
         public async Task<Avaliacao?> ObterAvaliacaoExistenteAsync(int avaliadorId, string tipoAvaliador, int avaliadoId, string tipoAvaliado)
         {
             return await _context.Avaliacoes
-                .FirstOrDefaultAsync(a => a.AvaliadorId == avaliadorId
+                .Where(a => a.AvaliadorId == avaliadorId
                     && a.TipoAvaliador == tipoAvaliador
                     && a.AvaliadoId == avaliadoId
-                    && a.TipoAvaliado == tipoAvaliado);
+                    && a.TipoAvaliado == tipoAvaliado)
+                .OrderByDescending(a => a.DataAvaliacao)
+                .FirstOrDefaultAsync();
         }
 
-        // Criar ou atualizar avaliacao
+        // Verifica existência de vínculo ativo (candidatura aprovada entre empresa e aluno)
+        private async Task<Candidatura?> ObterVinculoAtivoAsync(int avaliadorId, string tipoAvaliador, int avaliadoId, string tipoAvaliado)
+        {
+            if (tipoAvaliador == "Empresa" && tipoAvaliado == "Aluno")
+            {
+                return await _context.Candidaturas
+                    .Include(c => c.Oportunidade)
+                    .Where(c => c.AlunoId == avaliadoId
+                                && c.Oportunidade != null
+                                && c.Oportunidade.EmpresaId == avaliadorId
+                                && c.Status == "Aprovada")
+                    .OrderByDescending(c => c.DataResposta)
+                    .FirstOrDefaultAsync();
+            }
+            else if (tipoAvaliador == "Aluno" && tipoAvaliado == "Empresa")
+            {
+                return await _context.Candidaturas
+                    .Include(c => c.Oportunidade)
+                    .Where(c => c.AlunoId == avaliadorId
+                                && c.Oportunidade != null
+                                && c.Oportunidade.EmpresaId == avaliadoId
+                                && c.Status == "Aprovada")
+                    .OrderByDescending(c => c.DataResposta)
+                    .FirstOrDefaultAsync();
+            }
+
+            // Para outros tipos, exigir vínculo não faz sentido no modelo atual
+            return null;
+        }
+
+        // Criar ou atualizar avaliacao com regras: vinculo ativo, 1 avaliacao a cada 6 meses, bloqueio apos encerramento
         public async Task<Avaliacao> AvaliarAsync(int avaliadorId, string tipoAvaliador, int avaliadoId, string tipoAvaliado, int nota, string? comentario)
         {
             // Verificar autoavaliacao
@@ -32,21 +65,57 @@ namespace LinkAcademicoEmpreendedor.Services
                 throw new InvalidOperationException("Nao e permitido se autoavaliar.");
             }
 
-            // Verificar se ja existe avaliacao
+            // Exigir vínculo ativo entre empresa e aluno quando aplicável
+            var vinculo = await ObterVinculoAtivoAsync(avaliadorId, tipoAvaliador, avaliadoId, tipoAvaliado);
+            if (vinculo == null)
+            {
+                throw new InvalidOperationException("Avaliacao somente permitida enquanto existir um vínculo ativo (candidatura aprovada) entre as partes.");
+            }
+
+            // Buscar avaliacao mais recente do mesmo par avaliador/avaliado
             var avaliacaoExistente = await ObterAvaliacaoExistenteAsync(avaliadorId, tipoAvaliador, avaliadoId, tipoAvaliado);
+
+            var agora = DateTime.Now;
 
             if (avaliacaoExistente != null)
             {
-                // Atualizar avaliacao existente
-                avaliacaoExistente.Nota = nota;
-                avaliacaoExistente.Comentario = comentario;
-                avaliacaoExistente.DataAvaliacao = DateTime.Now;
-                await _context.SaveChangesAsync();
-                return avaliacaoExistente;
+                var diferenca = agora - avaliacaoExistente.DataAvaliacao;
+
+                // Se última avaliação está dentro do período (6 meses), permitimos apenas atualização da mesma entrada
+                if (diferenca <= PeriodoEntreAvaliacoes)
+                {
+                    // Atualizar existente (protege contra duplicidade criando nova entrada)
+                    avaliacaoExistente.Nota = nota;
+                    avaliacaoExistente.Comentario = comentario;
+                    avaliacaoExistente.DataAvaliacao = agora;
+
+                    await _context.SaveChangesAsync();
+                    return avaliacaoExistente;
+                }
+                else
+                {
+                    // Se passou o período, criar nova avaliação (histórico preservado)
+                    var novaAvaliacao = new Avaliacao
+                    {
+                        AvaliadorId = avaliadorId,
+                        TipoAvaliador = tipoAvaliador,
+                        AvaliadoId = avaliadoId,
+                        TipoAvaliado = tipoAvaliado,
+                        Nota = nota,
+                        Comentario = comentario,
+                        DataAvaliacao = agora,
+                        OportunidadeId = vinculo.OportunidadeId
+                    };
+
+                    _context.Avaliacoes.Add(novaAvaliacao);
+                    await CriarNotificacaoAvaliacaoAsync(avaliadorId, tipoAvaliador, avaliadoId, tipoAvaliado, nota);
+                    await _context.SaveChangesAsync();
+                    return novaAvaliacao;
+                }
             }
             else
             {
-                // Criar nova avaliacao
+                // Nenhuma avaliacao anterior: criar nova (somente se vinculo ativo)
                 var novaAvaliacao = new Avaliacao
                 {
                     AvaliadorId = avaliadorId,
@@ -55,20 +124,16 @@ namespace LinkAcademicoEmpreendedor.Services
                     TipoAvaliado = tipoAvaliado,
                     Nota = nota,
                     Comentario = comentario,
-                    DataAvaliacao = DateTime.Now
+                    DataAvaliacao = agora,
+                    OportunidadeId = vinculo.OportunidadeId
                 };
 
                 _context.Avaliacoes.Add(novaAvaliacao);
-
-                // Criar notificacao para o avaliado
                 await CriarNotificacaoAvaliacaoAsync(avaliadorId, tipoAvaliador, avaliadoId, tipoAvaliado, nota);
-
                 await _context.SaveChangesAsync();
                 return novaAvaliacao;
             }
         }
-
-        // Dentro do AvaliacaoService, substitua o metodo CriarNotificacaoAvaliacaoAsync:
 
         private async Task CriarNotificacaoAvaliacaoAsync(int avaliadorId, string tipoAvaliador, int avaliadoId, string tipoAvaliado, int nota)
         {

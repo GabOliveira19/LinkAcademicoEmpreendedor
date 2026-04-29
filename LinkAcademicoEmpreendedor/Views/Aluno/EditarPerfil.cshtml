@@ -58,6 +58,14 @@
                             <span asp-validation-for="Nome" class="text-danger"></span>
                         </div>
 
+                        <div class="mb-3">
+                            <label asp-for="AreaId" class="form-label">Área / Curso *</label>
+                            <select asp-for="AreaId" class="form-select" asp-items="ViewBag.Areas">
+                                <option value="">-- Selecione a área --</option>
+                            </select>
+                            <span asp-validation-for="AreaId" class="text-danger"></span>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-8 mb-3">
                                 <label asp-for="Curso" class="form-label">Curso</label>
@@ -106,6 +114,81 @@
 
                         <hr>
 
+                        <!-- Currículo PDF -->
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-file-earmark-pdf"></i> Currículo (PDF)</label>
+                            @if (!string.IsNullOrEmpty(Model.Curriculo))
+                            {
+                                <div class="mb-2">
+                                    <a href="@Model.Curriculo" target="_blank" class="btn btn-outline-secondary btn-sm me-2">
+                                        <i class="bi bi-download"></i> Ver / Baixar Currículo
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmarRemoverCurriculo()">
+                                        <i class="bi bi-trash"></i> Remover Currículo
+                                    </button>
+                                </div>
+                            }
+                            <div>
+                                <label for="curriculo" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-upload"></i> Enviar / Substituir Currículo (PDF)
+                                </label>
+                                <input type="file" id="curriculo" name="curriculo" accept="application/pdf" class="d-none" />
+                                <small class="text-muted d-block mt-1">Tamanho máximo: 5 MB. Só PDF.</small>
+                                <span asp-validation-for="Curriculo" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Redes Sociais Dinamicas -->
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-share-fill"></i> Redes Sociais</label>
+                            <div id="redesContainer">
+                                @if (Model.RedesSociais != null && Model.RedesSociais.Any())
+                                {
+                                    int idx = 0;
+                                    foreach (var rede in Model.RedesSociais)
+                                    {
+                                        <div class="row mb-2 rede-item">
+                                            <div class="col-md-5">
+                                                <input name="plataformas" class="form-control" value="@rede.Plataforma" placeholder="Plataforma (ex: Twitter, Website)" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input name="urls" class="form-control" value="@rede.Url" placeholder="URL (https://...)" />
+                                            </div>
+                                            <div class="col-md-1 text-end">
+                                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removerRede(this)">×</button>
+                                            </div>
+                                        </div>
+                                        idx++;
+                                    }
+                                }
+                                else
+                                {
+                                    <!-- um item vazio inicial -->
+                                    <div class="row mb-2 rede-item">
+                                        <div class="col-md-5">
+                                            <input name="plataformas" class="form-control" placeholder="Plataforma (ex: Twitter, Website)" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input name="urls" class="form-control" placeholder="URL (https://...)" />
+                                        </div>
+                                        <div class="col-md-1 text-end">
+                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removerRede(this)">×</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="adicionarRede()">
+                                    <i class="bi bi-plus-lg"></i> Adicionar Rede
+                                </button>
+                                <small class="text-muted d-block mt-1">Adicione várias redes informando plataforma e URL.</small>
+                            </div>
+                        </div>
+
+                        <hr>
+
                         <div class="mb-3">
                             <a asp-controller="Account" asp-action="AlterarSenha" class="btn btn-outline-warning">
                                 <i class="bi bi-lock"></i> Alterar Senha
@@ -142,6 +225,11 @@
     @Html.AntiForgeryToken()
 </form>
 
+<!-- Form para remover curriculo -->
+<form id="formRemoverCurriculo" asp-action="RemoverCurriculo" method="post" class="d-none">
+    @Html.AntiForgeryToken()
+</form>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
@@ -167,6 +255,27 @@
             if (confirm('Deseja realmente remover sua foto de perfil?')) {
                 document.getElementById('formRemoverFoto').submit();
             }
+        }
+
+        function confirmarRemoverCurriculo() {
+            if (confirm('Deseja realmente remover seu currículo?')) {
+                document.getElementById('formRemoverCurriculo').submit();
+            }
+        }
+
+        function adicionarRede() {
+            var container = document.getElementById('redesContainer');
+            var div = document.createElement('div');
+            div.className = 'row mb-2 rede-item';
+            div.innerHTML = '<div class="col-md-5"><input name="plataformas" class="form-control" placeholder="Plataforma (ex: Twitter, Website)" /></div>' +
+                            '<div class="col-md-6"><input name="urls" class="form-control" placeholder="URL (https://...)" /></div>' +
+                            '<div class="col-md-1 text-end"><button type="button" class="btn btn-outline-danger btn-sm" onclick="removerRede(this)">×</button></div>';
+            container.appendChild(div);
+        }
+
+        function removerRede(btn) {
+            var row = btn.closest('.rede-item');
+            if (row) row.remove();
         }
     </script>
 }

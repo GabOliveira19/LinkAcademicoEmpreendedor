@@ -1,70 +1,175 @@
 ﻿@model LinkAcademicoEmpreendedor.Models.Projeto
+
 @{
-    ViewData["Title"] = "Novo Projeto";
+    ViewData["Title"] = "Criar Projeto";
 }
 
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card shadow">
+
+            <div class="card shadow-lg border-0">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="bi bi-folder-plus"></i> Criar Novo Projeto</h4>
+                    <h4 class="mb-0">
+                        <i class="bi bi-folder-plus"></i> Criar Novo Projeto
+                    </h4>
                 </div>
+
                 <div class="card-body">
+
                     <form asp-action="Criar" method="post">
+
+                        <!-- TÍTULO -->
                         <div class="mb-3">
-                            <label asp-for="Titulo" class="form-label">Título do Projeto *</label>
-                            <input asp-for="Titulo" class="form-control" />
+                            <label asp-for="Titulo" class="form-label fw-bold"></label>
+                            <input asp-for="Titulo" class="form-control" placeholder="Digite o título do projeto" />
                             <span asp-validation-for="Titulo" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Descricao" class="form-label">Descrição *</label>
-                            <textarea asp-for="Descricao" class="form-control" rows="5" placeholder="Descreva seu projeto em detalhes..."></textarea>
+                            <label class="form-label fw-bold">Anexar PDF do Projeto</label>
+                            <input type="file" name="pdfFile" class="form-control" accept=".pdf" />
+                        </div>
+
+                        <!-- DESCRIÇÃO -->
+                        <div class="mb-3">
+                            <label asp-for="Descricao" class="form-label fw-bold"></label>
+                            <div id="editor" style="height:200px;"></div>
+                            <input type="hidden" asp-for="Descricao" id="Descricao" />
                             <span asp-validation-for="Descricao" class="text-danger"></span>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Tipo" class="form-label">Tipo de Projeto</label>
-                                <select asp-for="Tipo" class="form-select">
-                                    <option value="">Selecione...</option>
-                                    <option value="TCC">TCC</option>
-                                    <option value="Pesquisa">Pesquisa</option>
-                                    <option value="Extensão">Extensão</option>
-                                    <option value="Estágio">Estágio</option>
-                                    <option value="Projeto Pessoal">Projeto Pessoal</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Tecnologias" class="form-label">Tecnologias</label>
-                                <input asp-for="Tecnologias" class="form-control" placeholder="C#, JavaScript, SQL (separadas por vírgula)" />
-                            </div>
-                        </div>
-
+                        <!-- TIPO -->
                         <div class="mb-3">
-                            <label asp-for="LinkRepositorio" class="form-label">Link do Repositório</label>
-                            <input asp-for="LinkRepositorio" class="form-control" placeholder="https://github.com/seu-usuario/projeto" />
+                            <label class="form-label fw-bold">Tipo do Projeto</label>
+                            <select name="Tipo" class="form-select">
+                                <option value="">Selecione...</option>
+                                <option>Acadêmico</option>
+                                <option>Pesquisa</option>
+                                <option>Extensão</option>
+                                <option>Startup</option>
+                                <option>Outro</option>
+                            </select>
                         </div>
 
+                        <!-- ÁREA -->
                         <div class="mb-3">
-                            <label asp-for="LinkDemonstracao" class="form-label">Link de Demonstração</label>
-                            <input asp-for="LinkDemonstracao" class="form-control" placeholder="https://seu-projeto.com" />
+                            <label class="form-label fw-bold">Área</label>
+                            <div class="form-control bg-light">
+                                @Model.Area
+                            </div>
                         </div>
 
-                        <div class="d-flex justify-content-between">
-                            <a asp-controller="Aluno" asp-action="Dashboard" class="btn btn-outline-secondary">Cancelar</a>
+                        <!-- CAMPOS DINÂMICOS -->
+                        <div class="mt-4">
+                            <h5 class="text-primary">
+                                <i class="bi bi-diagram-3"></i> Informações específicas da área
+                            </h5>
+
+                            @await Html.PartialAsync("_DynamicFields",
+                            (Dictionary<string, string>)ViewBag.DynamicFieldsDefinition)
+                        </div>
+
+                        <!-- LINKS -->
+                        <div class="mt-4">
+                            <h5 class="text-success">
+                                <i class="bi bi-link-45deg"></i> Links do Projeto
+                            </h5>
+
+                            <div id="links-container">
+                                <div class="row mb-2">
+                                    <div class="col-md-4">
+                                        <select name="Links[0].Tipo" class="form-select">
+                                            <option>GitHub</option>
+                                            <option>Google Drive</option>
+                                            <option>Figma</option>
+                                            <option>YouTube</option>
+                                            <option>Artigo Científico</option>
+                                            <option>Outro</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <input name="Links[0].Url" class="form-control" placeholder="Cole o link aqui" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-outline-primary mt-2" onclick="addLink()">
+                                + Adicionar Link
+                            </button>
+                        </div>
+
+                        <!-- BOTÕES -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-controller="Aluno" asp-action="Dashboard" class="btn btn-outline-secondary">
+                                Cancelar
+                            </a>
+
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-check-lg"></i> Criar Projeto
                             </button>
                         </div>
+
                     </form>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        var quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+
+        document.querySelector('form').onsubmit = function () {
+            document.querySelector('#Descricao').value = quill.root.innerHTML;
+        };
+    </script>
 }
+<script>
+    var quill = new Quill('#editor', {
+        theme: 'snow'
+    });
+
+    document.querySelector('form').onsubmit = function () {
+        document.querySelector('#Descricao').value = quill.root.innerHTML;
+    };
+</script>
+
+<script>
+    let index = 1;
+
+    function addLink() {
+        const container = document.getElementById("links-container");
+
+        const html = `
+        <div class="row mb-2">
+            <div class="col-md-4">
+                <select name="Links[${index}].Tipo" class="form-select">
+                    <option>GitHub</option>
+                    <option>Google Drive</option>
+                    <option>Figma</option>
+                    <option>YouTube</option>
+                    <option>Artigo Científico</option>
+                    <option>Outro</option>
+                </select>
+            </div>
+
+            <div class="col-md-8">
+                <input name="Links[${index}].Url" class="form-control" placeholder="Cole o link aqui" />
+            </div>
+        </div>`;
+
+        container.insertAdjacentHTML("beforeend", html);
+        index++;
+    }
+</script>

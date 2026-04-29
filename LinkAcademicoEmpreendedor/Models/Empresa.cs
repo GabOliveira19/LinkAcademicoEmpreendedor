@@ -93,5 +93,9 @@ namespace LinkAcademicoEmpreendedor.Models
 
         // Navegacao
         public virtual ICollection<Oportunidade>? Oportunidades { get; set; }
+
+        // Novas coleções para preservar e navegar pelas interações
+        public virtual ICollection<Curtida>? Curtidas { get; set; } = new List<Curtida>();
+        public virtual ICollection<Comentario>? Comentarios { get; set; } = new List<Comentario>();
     }
 }

@@ -55,6 +55,14 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <label asp-for="AreaId" class="form-label">Área / Curso *</label>
+                            <select asp-for="AreaId" class="form-select" asp-items="ViewBag.Areas">
+                                <option value="">-- Selecione a área --</option>
+                            </select>
+                            <span asp-validation-for="AreaId" class="text-danger"></span>
+                        </div>
+
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="bi bi-person-plus"></i> Cadastrar
                         </button>

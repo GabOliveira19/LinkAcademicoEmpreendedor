@@ -4,6 +4,7 @@ using LinkAcademicoEmpreendedor.Data;
 using LinkAcademicoEmpreendedor.Models;
 using LinkAcademicoEmpreendedor.ViewModels;
 using LinkAcademicoEmpreendedor.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Text.Json;
 using System.Net.Http.Headers;
 
@@ -89,32 +90,39 @@ namespace LinkAcademicoEmpreendedor.Controllers
         // GET: Cadastro Aluno
         public IActionResult CadastroAluno()
         {
-            return View();
+            ViewBag.Areas = new SelectList(_context.Areas.OrderBy(a => a.Nome).ToList(), "Id", "Nome");
+            return View(new CadastroAlunoViewModel());
         }
 
         // POST: Cadastro Aluno
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CadastroAluno(Aluno aluno)
+        public async Task<IActionResult> CadastroAluno(CadastroAlunoViewModel model)
         {
-            ModelState.Remove("Projetos");
-            ModelState.Remove("Curtidas");
-            ModelState.Remove("Comentarios");
-            ModelState.Remove("Candidaturas");
+            ViewBag.Areas = new SelectList(_context.Areas.OrderBy(a => a.Nome).ToList(), "Id", "Nome");
 
             if (!ModelState.IsValid)
-                return View(aluno);
+                return View(model);
 
-            if (await _context.Alunos.AnyAsync(a => a.Email == aluno.Email))
+            if (await _context.Alunos.AnyAsync(a => a.Email == model.Email))
             {
                 ModelState.AddModelError("Email", "Este email ja esta cadastrado.");
-                return View(aluno);
+                return View(model);
             }
 
-            // CRIPTOGRAFAR A SENHA
-            aluno.Senha = SenhaService.CriptografarSenha(aluno.Senha);
+            // Mapear ViewModel para entidade Aluno
+            var aluno = new Aluno
+            {
+                Nome = model.Nome,
+                Email = model.Email,
+                Senha = SenhaService.CriptografarSenha(model.Senha),
+                Curso = model.Curso,
+                Instituicao = model.Instituicao,
+                AnoIngresso = model.AnoIngresso,
+                DataCadastro = DateTime.Now,
+                AreaId = model.AreaId // persistir área escolhida
+            };
 
-            aluno.DataCadastro = DateTime.Now;
             _context.Alunos.Add(aluno);
             await _context.SaveChangesAsync();
 

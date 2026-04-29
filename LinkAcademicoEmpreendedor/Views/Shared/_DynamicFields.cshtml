@@ -1,0 +1,23 @@
+@model Dictionary<string, string>
+
+@if (Model != null && Model.Any())
+{
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h5 class="mb-3">Informações específicas da área</h5>
+
+            <div class="row">
+                @foreach (var campo in Model)
+                {
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">@campo.Value</label>
+                        <input type="text"
+                               name="campo_@campo.Key"
+                               class="form-control"
+                               placeholder="@campo.Value" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

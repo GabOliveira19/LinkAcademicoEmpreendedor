@@ -1,9 +1,10 @@
-ï»¿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LinkAcademicoEmpreendedor.Data;
 using LinkAcademicoEmpreendedor.Models;
 using LinkAcademicoEmpreendedor.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace LinkAcademicoEmpreendedor.Controllers
 {
@@ -64,6 +65,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
                     .ThenInclude(p => p.Curtidas)
                 .Include(a => a.Projetos)
                     .ThenInclude(p => p.Comentarios)
+                .Include(a => a.RedesSociais)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (aluno == null)
@@ -79,27 +81,31 @@ namespace LinkAcademicoEmpreendedor.Controllers
             if (userId == null)
                 return RedirectToAction("Login", "Account");
 
-            var aluno = await _context.Alunos.FindAsync(userId);
+            var aluno = await _context.Alunos
+                .Include(a => a.RedesSociais)
+                .FirstOrDefaultAsync(a => a.Id == userId);
+
             if (aluno == null)
                 return NotFound();
 
-            ViewBag.Areas = new SelectList(_context.Areas.OrderBy(a => a.Nome).ToList(), "Id", "Nome", aluno.AreaId);
             return View(aluno);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditarPerfil(Aluno model, IFormFile? fotoPerfil)
+        public async Task<IActionResult> EditarPerfil(Aluno model, IFormFile? fotoPerfil, IFormFile? curriculo, List<string>? plataformas, List<string>? urls)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null || userId != model.Id)
                 return RedirectToAction("Login", "Account");
 
-            var aluno = await _context.Alunos.FindAsync(userId);
+            var aluno = await _context.Alunos
+                .Include(a => a.RedesSociais)
+                .FirstOrDefaultAsync(a => a.Id == userId);
             if (aluno == null)
                 return NotFound();
 
-            // Upload da foto
+            // Upload da foto (mantive comportamento existente)
             if (fotoPerfil != null && fotoPerfil.Length > 0)
             {
                 var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "alunos");
@@ -126,7 +132,83 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 HttpContext.Session.SetString("UserFoto", aluno.FotoPerfil);
             }
 
-            // atualizar campos editÃ¡veis
+            // Upload do curriculo (PDF) - validações de seguranca
+            if (curriculo != null && curriculo.Length > 0)
+            {
+                var ext = Path.GetExtension(curriculo.FileName).ToLowerInvariant();
+                if (ext != ".pdf")
+                {
+                    ModelState.AddModelError("Curriculo", "Apenas arquivos PDF são aceitos para o currículo.");
+                }
+                else if (curriculo.Length > 5 * 1024 * 1024) // 5 MB
+                {
+                    ModelState.AddModelError("Curriculo", "O currículo deve ter até 5 MB.");
+                }
+                else
+                {
+                    var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "alunos", "curriculos");
+                    if (!Directory.Exists(uploadsFolder))
+                        Directory.CreateDirectory(uploadsFolder);
+
+                    // Deletar curriculo antigo se existir
+                    if (!string.IsNullOrEmpty(aluno.Curriculo))
+                    {
+                        var oldPath = Path.Combine(_webHostEnvironment.WebRootPath, aluno.Curriculo.TrimStart('/'));
+                        if (System.IO.File.Exists(oldPath))
+                            System.IO.File.Delete(oldPath);
+                    }
+
+                    var fileName = $"{userId}_cv_{DateTime.Now.Ticks}{ext}";
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await curriculo.CopyToAsync(stream);
+                    }
+
+                    aluno.Curriculo = $"/uploads/alunos/curriculos/{fileName}";
+                    // opcional: HttpContext.Session.SetString("UserCurriculo", aluno.Curriculo);
+                }
+            }
+
+            // Processar redes sociais: plataformas[] e urls[] (sincroniza substituindo existentes)
+            if (plataformas != null && urls != null)
+            {
+                // Normalizar entrada: manter pares válidos
+                var novas = new List<SocialNetwork>();
+                for (int i = 0; i < Math.Min(plataformas.Count, urls.Count); i++)
+                {
+                    var plat = (plataformas[i] ?? string.Empty).Trim();
+                    var url = (urls[i] ?? string.Empty).Trim();
+                    if (!string.IsNullOrEmpty(plat) && !string.IsNullOrEmpty(url))
+                    {
+                        novas.Add(new SocialNetwork
+                        {
+                            AlunoId = aluno.Id,
+                            Plataforma = plat,
+                            Url = url
+                        });
+                    }
+                }
+
+                // Remover redes existentes e adicionar as novas (substituicao simples)
+                if (aluno.RedesSociais.Any())
+                {
+                    _context.SocialNetworks.RemoveRange(aluno.RedesSociais);
+                }
+
+                if (novas.Any())
+                {
+                    _context.SocialNetworks.AddRange(novas);
+                    aluno.RedesSociais = novas;
+                }
+                else
+                {
+                    aluno.RedesSociais = new List<SocialNetwork>();
+                }
+            }
+
+            // Atualizar demais campos
             aluno.Nome = model.Nome;
             aluno.Curso = model.Curso;
             aluno.Instituicao = model.Instituicao;
@@ -135,7 +217,15 @@ namespace LinkAcademicoEmpreendedor.Controllers
             aluno.Habilidades = model.Habilidades;
             aluno.LinkedIn = model.LinkedIn;
             aluno.GitHub = model.GitHub;
-            aluno.AreaId = model.AreaId; // atualizar Ã¡rea
+
+            if (!ModelState.IsValid)
+            {
+                // recarregar redes sociais para exibir corretamente
+                var alunoParaView = await _context.Alunos
+                    .Include(a => a.RedesSociais)
+                    .FirstOrDefaultAsync(a => a.Id == userId);
+                return View(alunoParaView ?? aluno);
+            }
 
             await _context.SaveChangesAsync();
 
@@ -169,6 +259,33 @@ namespace LinkAcademicoEmpreendedor.Controllers
             }
 
             TempData["Sucesso"] = "Foto removida com sucesso!";
+            return RedirectToAction("EditarPerfil");
+        }
+
+        // Remover currículo
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoverCurriculo()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Login", "Account");
+
+            var aluno = await _context.Alunos.FindAsync(userId);
+            if (aluno == null)
+                return NotFound();
+
+            if (!string.IsNullOrEmpty(aluno.Curriculo))
+            {
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, aluno.Curriculo.TrimStart('/'));
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+
+                aluno.Curriculo = null;
+                await _context.SaveChangesAsync();
+            }
+
+            TempData["Sucesso"] = "Currículo removido com sucesso!";
             return RedirectToAction("EditarPerfil");
         }
 

@@ -1,4 +1,3 @@
-using LinkAcademicoEmpreendedor.Data;
 using LinkAcademicoEmpreendedor.Services;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -28,7 +27,8 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<DynamicFormService>();
+// registro via interface para garantir resolução e facilitar testes
+builder.Services.AddScoped<IDynamicFormService, DynamicFormService>();
 
 var app = builder.Build();
 

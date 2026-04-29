@@ -10,30 +10,64 @@
             <div class="card shadow mb-4">
                 <div class="card-body text-center">
                     <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 120px; height: 120px; font-size: 3rem;">
-                        @Model.Nome?.Substring(0, 1).ToUpper()
+                        @if (!string.IsNullOrEmpty(Model.FotoPerfil))
+                        {
+                            <img src="@Model.FotoPerfil" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            @Model.Nome?.Substring(0, 1).ToUpper()
+                        }
                     </div>
                     <h3>@Model.Nome</h3>
                     <p class="text-muted">@Model.Curso</p>
                     <p class="text-muted"><i class="bi bi-building"></i> @Model.Instituicao</p>
+                    <p class="text-muted">@Model.Area?.Nome</p>
 
                     @if (!string.IsNullOrEmpty(Model.Sobre))
                     {
                         <hr>
-                        <p>@Model.Sobre</p>
+                        <div class="text-muted">
+                            @Html.Raw(Model.Sobre)
+                        </div>
                     }
 
                     <hr>
 
-                    @if (!string.IsNullOrEmpty(Model.LinkedIn))
+                    <div class="mb-2">
+                        @if (!string.IsNullOrEmpty(Model.LinkedIn))
+                        {
+                            <a href="@Model.LinkedIn" target="_blank" class="btn btn-outline-primary btn-sm me-2">
+                                <i class="bi bi-linkedin"></i> LinkedIn
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.GitHub))
+                        {
+                            <a href="@Model.GitHub" target="_blank" class="btn btn-outline-dark btn-sm">
+                                <i class="bi bi-github"></i> GitHub
+                            </a>
+                        }
+                    </div>
+
+                    @* Redes sociais dinâmicas *@
+                    @if (Model.RedesSociais != null && Model.RedesSociais.Any())
                     {
-                        <a href="@Model.LinkedIn" target="_blank" class="btn btn-outline-primary btn-sm me-2">
-                            <i class="bi bi-linkedin"></i> LinkedIn
-                        </a>
+                        <div class="mt-2">
+                            @foreach (var rede in Model.RedesSociais)
+                            {
+                                <a href="@rede.Url" target="_blank" class="btn btn-outline-secondary btn-sm me-1 mb-1">
+                                    <i class="bi bi-link-45deg"></i> @rede.Plataforma
+                                </a>
+                            }
+                        </div>
                     }
-                    @if (!string.IsNullOrEmpty(Model.GitHub))
+
+                    @* Currículo *@
+                    @if (!string.IsNullOrEmpty(Model.Curriculo))
                     {
-                        <a href="@Model.GitHub" target="_blank" class="btn btn-outline-dark btn-sm">
-                            <i class="bi bi-github"></i> GitHub
+                        <hr />
+                        <a href="@Model.Curriculo" target="_blank" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-file-earmark-pdf"></i> Ver / Baixar Currículo
                         </a>
                     }
                 </div>
@@ -94,7 +128,9 @@
                                             <span class="badge bg-secondary mb-2">@projeto.Tipo</span>
                                             <h5 class="card-title">@projeto.Titulo</h5>
                                             <p class="card-text small text-muted">
-                                                @(projeto.Descricao.Length > 100 ? projeto.Descricao.Substring(0, 100) + "..." : projeto.Descricao)
+                                                <div class="card-text small text-muted">
+                                                    @Html.Raw(projeto.Descricao)
+                                                </div>
                                             </p>
                                             @if (!string.IsNullOrEmpty(projeto.Tecnologias))
                                             {

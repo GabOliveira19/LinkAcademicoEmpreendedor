@@ -13,12 +13,16 @@ namespace LinkAcademicoEmpreendedor.Models
 
         public DateTime DataComentario { get; set; } = DateTime.Now;
 
-        // Chaves estrangeiras
-        public int AlunoId { get; set; }
+        // Chaves estrangeiras: autor pode ser Aluno OU Empresa
+        public int? AlunoId { get; set; }
+        public int? EmpresaId { get; set; }
         public int ProjetoId { get; set; }
 
         [ForeignKey("AlunoId")]
         public virtual Aluno? Aluno { get; set; }
+
+        [ForeignKey("EmpresaId")]
+        public virtual Empresa? Empresa { get; set; }
 
         [ForeignKey("ProjetoId")]
         public virtual Projeto? Projeto { get; set; }

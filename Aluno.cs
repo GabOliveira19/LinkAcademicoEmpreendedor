@@ -1,5 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace LinkAcademicoEmpreendedor.Models
@@ -21,7 +19,6 @@ namespace LinkAcademicoEmpreendedor.Models
         [StringLength(100, MinimumLength = 6, ErrorMessage = "A senha deve ter no minimo 6 caracteres")]
         public string Senha { get; set; } = string.Empty;
 
-        // legacy: pode manter string Curso, mas iremos exigir AreaId
         [StringLength(200)]
         public string? Curso { get; set; }
 
@@ -45,6 +42,10 @@ namespace LinkAcademicoEmpreendedor.Models
         [StringLength(300)]
         public string? GitHub { get; set; }
 
+        // Caminho relativo para arquivo PDF do curr�culo (ex.: /uploads/alunos/curriculos/123_cv_12345.pdf)
+        [StringLength(500)]
+        public string? Curriculo { get; set; }
+
         public DateTime DataCadastro { get; set; } = DateTime.Now;
 
         // Campos para recuperacao de senha
@@ -53,18 +54,13 @@ namespace LinkAcademicoEmpreendedor.Models
 
         public DateTime? TokenExpiracao { get; set; }
 
-        // Relação com Area (nova)
-        public int AreaId { get; set; }
-        public Area? Area { get; set; }
-
         // Navegacao
         public virtual ICollection<Projeto> Projetos { get; set; } = new List<Projeto>();
         public virtual ICollection<Curtida> Curtidas { get; set; } = new List<Curtida>();
         public virtual ICollection<Comentario> Comentarios { get; set; } = new List<Comentario>();
         public virtual ICollection<Candidatura> Candidaturas { get; set; } = new List<Candidatura>();
 
-        public string Curriculo { get; set; } = string.Empty;
-
-        public List<RedeSocial> RedesSociais { get; set; } = new List<RedeSocial>();
+        // Novas redes sociais do aluno
+        public virtual ICollection<SocialNetwork> RedesSociais { get; set; } = new List<SocialNetwork>();
     }
 }
