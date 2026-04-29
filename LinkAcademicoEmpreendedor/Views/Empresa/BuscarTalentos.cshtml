@@ -1,0 +1,115 @@
+﻿@model List<LinkAcademicoEmpreendedor.Models.Aluno>
+@{
+    ViewData["Title"] = "Buscar Talentos";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4"><i class="bi bi-search text-success"></i> Buscar Talentos</h2>
+
+    <!-- Filtros -->
+    <div class="card shadow-sm mb-4 border-success">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-funnel"></i> Filtros de Busca</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Nome ou Instituicao</label>
+                    <input type="text" name="busca" class="form-control"
+                           placeholder="Buscar..."
+                           value="@ViewBag.Busca" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Habilidade</label>
+                    <input type="text" name="habilidade" class="form-control"
+                           placeholder="Ex: C#, JavaScript..."
+                           value="@ViewBag.Habilidade" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Curso</label>
+                    <input type="text" name="curso" class="form-control"
+                           placeholder="Ex: Ciencia da Computacao"
+                           value="@ViewBag.Curso" />
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-search"></i> Buscar Talentos
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Resultados -->
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-person-x display-1 text-muted"></i>
+            <p class="lead text-muted mt-3">Nenhum talento encontrado com os filtros aplicados</p>
+            <p class="text-muted">Tente ajustar os criterios de busca</p>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted mb-3">
+            <i class="bi bi-info-circle"></i> @Model.Count talento(s) encontrado(s)
+        </p>
+
+        <div class="row">
+            @foreach (var aluno in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                                     style="width: 50px; height: 50px; font-size: 1.3rem;">
+                                    @aluno.Nome?.Substring(0, 1).ToUpper()
+                                </div>
+                                <div>
+                                    <h5 class="mb-0">@aluno.Nome</h5>
+                                    <small class="text-muted">@aluno.Curso</small>
+                                </div>
+                            </div>
+
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-building"></i> @aluno.Instituicao
+                            </p>
+
+                            @if (!string.IsNullOrEmpty(aluno.Habilidades))
+                            {
+                                <div class="mb-3">
+                                    <strong class="small">Habilidades:</strong><br />
+                                    @foreach (var hab in aluno.Habilidades.Split(',').Take(4))
+                                    {
+                                        <span class="badge bg-primary me-1 mb-1">@hab.Trim()</span>
+                                    }
+                                </div>
+                            }
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small">
+                                    <i class="bi bi-folder"></i> @(aluno.Projetos?.Count ?? 0) projetos
+                                </span>
+                                @{
+                                    var totalCurtidas = aluno.Projetos?.Sum(p => p.Curtidas?.Count ?? 0) ?? 0;
+                                }
+                                <span class="text-danger small">
+                                    <i class="bi bi-heart-fill"></i> @totalCurtidas curtidas
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <div class="d-grid gap-2">
+                                <a asp-controller="Aluno" asp-action="Perfil" asp-route-id="@aluno.Id"
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-person"></i> Ver Perfil Completo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

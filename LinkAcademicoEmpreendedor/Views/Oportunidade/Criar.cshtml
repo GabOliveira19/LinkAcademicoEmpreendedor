@@ -1,0 +1,84 @@
+﻿@model LinkAcademicoEmpreendedor.Models.Oportunidade
+@{
+    ViewData["Title"] = "Nova Oportunidade";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-briefcase"></i> Publicar Nova Oportunidade</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Criar" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Titulo" class="form-label">Título da Vaga *</label>
+                            <input asp-for="Titulo" class="form-control" placeholder="Ex: Desenvolvedor Full Stack Jr" />
+                            <span asp-validation-for="Titulo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Descricao" class="form-label">Descrição da Vaga *</label>
+                            <textarea asp-for="Descricao" class="form-control" rows="5" placeholder="Descreva as atividades, responsabilidades..."></textarea>
+                            <span asp-validation-for="Descricao" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Tipo" class="form-label">Tipo</label>
+                                <select asp-for="Tipo" class="form-select">
+                                    <option value="">Selecione...</option>
+                                    <option value="Estágio">Estágio</option>
+                                    <option value="CLT">CLT</option>
+                                    <option value="PJ">PJ</option>
+                                    <option value="Freelancer">Freelancer</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Modalidade" class="form-label">Modalidade</label>
+                                <select asp-for="Modalidade" class="form-select">
+                                    <option value="">Selecione...</option>
+                                    <option value="Presencial">Presencial</option>
+                                    <option value="Remoto">Remoto</option>
+                                    <option value="Híbrido">Híbrido</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Salario" class="form-label">Salário (R$)</label>
+                                <input asp-for="Salario" type="number" step="0.01" class="form-control" placeholder="0.00" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Requisitos" class="form-label">Requisitos</label>
+                            <input asp-for="Requisitos" class="form-control" placeholder="Ex: Conhecimento em C#, SQL, Git" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="Local" class="form-label">Local</label>
+                                <input asp-for="Local" class="form-control" placeholder="Ex: São Paulo - SP" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="DataExpiracao" class="form-label">Data de Expiração</label>
+                                <input asp-for="DataExpiracao" type="date" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-controller="Empresa" asp-action="Dashboard" class="btn btn-outline-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-lg"></i> Publicar Oportunidade
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

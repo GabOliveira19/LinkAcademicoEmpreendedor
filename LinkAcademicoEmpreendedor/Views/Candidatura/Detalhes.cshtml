@@ -1,0 +1,169 @@
+﻿@model LinkAcademicoEmpreendedor.Models.Candidatura
+@{
+    ViewData["Title"] = "Detalhes da Candidatura";
+    var tipoUsuario = Context.Session.GetString("TipoUsuario");
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-person"></i> Candidatura</h5>
+                    <span class="badge
+                        @(Model.Status == "Pendente" ? "bg-warning" :
+                                                    Model.Status == "Visualizada" ? "bg-info" :
+                                                    Model.Status == "Aprovada" ? "bg-success" : "bg-secondary") fs-6">
+                        @Model.Status
+                    </span>
+                </div>
+                <div class="card-body">
+                    <h4>@Model.Oportunidade?.Titulo</h4>
+                    <p class="text-muted">
+                        <i class="bi bi-building"></i> @Model.Oportunidade?.Empresa?.RazaoSocial
+                    </p>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>
+                                <strong>Data da Candidatura:</strong><br>
+                                @Model.DataCandidatura.ToString("dd/MM/yyyy HH:mm")
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            @if (Model.DataVisualizacao.HasValue)
+                            {
+                                <p>
+                                    <strong>Visualizada em:</strong><br>
+                                    @Model.DataVisualizacao.Value.ToString("dd/MM/yyyy HH:mm")
+                                </p>
+                            }
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.MensagemApresentacao))
+                    {
+                        <div class="bg-light p-3 rounded mb-3">
+                            <strong>Mensagem de Apresentacao:</strong>
+                            <p class="mb-0 mt-2">@Model.MensagemApresentacao</p>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.MensagemResposta))
+                    {
+                        <div class="alert @(Model.Status == "Aprovada" ? "alert-success" : "alert-info")">
+                            <strong>Resposta da Empresa (@Model.DataResposta?.ToString("dd/MM/yyyy")):</strong>
+                            <p class="mb-0 mt-2">@Model.MensagemResposta</p>
+                        </div>
+                    }
+
+                    <!-- Formulario de resposta (apenas para empresa) -->
+                    @if (tipoUsuario == "Empresa" && (Model.Status == "Pendente" || Model.Status == "Visualizada"))
+                    {
+                        <hr>
+                        <h5><i class="bi bi-reply"></i> Responder ao Candidato</h5>
+                        <form asp-action="Responder" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="candidaturaId" value="@Model.Id" />
+
+                            <div class="mb-3">
+                                <label class="form-label">Status da Candidatura</label>
+                                <select name="status" class="form-select" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Aprovada">Aprovar - Chamar para entrevista</option>
+                                    <option value="Rejeitada">Rejeitar - Nao atende aos requisitos</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Mensagem para o Candidato</label>
+                                <textarea name="mensagemResposta" class="form-control" rows="4"
+                                      placeholder="Escreva uma mensagem para o candidato..."></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-send"></i> Enviar Resposta
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Info do Candidato -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-person"></i> Candidato</h5>
+                </div>
+                <div class="card-body text-center">
+                    @if (!string.IsNullOrEmpty(Model.Aluno?.FotoPerfil))
+                    {
+                        <img src="@Model.Aluno.FotoPerfil" class="rounded-circle mb-3"
+                             style="width: 80px; height: 80px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                             style="width: 80px; height: 80px; font-size: 2rem;">
+                            @Model.Aluno?.Nome?.Substring(0, 1).ToUpper()
+                        </div>
+                    }
+                    <h5>@Model.Aluno?.Nome</h5>
+                    <p class="text-muted">@Model.Aluno?.Curso</p>
+                    <p class="text-muted">@Model.Aluno?.Instituicao</p>
+
+                    @if (!string.IsNullOrEmpty(Model.Aluno?.Habilidades))
+                    {
+                        <div class="mb-3">
+                            @foreach (var hab in Model.Aluno.Habilidades.Split(',').Take(5))
+                            {
+                                <span class="badge bg-primary me-1 mb-1">@hab.Trim()</span>
+                            }
+                        </div>
+                    }
+
+                    <a asp-controller="Aluno" asp-action="Perfil" asp-route-id="@Model.AlunoId"
+                       class="btn btn-outline-primary w-100" target="_blank">
+                        Ver Perfil Completo
+                    </a>
+                </div>
+            </div>
+
+            <!-- Info da Vaga -->
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-briefcase"></i> Vaga</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>@Model.Oportunidade?.Titulo</strong></p>
+                    <p class="text-muted mb-1">
+                        <i class="bi bi-building"></i> @Model.Oportunidade?.Empresa?.RazaoSocial
+                    </p>
+                    <p class="text-muted mb-1">
+                        <i class="bi bi-geo-alt"></i> @Model.Oportunidade?.Local
+                    </p>
+                    <span class="badge bg-success">@Model.Oportunidade?.Tipo</span>
+                    <span class="badge bg-info">@Model.Oportunidade?.Modalidade</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        @if (tipoUsuario == "Aluno")
+        {
+            <a asp-action="MinhasCandidaturas" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        }
+        else
+        {
+            <a asp-action="Candidatos" asp-route-oportunidadeId="@Model.OportunidadeId" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        }
+    </div>
+</div>

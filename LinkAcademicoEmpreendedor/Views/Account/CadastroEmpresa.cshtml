@@ -1,0 +1,458 @@
+﻿@model LinkAcademicoEmpreendedor.ViewModels.CadastroEmpresaViewModel
+@{
+    ViewData["Title"] = "Cadastro de Empresa";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white text-center">
+                    <h4 class="mb-0"><i class="bi bi-building"></i> Cadastro de Empresa</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Alerta de Status -->
+                    <div id="alertStatus" class="alert d-none"></div>
+
+                    <!-- Debug - remover depois -->
+                    <div id="debugInfo" class="alert alert-secondary d-none">
+                        <strong>Debug:</strong> <span id="debugText"></span>
+                    </div>
+
+                    <form asp-action="CadastroEmpresa" method="post" id="formCadastro">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="CnpjValidado" id="cnpjValidado" />
+
+                        <!-- Secao CNPJ -->
+                        <div class="card mb-4 border-primary">
+                            <div class="card-header bg-primary text-white">
+                                <i class="bi bi-search"></i> Passo 1: Informe o CNPJ
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label asp-for="Cnpj" class="form-label">CNPJ *</label>
+                                        <input asp-for="Cnpj" class="form-control" id="inputCnpj"
+                                               placeholder="00.000.000/0000-00" maxlength="18" />
+                                        <span asp-validation-for="Cnpj" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button type="button" class="btn btn-primary w-100" id="btnConsultarCnpj">
+                                            <i class="bi bi-search"></i> Consultar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button type="button" class="btn btn-secondary w-100" id="btnCadastroManual">
+                                            <i class="bi bi-pencil"></i> Manual
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="loadingCnpj" class="text-center py-3 d-none">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Consultando...</span>
+                                    </div>
+                                    <p class="text-muted mt-2">Consultando CNPJ na Receita Federal...</p>
+                                </div>
+                                <div class="form-text mt-2">
+                                    <i class="bi bi-info-circle"></i> Clique em "Consultar" para buscar automaticamente ou "Manual" para digitar os dados.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Secao Dados da Empresa -->
+                        <div class="card mb-4" id="secaoDadosEmpresa" style="display: none;">
+                            <div class="card-header bg-secondary text-white">
+                                <i class="bi bi-building"></i> Passo 2: Dados da Empresa
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="RazaoSocial" class="form-label">Razao Social *</label>
+                                        <input asp-for="RazaoSocial" class="form-control" id="inputRazaoSocial" />
+                                        <span asp-validation-for="RazaoSocial" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="NomeFantasia" class="form-label">Nome Fantasia</label>
+                                        <input asp-for="NomeFantasia" class="form-control" id="inputNomeFantasia" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="SituacaoCadastral" class="form-label">Situacao Cadastral</label>
+                                        <input asp-for="SituacaoCadastral" class="form-control" id="inputSituacaoCadastral" />
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="DataAbertura" class="form-label">Data de Abertura</label>
+                                        <input asp-for="DataAbertura" class="form-control" id="inputDataAbertura" placeholder="dd/mm/aaaa" />
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="NaturezaJuridica" class="form-label">Natureza Juridica</label>
+                                        <input asp-for="NaturezaJuridica" class="form-control" id="inputNaturezaJuridica" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Endereco" class="form-label">Endereco</label>
+                                        <input asp-for="Endereco" class="form-control" id="inputEndereco" />
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label asp-for="Numero" class="form-label">Numero</label>
+                                        <input asp-for="Numero" class="form-control" id="inputNumero" />
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="Bairro" class="form-label">Bairro</label>
+                                        <input asp-for="Bairro" class="form-control" id="inputBairro" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5 mb-3">
+                                        <label asp-for="Cidade" class="form-label">Cidade</label>
+                                        <input asp-for="Cidade" class="form-control" id="inputCidade" />
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label asp-for="Estado" class="form-label">Estado</label>
+                                        <select asp-for="Estado" class="form-select" id="inputEstado">
+                                            <option value="">Selecione</option>
+                                            <option value="AC">AC</option>
+                                            <option value="AL">AL</option>
+                                            <option value="AP">AP</option>
+                                            <option value="AM">AM</option>
+                                            <option value="BA">BA</option>
+                                            <option value="CE">CE</option>
+                                            <option value="DF">DF</option>
+                                            <option value="ES">ES</option>
+                                            <option value="GO">GO</option>
+                                            <option value="MA">MA</option>
+                                            <option value="MT">MT</option>
+                                            <option value="MS">MS</option>
+                                            <option value="MG">MG</option>
+                                            <option value="PA">PA</option>
+                                            <option value="PB">PB</option>
+                                            <option value="PR">PR</option>
+                                            <option value="PE">PE</option>
+                                            <option value="PI">PI</option>
+                                            <option value="RJ">RJ</option>
+                                            <option value="RN">RN</option>
+                                            <option value="RS">RS</option>
+                                            <option value="RO">RO</option>
+                                            <option value="RR">RR</option>
+                                            <option value="SC">SC</option>
+                                            <option value="SP">SP</option>
+                                            <option value="SE">SE</option>
+                                            <option value="TO">TO</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="Cep" class="form-label">CEP</label>
+                                        <input asp-for="Cep" class="form-control" id="inputCep" placeholder="00000-000" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Secao Dados Complementares -->
+                        <div class="card mb-4" id="secaoDadosComplementares" style="display: none;">
+                            <div class="card-header bg-info text-white">
+                                <i class="bi bi-person"></i> Passo 3: Dados de Acesso
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Email" class="form-label">E-mail *</label>
+                                        <input asp-for="Email" class="form-control" type="email" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Telefone" class="form-label">Telefone</label>
+                                        <input asp-for="Telefone" class="form-control" id="inputTelefone"
+                                               placeholder="(00) 00000-0000" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Senha" class="form-label">Senha *</label>
+                                        <input asp-for="Senha" class="form-control" type="password" />
+                                        <span asp-validation-for="Senha" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="ConfirmarSenha" class="form-label">Confirmar Senha *</label>
+                                        <input asp-for="ConfirmarSenha" class="form-control" type="password" />
+                                        <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="NomeResponsavel" class="form-label">Nome do Responsavel</label>
+                                        <input asp-for="NomeResponsavel" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="AreaAtuacao" class="form-label">Area de Atuacao</label>
+                                        <input asp-for="AreaAtuacao" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Descricao" class="form-label">Descricao da Empresa</label>
+                                    <textarea asp-for="Descricao" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botao de Submit -->
+                        <div id="secaoBotaoSubmit" style="display: none;">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="bi bi-check-lg"></i> Cadastrar Empresa
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" id="btnProcurarOutro">
+                                    <i class="bi bi-arrow-left"></i> Procurar outro CNPJ
+                                </button>
+                            </div>
+                            <p class="text-center text-muted mt-3">
+                                Ja tem cadastro? <a asp-action="Login">Faca login</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputCnpj = document.getElementById('inputCnpj');
+            const btnConsultar = document.getElementById('btnConsultarCnpj');
+            const btnManual = document.getElementById('btnCadastroManual');
+            const loadingCnpj = document.getElementById('loadingCnpj');
+            const alertStatus = document.getElementById('alertStatus');
+            const cnpjValidado = document.getElementById('cnpjValidado');
+            const secaoDadosEmpresa = document.getElementById('secaoDadosEmpresa');
+            const secaoDadosComplementares = document.getElementById('secaoDadosComplementares');
+            const secaoBotaoSubmit = document.getElementById('secaoBotaoSubmit');
+            const btnProcurarOutro = document.getElementById('btnProcurarOutro');
+
+            // Mascara de CNPJ
+            inputCnpj.addEventListener('input', function (e) {
+                let valor = e.target.value.replace(/\D/g, '');
+                if (valor.length > 14) valor = valor.substring(0, 14);
+
+                if (valor.length > 12) {
+                    valor = valor.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, '$1.$2.$3/$4-$5');
+                } else if (valor.length > 8) {
+                    valor = valor.replace(/^(\d{2})(\d{3})(\d{3})(\d*).*/, '$1.$2.$3/$4');
+                } else if (valor.length > 5) {
+                    valor = valor.replace(/^(\d{2})(\d{3})(\d*).*/, '$1.$2.$3');
+                } else if (valor.length > 2) {
+                    valor = valor.replace(/^(\d{2})(\d*).*/, '$1.$2');
+                }
+
+                e.target.value = valor;
+            });
+
+            // Mascara de Telefone
+            const inputTelefone = document.getElementById('inputTelefone');
+            if (inputTelefone) {
+                inputTelefone.addEventListener('input', function (e) {
+                    let valor = e.target.value.replace(/\D/g, '');
+                    if (valor.length > 11) valor = valor.substring(0, 11);
+
+                    if (valor.length > 10) {
+                        valor = valor.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+                    } else if (valor.length > 6) {
+                        valor = valor.replace(/^(\d{2})(\d{4})(\d*).*/, '($1) $2-$3');
+                    } else if (valor.length > 2) {
+                        valor = valor.replace(/^(\d{2})(\d*).*/, '($1) $2');
+                    }
+
+                    e.target.value = valor;
+                });
+            }
+
+            // Mascara de CEP
+            const inputCep = document.getElementById('inputCep');
+            if (inputCep) {
+                inputCep.addEventListener('input', function (e) {
+                    let valor = e.target.value.replace(/\D/g, '');
+                    if (valor.length > 8) valor = valor.substring(0, 8);
+                    if (valor.length > 5) {
+                        valor = valor.replace(/^(\d{5})(\d*)/, '$1-$2');
+                    }
+                    e.target.value = valor;
+                });
+            }
+
+            // Funcao para mostrar alerta
+            function mostrarAlerta(mensagem, tipo) {
+                alertStatus.className = 'alert alert-' + tipo;
+                alertStatus.innerHTML = mensagem;
+                alertStatus.classList.remove('d-none');
+            }
+
+            // Funcao para esconder alerta
+            function esconderAlerta() {
+                alertStatus.classList.add('d-none');
+            }
+
+            // Funcao para limpar campos da empresa
+            function limparCamposEmpresa() {
+                var campos = ['inputRazaoSocial', 'inputNomeFantasia', 'inputSituacaoCadastral',
+                    'inputDataAbertura', 'inputNaturezaJuridica', 'inputEndereco', 'inputNumero',
+                    'inputBairro', 'inputCidade', 'inputCep'];
+
+                campos.forEach(function(id) {
+                    var campo = document.getElementById(id);
+                    if (campo) {
+                        campo.value = '';
+                        campo.removeAttribute('readonly');
+                        campo.removeAttribute('disabled');
+                    }
+                });
+
+                var selectEstado = document.getElementById('inputEstado');
+                if (selectEstado) {
+                    selectEstado.value = '';
+                    selectEstado.removeAttribute('disabled');
+                }
+            }
+
+            // Funcao para mostrar formulario
+            function mostrarFormulario(bloqueado) {
+                secaoDadosEmpresa.style.display = 'block';
+                secaoDadosComplementares.style.display = 'block';
+                secaoBotaoSubmit.style.display = 'block';
+                cnpjValidado.value = 'true';
+
+                var camposEmpresa = ['inputRazaoSocial', 'inputNomeFantasia', 'inputSituacaoCadastral',
+                    'inputDataAbertura', 'inputNaturezaJuridica', 'inputEndereco', 'inputNumero',
+                    'inputBairro', 'inputCidade', 'inputEstado', 'inputCep'];
+
+                camposEmpresa.forEach(function(id) {
+                    var campo = document.getElementById(id);
+                    if (campo) {
+                        if (bloqueado) {
+                            campo.setAttribute('readonly', true);
+                            if (campo.tagName === 'SELECT') {
+                                campo.setAttribute('disabled', true);
+                            }
+                        } else {
+                            campo.removeAttribute('readonly');
+                            campo.removeAttribute('disabled');
+                        }
+                    }
+                });
+            }
+
+            // Funcao para resetar formulario
+            function resetarFormulario() {
+                // Limpa o CNPJ
+                inputCnpj.value = '';
+                inputCnpj.removeAttribute('readonly');
+
+                // Limpa campos da empresa
+                limparCamposEmpresa();
+
+                // Esconde as secoes
+                secaoDadosEmpresa.style.display = 'none';
+                secaoDadosComplementares.style.display = 'none';
+                secaoBotaoSubmit.style.display = 'none';
+
+                // Mostra os botoes novamente
+                btnConsultar.style.display = 'block';
+                btnManual.style.display = 'block';
+
+                // Reseta a validacao
+                cnpjValidado.value = 'false';
+
+                // Esconde alertas
+                esconderAlerta();
+
+                // Foca no campo CNPJ
+                inputCnpj.focus();
+            }
+
+            // Cadastro Manual
+            btnManual.addEventListener('click', function () {
+                var cnpj = inputCnpj.value;
+                var cnpjLimpo = cnpj.replace(/\D/g, '');
+
+                if (cnpjLimpo.length !== 14) {
+                    mostrarAlerta('<i class="bi bi-exclamation-circle"></i> Informe um CNPJ valido com 14 digitos.', 'warning');
+                    return;
+                }
+
+                esconderAlerta();
+                mostrarFormulario(false);
+                mostrarAlerta('<i class="bi bi-info-circle"></i> Modo manual ativado. Preencha os dados da empresa.', 'info');
+            });
+
+            // Procurar outro CNPJ
+            if (btnProcurarOutro) {
+                btnProcurarOutro.addEventListener('click', function () {
+                    resetarFormulario();
+                });
+            }
+
+            // Consultar CNPJ
+            btnConsultar.addEventListener('click', async function () {
+                var cnpjComMascara = inputCnpj.value;
+                var cnpjLimpo = cnpjComMascara.replace(/\D/g, '');
+
+                if (cnpjLimpo.length !== 14) {
+                    mostrarAlerta('<i class="bi bi-exclamation-circle"></i> Informe um CNPJ valido com 14 digitos.', 'warning');
+                    return;
+                }
+
+                esconderAlerta();
+                loadingCnpj.classList.remove('d-none');
+                btnConsultar.disabled = true;
+                btnManual.disabled = true;
+
+                try {
+                    var url = '/Account/ConsultarCnpj?cnpj=' + cnpjLimpo;
+                    var response = await fetch(url);
+                    var resultado = await response.json();
+
+                    if (resultado.sucesso) {
+                        inputCnpj.value = resultado.dados.cnpj;
+                        document.getElementById('inputRazaoSocial').value = resultado.dados.razaoSocial || '';
+                        document.getElementById('inputNomeFantasia').value = resultado.dados.nomeFantasia || '';
+                        document.getElementById('inputSituacaoCadastral').value = resultado.dados.situacaoCadastral || '';
+                        document.getElementById('inputDataAbertura').value = resultado.dados.dataAbertura || '';
+                        document.getElementById('inputNaturezaJuridica').value = resultado.dados.naturezaJuridica || '';
+                        document.getElementById('inputEndereco').value = resultado.dados.endereco || '';
+                        document.getElementById('inputNumero').value = resultado.dados.numero || '';
+                        document.getElementById('inputBairro').value = resultado.dados.bairro || '';
+                        document.getElementById('inputCidade').value = resultado.dados.cidade || '';
+                        document.getElementById('inputEstado').value = resultado.dados.estado || '';
+                        document.getElementById('inputCep').value = resultado.dados.cep || '';
+
+                        inputCnpj.setAttribute('readonly', true);
+                        btnConsultar.style.display = 'none';
+                        btnManual.style.display = 'none';
+
+                        mostrarFormulario(true);
+                        mostrarAlerta('<i class="bi bi-check-circle"></i> CNPJ encontrado! Dados preenchidos automaticamente.', 'success');
+                    } else {
+                        mostrarAlerta('<i class="bi bi-x-circle"></i> ' + resultado.mensagem, 'danger');
+                    }
+                } catch (error) {
+                    mostrarAlerta('<i class="bi bi-x-circle"></i> Erro ao consultar CNPJ. Clique em "Manual" para preencher os dados manualmente.', 'danger');
+                } finally {
+                    loadingCnpj.classList.add('d-none');
+                    btnConsultar.disabled = false;
+                    btnManual.disabled = false;
+                }
+            });
+
+            // Validar formulario antes de enviar
+            document.getElementById('formCadastro').addEventListener('submit', function (e) {
+                if (cnpjValidado.value !== 'true') {
+                    e.preventDefault();
+                    mostrarAlerta('<i class="bi bi-exclamation-circle"></i> Clique em "Consultar" ou "Manual" antes de cadastrar.', 'warning');
+                }
+            });
+        });
+    </script>
+}
+}

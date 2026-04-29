@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Recuperacao de Senha";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-envelope-check text-success display-1"></i>
+                    <h3 class="mt-4">Verifique seu Email</h3>
+                    <p class="text-muted">
+                        Se o email informado estiver cadastrado em nossa plataforma,
+                        voce recebera as instrucoes para redefinir sua senha.
+                    </p>
+
+                    @if (TempData["Token"] != null)
+                    {
+                        <div class="alert alert-info mt-4">
+                            <strong>MODO DEMONSTRACAO</strong><br>
+                            <small>Em producao, o link seria enviado por email.</small><br><br>
+                            <a href="/Account/RedefinirSenha?token=@TempData["Token"]&tipo=@TempData["TipoRecuperacao"]"
+                               class="btn btn-primary">
+                                Clique aqui para redefinir sua senha
+                            </a>
+                        </div>
+                    }
+
+                    <div class="mt-4">
+                        <a asp-action="Login" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left"></i> Voltar ao Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

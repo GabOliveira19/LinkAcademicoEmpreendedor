@@ -1,0 +1,80 @@
+﻿@model List<LinkAcademicoEmpreendedor.Models.Candidatura>
+@{
+    ViewData["Title"] = "Minhas Candidaturas";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4"><i class="bi bi-file-earmark-person text-primary"></i> Minhas Candidaturas</h2>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-inbox display-1 text-muted"></i>
+            <p class="lead text-muted mt-3">Voce ainda nao se candidatou a nenhuma vaga.</p>
+            <a asp-controller="Oportunidade" asp-action="Index" class="btn btn-primary">
+                <i class="bi bi-search"></i> Explorar Oportunidades
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var candidatura in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span class="badge
+                                        @(candidatura.Status == "Pendente" ? "bg-warning" :
+                                                                    candidatura.Status == "Visualizada" ? "bg-info" :
+                                                                    candidatura.Status == "Aprovada" ? "bg-success" : "bg-secondary")">
+                        @candidatura.Status
+                    </span>
+                    <small class="text-muted">@candidatura.DataCandidatura.ToString("dd/MM/yyyy")</small>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@candidatura.Oportunidade?.Titulo</h5>
+                    <p class="text-muted mb-2">
+                        <i class="bi bi-building"></i> @candidatura.Oportunidade?.Empresa?.RazaoSocial
+                    </p>
+                    <p class="text-muted mb-2">
+                        <i class="bi bi-geo-alt"></i> @candidatura.Oportunidade?.Local
+                        <span class="badge bg-info ms-2">@candidatura.Oportunidade?.Modalidade</span>
+                    </p>
+
+                    @if (!string.IsNullOrEmpty(candidatura.MensagemResposta))
+                            {
+                                <div class="alert alert-light mt-3 mb-0">
+                                    <strong>Resposta da empresa:</strong><br>
+                                    @candidatura.MensagemResposta
+                                </div>
+                            }
+                        </div>
+                        <div class="card-footer bg-white">
+                            <div class="d-flex justify-content-between">
+                                <a asp-action="Detalhes" asp-route-id="@candidatura.Id" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-eye"></i> Ver Detalhes
+                                </a>
+                                <a asp-controller="Avaliacao" asp-action="AvaliarEmpresa"
+                                   asp-route-empresaId="@candidatura.Oportunidade.EmpresaId"
+                                   class="btn btn-sm btn-outline-warning">
+                                    <i class="bi bi-star"></i> Avaliar Empresa
+                                </a>
+                                @if (candidatura.Status == "Pendente" || candidatura.Status == "Visualizada")
+                                {
+                                    <form asp-action="Cancelar" asp-route-id="@candidatura.Id" method="post"
+                                          onsubmit="return confirm('Deseja realmente cancelar esta candidatura?')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-x-lg"></i> Cancelar
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

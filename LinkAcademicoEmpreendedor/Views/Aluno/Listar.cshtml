@@ -1,0 +1,84 @@
+﻿@model List<LinkAcademicoEmpreendedor.Models.Aluno>
+@{
+    ViewData["Title"] = "Talentos";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4"><i class="bi bi-people-fill text-primary"></i> Talentos</h2>
+
+    <!-- Filtros -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-5">
+                    <input type="text" name="busca" class="form-control"
+                           placeholder="Buscar por nome, curso ou instituicao..."
+                           value="@ViewBag.Busca" />
+                </div>
+                <div class="col-md-5">
+                    <input type="text" name="habilidade" class="form-control"
+                           placeholder="Filtrar por habilidade..."
+                           value="@ViewBag.Habilidade" />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de Alunos -->
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-person-x display-1 text-muted"></i>
+            <p class="lead text-muted mt-3">Nenhum aluno encontrado</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var aluno in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                                 style="width: 70px; height: 70px; font-size: 1.8rem;">
+                                @aluno.Nome?.Substring(0, 1).ToUpper()
+                            </div>
+                            <h5 class="card-title">@aluno.Nome</h5>
+                            <p class="text-muted mb-1">@aluno.Curso</p>
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-building"></i> @aluno.Instituicao
+                            </p>
+
+                            @if (!string.IsNullOrEmpty(aluno.Habilidades))
+                            {
+                                <div class="mb-3">
+                                    @foreach (var hab in aluno.Habilidades.Split(',').Take(3))
+                                    {
+                                        <span class="badge bg-light text-dark me-1">@hab.Trim()</span>
+                                    }
+                                </div>
+                            }
+
+                            <p class="mb-2">
+                                <span class="badge bg-primary">
+                                    <i class="bi bi-folder"></i> @aluno.Projetos?.Count Projetos
+                                </span>
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white text-center">
+                            <a asp-action="Perfil" asp-route-id="@aluno.Id" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-person"></i> Ver Perfil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

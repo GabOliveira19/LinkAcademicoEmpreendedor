@@ -1,0 +1,501 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Link Academico Empreendedor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        :root {
+            --top-navbar-height: 70px;
+            --mobile-bottom-nav-height: 65px;
+            --desktop-footer-height: 60px;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: var(--top-navbar-height);
+            padding-bottom: var(--mobile-bottom-nav-height);
+        }
+
+        main {
+            flex: 1;
+            padding-bottom: 10px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: var(--mobile-bottom-nav-height);
+            background: #ffffff;
+            border-top: 1px solid #dee2e6;
+            z-index: 9999;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+            padding: 5px 0;
+        }
+
+            .bottom-nav .nav-link {
+                color: #6c757d;
+                padding: 6px 0;
+                font-size: 0.7rem;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                height: 100%;
+            }
+
+                .bottom-nav .nav-link:hover,
+                .bottom-nav .nav-link.active {
+                    color: #0d6efd;
+                }
+
+                    .bottom-nav .nav-link.active i {
+                        transform: scale(1.1);
+                    }
+
+                .bottom-nav .nav-link i {
+                    font-size: 1.3rem;
+                    margin-bottom: 2px;
+                    transition: transform 0.2s ease;
+                }
+
+            .bottom-nav .position-relative .badge {
+                position: absolute;
+                top: 0;
+                right: 50%;
+                transform: translateX(15px);
+                font-size: 0.55rem;
+                padding: 2px 5px;
+            }
+
+        .desktop-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: var(--desktop-footer-height);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            background: rgba(33, 37, 41, 1);
+            transition: all 0.35s ease;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+        }
+
+            .desktop-footer .container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                transition: all 0.35s ease;
+            }
+
+            /* EFEITO AO PASSAR O MOUSE */
+            .desktop-footer:hover {
+                background: rgba(33, 37, 41, 0.25) !important;
+                backdrop-filter: blur(6px);
+                -webkit-backdrop-filter: blur(6px);
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.10);
+                pointer-events: none;
+            }
+
+                .desktop-footer:hover p {
+                    color: rgba(255,255,255,0.85);
+                }
+
+        @@media (min-width: 992px) {
+            body {
+                padding-bottom: calc(var(--desktop-footer-height) + 20px);
+            }
+
+            main {
+                padding-bottom: 20px;
+            }
+
+            .bottom-nav {
+                display: none !important;
+            }
+        }
+
+        @@media (max-width: 991px) {
+            .navbar .navbar-nav.main-menu {
+                display: none !important;
+            }
+
+            footer.desktop-footer {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Principal -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-link-45deg"></i> Link Academico
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto main-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Projeto" asp-action="Index">Projetos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Oportunidade" asp-action="Index">Oportunidades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Aluno" asp-action="Listar">Talentos</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav">
+                    @if (Context.Session.GetInt32("UserId") != null)
+                    {
+                        var tipoUsuario = Context.Session.GetString("TipoUsuario");
+                        var userName = Context.Session.GetString("UserName");
+                        var userFoto = Context.Session.GetString("UserFoto");
+
+                        <li class="nav-item d-none d-lg-block">
+                            <a class="nav-link position-relative" asp-controller="Notificacao" asp-action="Index">
+                                <i class="bi bi-bell fs-5"></i>
+                                <span id="notificationBadgeDesktop" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">0</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                                @if (!string.IsNullOrEmpty(userFoto))
+                                {
+                                    <img src="@userFoto" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <i class="bi bi-person-circle me-1"></i>
+                                }
+                                @userName
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                @if (tipoUsuario == "Aluno")
+                                {
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Aluno" asp-action="Dashboard">
+                                            <i class="bi bi-speedometer2"></i> Meu Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Candidatura" asp-action="MinhasCandidaturas">
+                                            <i class="bi bi-file-earmark-person"></i> Minhas Candidaturas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Projeto" asp-action="Criar">
+                                            <i class="bi bi-folder-plus"></i> Novo Projeto
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Aluno" asp-action="EditarPerfil">
+                                            <i class="bi bi-person-gear"></i> Editar Perfil
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Empresa" asp-action="Dashboard">
+                                            <i class="bi bi-speedometer2"></i> Meu Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Oportunidade" asp-action="Criar">
+                                            <i class="bi bi-briefcase"></i> Nova Oportunidade
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Empresa" asp-action="EditarPerfil">
+                                            <i class="bi bi-building-gear"></i> Editar Perfil
+                                        </a>
+                                    </li>
+                                }
+
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Notificacao" asp-action="Index">
+                                        <i class="bi bi-bell"></i> Notificacoes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="AlterarSenha">
+                                        <i class="bi bi-lock"></i> Alterar Senha
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" asp-controller="Account" asp-action="ExcluirConta">
+                                        <i class="bi bi-trash"></i> Excluir Conta
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout">
+                                        <i class="bi bi-box-arrow-right"></i> Sair
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">Entrar</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Cadastrar
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="CadastroAluno">
+                                        <i class="bi bi-mortarboard"></i> Sou Aluno
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="CadastroEmpresa">
+                                        <i class="bi bi-building"></i> Sou Empresa
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    <!-- Adicione no menu principal (dentro do <ul class="navbar-nav">) -->
+                    <!-- Link para Rankings (visivel para todos) -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="bi bi-trophy"></i> Rankings
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" asp-controller="Ranking" asp-action="Alunos">
+                                    <i class="bi bi-mortarboard"></i> Ranking de Alunos
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Ranking" asp-action="Empresas">
+                                    <i class="bi bi-building"></i> Ranking de Empresas
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Link para Avaliacoes (apenas logado) -->
+                    @if (Context.Session.GetInt32("UserId") != null)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Avaliacao" asp-action="MinhasAvaliacoes">
+                                <i class="bi bi-star"></i> Avaliacoes
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteudo Principal -->
+    <main>
+        @if (TempData["Sucesso"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+                @TempData["Sucesso"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (TempData["Erro"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+                @TempData["Erro"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @RenderBody()
+    </main>
+
+    <!-- Footer Desktop Fixo -->
+    <footer class="text-light py-0 desktop-footer">
+        <div class="container text-center">
+            <p class="mb-0">Link Academico Empreendedor &copy; @DateTime.Now.Year</p>
+        </div>
+    </footer>
+
+    <!-- Navegacao Fixa no Rodape Mobile -->
+    <nav class="bottom-nav d-lg-none">
+        <div class="container-fluid px-0">
+            <div class="row g-0 text-center">
+                @if (Context.Session.GetInt32("UserId") != null)
+                {
+                    var tipoUsuarioNav = Context.Session.GetString("TipoUsuario");
+
+                    <div class="col">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
+                           asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-house-fill"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </div>
+
+                    <div class="col">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Oportunidade" ? "active" : "")"
+                           asp-controller="Oportunidade" asp-action="Index">
+                            <i class="bi bi-briefcase-fill"></i>
+                            <span>Vagas</span>
+                        </a>
+                    </div>
+
+                    <div class="col">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projeto" ? "active" : "")"
+                           asp-controller="Projeto" asp-action="Index">
+                            <i class="bi bi-folder-fill"></i>
+                            <span>Projetos</span>
+                        </a>
+                    </div>
+
+                    <div class="col">
+                        <a class="nav-link position-relative @(ViewContext.RouteData.Values["controller"]?.ToString() == "Notificacao" ? "active" : "")"
+                           asp-controller="Notificacao" asp-action="Index">
+                            <i class="bi bi-bell-fill"></i>
+                            <span id="notificationBadgeMobile" class="badge rounded-pill bg-danger d-none">0</span>
+                            <span>Alertas</span>
+                        </a>
+                    </div>
+
+                    <div class="col">
+                        @if (tipoUsuarioNav == "Aluno")
+                        {
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Aluno" ? "active" : "")"
+                               asp-controller="Aluno" asp-action="Dashboard">
+                                <i class="bi bi-person-fill"></i>
+                                <span>Perfil</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Empresa" ? "active" : "")"
+                               asp-controller="Empresa" asp-action="Dashboard">
+                                <i class="bi bi-building-fill"></i>
+                                <span>Perfil</span>
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="col">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
+                           asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-house-fill"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </div>
+
+                    <div class="col">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Oportunidade" ? "active" : "")"
+                           asp-controller="Oportunidade" asp-action="Index">
+                            <i class="bi bi-briefcase-fill"></i>
+                            <span>Vagas</span>
+                        </a>
+                    </div>
+
+                    <div class="col">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projeto" ? "active" : "")"
+                           asp-controller="Projeto" asp-action="Index">
+                            <i class="bi bi-folder-fill"></i>
+                            <span>Projetos</span>
+                        </a>
+                    </div>
+
+                    <div class="col">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Aluno" ? "active" : "")"
+                           asp-controller="Aluno" asp-action="Listar">
+                            <i class="bi bi-people-fill"></i>
+                            <span>Talentos</span>
+                        </a>
+                    </div>
+
+                    <div class="col">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Account" ? "active" : "")"
+                           asp-controller="Account" asp-action="Login">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            <span>Entrar</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    @if (Context.Session.GetInt32("UserId") != null)
+    {
+        <script>
+            function atualizarNotificacoes() {
+                fetch('/Notificacao/ContarNaoLidas')
+                    .then(response => response.json())
+                    .then(data => {
+                        var badgeDesktop = document.getElementById('notificationBadgeDesktop');
+                        var badgeMobile = document.getElementById('notificationBadgeMobile');
+
+                        if (data.count > 0) {
+                            var countText = data.count > 9 ? '9+' : data.count;
+
+                            if (badgeDesktop) {
+                                badgeDesktop.textContent = countText;
+                                badgeDesktop.classList.remove('d-none');
+                            }
+
+                            if (badgeMobile) {
+                                badgeMobile.textContent = countText;
+                                badgeMobile.classList.remove('d-none');
+                            }
+                        } else {
+                            if (badgeDesktop) badgeDesktop.classList.add('d-none');
+                            if (badgeMobile) badgeMobile.classList.add('d-none');
+                        }
+                    })
+                    .catch(error => console.log('Erro ao buscar notificacoes'));
+            }
+
+            atualizarNotificacoes();
+            setInterval(atualizarNotificacoes, 30000);
+        </script>
+    }
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

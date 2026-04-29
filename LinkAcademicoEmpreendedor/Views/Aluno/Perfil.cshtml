@@ -1,0 +1,134 @@
+﻿@model LinkAcademicoEmpreendedor.Models.Aluno
+@{
+    ViewData["Title"] = Model.Nome;
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-4">
+            <!-- Card do Perfil -->
+            <div class="card shadow mb-4">
+                <div class="card-body text-center">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 120px; height: 120px; font-size: 3rem;">
+                        @Model.Nome?.Substring(0, 1).ToUpper()
+                    </div>
+                    <h3>@Model.Nome</h3>
+                    <p class="text-muted">@Model.Curso</p>
+                    <p class="text-muted"><i class="bi bi-building"></i> @Model.Instituicao</p>
+
+                    @if (!string.IsNullOrEmpty(Model.Sobre))
+                    {
+                        <hr>
+                        <p>@Model.Sobre</p>
+                    }
+
+                    <hr>
+
+                    @if (!string.IsNullOrEmpty(Model.LinkedIn))
+                    {
+                        <a href="@Model.LinkedIn" target="_blank" class="btn btn-outline-primary btn-sm me-2">
+                            <i class="bi bi-linkedin"></i> LinkedIn
+                        </a>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.GitHub))
+                    {
+                        <a href="@Model.GitHub" target="_blank" class="btn btn-outline-dark btn-sm">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <!-- Habilidades -->
+            @if (!string.IsNullOrEmpty(Model.Habilidades))
+            {
+                <div class="card shadow mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-tools"></i> Habilidades</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var hab in Model.Habilidades.Split(','))
+                        {
+                            <span class="badge bg-primary me-1 mb-1">@hab.Trim()</span>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Estatísticas -->
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <h4 class="text-primary">@Model.Projetos.Count</h4>
+                            <small class="text-muted">Projetos</small>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="text-danger">@Model.Projetos.Sum(p => p.Curtidas.Count)</h4>
+                            <small class="text-muted">Curtidas</small>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="text-info">@Model.Projetos.Sum(p => p.Comentarios.Count)</h4>
+                            <small class="text-muted">Comentários</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <!-- Projetos do Aluno -->
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-folder"></i> Projetos de @Model.Nome</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Projetos.Any())
+                    {
+                        <div class="row">
+                            @foreach (var projeto in Model.Projetos.Where(p => p.Ativo))
+                            {
+                                <div class="col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <span class="badge bg-secondary mb-2">@projeto.Tipo</span>
+                                            <h5 class="card-title">@projeto.Titulo</h5>
+                                            <p class="card-text small text-muted">
+                                                @(projeto.Descricao.Length > 100 ? projeto.Descricao.Substring(0, 100) + "..." : projeto.Descricao)
+                                            </p>
+                                            @if (!string.IsNullOrEmpty(projeto.Tecnologias))
+                                            {
+                                                <div class="mb-2">
+                                                    @foreach (var tech in projeto.Tecnologias.Split(',').Take(3))
+                                                    {
+                                                        <span class="badge bg-light text-dark">@tech.Trim()</span>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="card-footer bg-white">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <span class="text-danger me-2"><i class="bi bi-heart-fill"></i> @projeto.TotalCurtidas</span>
+                                                    <span class="text-primary"><i class="bi bi-chat-fill"></i> @projeto.TotalComentarios</span>
+                                                </div>
+                                                <a asp-controller="Projeto" asp-action="Detalhes" asp-route-id="@projeto.Id" class="btn btn-sm btn-outline-primary">Ver</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="bi bi-folder-x display-4 text-muted"></i>
+                            <p class="text-muted mt-2">Este aluno ainda não tem projetos publicados</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

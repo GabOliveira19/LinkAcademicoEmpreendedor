@@ -1,0 +1,52 @@
+﻿@model LinkAcademicoEmpreendedor.ViewModels.AlterarSenhaViewModel
+@{
+    ViewData["Title"] = "Alterar Senha";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4><i class="bi bi-lock"></i> Alterar Senha</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="AlterarSenha" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="SenhaAtual" class="form-label">Senha Atual</label>
+                            <input asp-for="SenhaAtual" class="form-control" />
+                            <span asp-validation-for="SenhaAtual" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NovaSenha" class="form-label">Nova Senha</label>
+                            <input asp-for="NovaSenha" class="form-control" />
+                            <span asp-validation-for="NovaSenha" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ConfirmarSenha" class="form-label">Confirmar Nova Senha</label>
+                            <input asp-for="ConfirmarSenha" class="form-control" />
+                            <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> Alterar Senha
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,113 @@
+﻿@model List<LinkAcademicoEmpreendedor.Models.Avaliacao>
+@{
+    ViewData["Title"] = "Avaliacoes Feitas";
+    var tipoUsuario = ViewBag.TipoUsuario as string;
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-send text-primary"></i> Avaliacoes que Fiz</h2>
+            <p class="text-muted mb-0">Historico de avaliacoes enviadas</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="MinhasAvaliacoes" class="btn btn-outline-warning">
+                <i class="bi bi-star"></i> Recebidas
+            </a>
+            @if (tipoUsuario == "Aluno")
+            {
+                <a asp-controller="Aluno" asp-action="Dashboard" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Dashboard
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Empresa" asp-action="Dashboard" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Dashboard
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Estatisticas -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-send fs-2"></i>
+                    <h2 class="mb-0 mt-2">@Model.Count</h2>
+                    <small>Total Enviadas</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-send fs-1 text-muted d-block mb-3"></i>
+                <h5>Voce ainda nao fez nenhuma avaliacao</h5>
+                <p class="text-muted">Suas avaliacoes aparecerao aqui.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var avaliacao in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <span class="badge bg-@(avaliacao.TipoAvaliado == "Aluno" ? "primary" : "success")">
+                                <i class="bi bi-@(avaliacao.TipoAvaliado == "Aluno" ? "mortarboard" : "building")"></i>
+                                @avaliacao.TipoAvaliado
+                            </span>
+                            <small class="text-muted">@avaliacao.DataAvaliacao.ToString("dd/MM/yyyy")</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                @if (!string.IsNullOrEmpty(avaliacao.FotoAvaliado))
+                                {
+                                    <img src="@avaliacao.FotoAvaliado" class="rounded-circle mb-2" width="60" height="60" style="object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px;">
+                                        <i class="bi bi-@(avaliacao.TipoAvaliado == "Aluno" ? "person" : "building") text-white fs-4"></i>
+                                    </div>
+                                }
+                                <h6 class="mb-0">@avaliacao.NomeAvaliado</h6>
+                            </div>
+
+                            <!-- Estrelas -->
+                            <div class="text-center mb-3">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= avaliacao.Nota)
+                                    {
+                                        <i class="bi bi-star-fill text-warning fs-5"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-star text-warning fs-5"></i>
+                                    }
+                                }
+                                <span class="ms-2 badge bg-warning text-dark">@avaliacao.Nota/5</span>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(avaliacao.Comentario))
+                            {
+                                <div class="bg-light rounded p-2">
+                                    <small class="text-muted">Seu comentario:</small>
+                                    <p class="mb-0 small">"@avaliacao.Comentario"</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

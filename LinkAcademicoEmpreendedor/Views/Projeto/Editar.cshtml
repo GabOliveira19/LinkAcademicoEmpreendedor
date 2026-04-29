@@ -1,0 +1,80 @@
+﻿@model LinkAcademicoEmpreendedor.Models.Projeto
+@{
+    ViewData["Title"] = "Editar Projeto";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-pencil"></i> Editar Projeto</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Editar" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="AlunoId" />
+                        <input type="hidden" asp-for="DataCriacao" />
+                        <input type="hidden" asp-for="Ativo" />
+
+                        <div class="mb-3">
+                            <label asp-for="Titulo" class="form-label">Titulo do Projeto *</label>
+                            <input asp-for="Titulo" class="form-control" />
+                            <span asp-validation-for="Titulo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Descricao" class="form-label">Descricao *</label>
+                            <textarea asp-for="Descricao" class="form-control" rows="5"></textarea>
+                            <span asp-validation-for="Descricao" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Tipo" class="form-label">Tipo de Projeto</label>
+                                <select asp-for="Tipo" class="form-select">
+                                    <option value="">Selecione...</option>
+                                    <option value="TCC">TCC</option>
+                                    <option value="Pesquisa">Pesquisa</option>
+                                    <option value="Extensao">Extensao</option>
+                                    <option value="Estagio">Estagio</option>
+                                    <option value="Projeto Pessoal">Projeto Pessoal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Tecnologias" class="form-label">Tecnologias</label>
+                                <input asp-for="Tecnologias" class="form-control"
+                                       placeholder="C#, JavaScript, SQL" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LinkRepositorio" class="form-label">Link do Repositorio</label>
+                            <input asp-for="LinkRepositorio" class="form-control"
+                                   placeholder="https://github.com/..." />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LinkDemonstracao" class="form-label">Link de Demonstracao</label>
+                            <input asp-for="LinkDemonstracao" class="form-control"
+                                   placeholder="https://..." />
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-controller="Aluno" asp-action="Dashboard" class="btn btn-outline-secondary">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> Salvar Alteracoes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

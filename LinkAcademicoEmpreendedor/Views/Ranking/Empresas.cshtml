@@ -1,0 +1,224 @@
+﻿@model List<LinkAcademicoEmpreendedor.ViewModels.RankingEmpresaViewModel>
+@{
+    ViewData["Title"] = "Ranking de Empresas";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-trophy text-warning"></i> Ranking de Empresas</h2>
+            <p class="text-muted mb-0">As empresas mais bem avaliadas da plataforma</p>
+        </div>
+        <a asp-action="Alunos" class="btn btn-outline-primary">
+            <i class="bi bi-mortarboard"></i> Ranking de Alunos
+        </a>
+    </div>
+
+    <!-- Legenda -->
+    <div class="alert alert-info mb-4">
+        <i class="bi bi-info-circle"></i> <strong>Criterios de ordenacao:</strong>
+        1o Maior media de avaliacoes | 2o Maior quantidade de avaliacoes
+    </div>
+
+    <!-- Top 3 -->
+    @if (Model.Count >= 3)
+    {
+        <div class="row mb-4">
+            <!-- 2o Lugar -->
+            <div class="col-md-4 order-md-1 order-2">
+                <div class="card text-center h-100 border-secondary">
+                    <div class="card-body">
+                        <div class="badge bg-secondary fs-5 mb-2">2o</div>
+                        @if (!string.IsNullOrEmpty(Model[1].LogoEmpresa))
+                        {
+                            <img src="@Model[1].LogoEmpresa" class="rounded mb-2" width="80" height="80" style="object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="bg-secondary rounded d-inline-flex align-items-center justify-content-center mb-2" style="width: 80px; height: 80px;">
+                                <i class="bi bi-building text-white fs-2"></i>
+                            </div>
+                        }
+                        <h5>@(Model[1].NomeFantasia ?? Model[1].RazaoSocial)</h5>
+                        <p class="text-muted small mb-2">@Model[1].AreaAtuacao</p>
+                        <div class="text-warning mb-1">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= Math.Round(Model[1].MediaAvaliacoes))
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-star"></i>
+                                }
+                            }
+                        </div>
+                        <span class="badge bg-secondary">@Model[1].MediaAvaliacoes.ToString("0.1") (@Model[1].TotalAvaliacoes avaliacoes)</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 1o Lugar -->
+            <div class="col-md-4 order-md-2 order-1 mb-3 mb-md-0">
+                <div class="card text-center h-100 border-warning bg-warning bg-opacity-10">
+                    <div class="card-body">
+                        <div class="badge bg-warning text-dark fs-4 mb-2"><i class="bi bi-trophy"></i> 1o</div>
+                        @if (!string.IsNullOrEmpty(Model[0].LogoEmpresa))
+                        {
+                            <img src="@Model[0].LogoEmpresa" class="rounded mb-2 border border-warning border-3" width="100" height="100" style="object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="bg-warning rounded d-inline-flex align-items-center justify-content-center mb-2" style="width: 100px; height: 100px;">
+                                <i class="bi bi-building text-dark fs-1"></i>
+                            </div>
+                        }
+                        <h4>@(Model[0].NomeFantasia ?? Model[0].RazaoSocial)</h4>
+                        <p class="text-muted mb-2">@Model[0].AreaAtuacao</p>
+                        <div class="text-warning fs-4 mb-1">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= Math.Round(Model[0].MediaAvaliacoes))
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-star"></i>
+                                }
+                            }
+                        </div>
+                        <span class="badge bg-warning text-dark fs-6">@Model[0].MediaAvaliacoes.ToString("0.1") (@Model[0].TotalAvaliacoes avaliacoes)</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 3o Lugar -->
+            <div class="col-md-4 order-md-3 order-3">
+                <div class="card text-center h-100" style="border-color: #cd7f32;">
+                    <div class="card-body">
+                        <div class="badge fs-5 mb-2" style="background-color: #cd7f32;">3o</div>
+                        @if (!string.IsNullOrEmpty(Model[2].LogoEmpresa))
+                        {
+                            <img src="@Model[2].LogoEmpresa" class="rounded mb-2" width="80" height="80" style="object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="rounded d-inline-flex align-items-center justify-content-center mb-2" style="width: 80px; height: 80px; background-color: #cd7f32;">
+                                <i class="bi bi-building text-white fs-2"></i>
+                            </div>
+                        }
+                        <h5>@(Model[2].NomeFantasia ?? Model[2].RazaoSocial)</h5>
+                        <p class="text-muted small mb-2">@Model[2].AreaAtuacao</p>
+                        <div class="text-warning mb-1">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= Math.Round(Model[2].MediaAvaliacoes))
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-star"></i>
+                                }
+                            }
+                        </div>
+                        <span class="badge" style="background-color: #cd7f32;">@Model[2].MediaAvaliacoes.ToString("0.1") (@Model[2].TotalAvaliacoes avaliacoes)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Tabela Completa -->
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-list-ol"></i> Ranking Completo</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center" style="width: 60px;">#</th>
+                            <th>Empresa</th>
+                            <th class="text-center">Avaliacao</th>
+                            <th class="text-center">Total Avaliacoes</th>
+                            <th class="text-center">Acoes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var empresa in Model)
+                        {
+                            var rowClass = empresa.Posicao == 1 ? "table-warning" :
+                            empresa.Posicao == 2 ? "table-secondary" :
+                            empresa.Posicao == 3 ? "" : "";
+                            <tr class="@rowClass">
+                                <td class="text-center align-middle">
+                                    @if (empresa.Posicao == 1)
+                                    {
+                                        <span class="badge bg-warning text-dark fs-6"><i class="bi bi-trophy"></i></span>
+                                    }
+                                    else if (empresa.Posicao == 2)
+                                    {
+                                        <span class="badge bg-secondary fs-6">2o</span>
+                                    }
+                                    else if (empresa.Posicao == 3)
+                                    {
+                                        <span class="badge fs-6" style="background-color: #cd7f32;">3o</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">@empresa.Posicao</span>
+                                    }
+                                </td>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-center">
+                                        @if (!string.IsNullOrEmpty(empresa.LogoEmpresa))
+                                        {
+                                            <img src="@empresa.LogoEmpresa" class="rounded me-2" width="40" height="40" style="object-fit: cover;">
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-success rounded d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-building text-white"></i>
+                                            </div>
+                                        }
+                                        <div>
+                                            <strong>@(empresa.NomeFantasia ?? empresa.RazaoSocial)</strong>
+                                            <br><small class="text-muted">@empresa.AreaAtuacao - @empresa.Cidade/@empresa.Estado</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <div class="text-warning">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= Math.Round(empresa.MediaAvaliacoes))
+                                            {
+                                                <i class="bi bi-star-fill"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-star"></i>
+                                            }
+                                        }
+                                    </div>
+                                    <small class="text-muted">@empresa.MediaAvaliacoes.ToString("0.1")</small>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <span class="badge bg-info">@empresa.TotalAvaliacoes</span>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <a asp-controller="Empresa" asp-action="Perfil" asp-route-id="@empresa.EmpresaId"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> Ver
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

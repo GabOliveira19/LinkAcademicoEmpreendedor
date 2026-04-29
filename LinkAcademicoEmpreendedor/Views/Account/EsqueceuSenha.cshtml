@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Esqueceu a Senha";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark text-center">
+                    <h4 class="mb-0"><i class="bi bi-key"></i> Recuperar Senha</h4>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.Erro != null)
+                    {
+                        <div class="alert alert-danger">
+                            <i class="bi bi-x-circle"></i> @ViewBag.Erro
+                        </div>
+                    }
+
+                    <p class="text-muted text-center mb-4">
+                        Informe seu email para recuperar a senha.
+                    </p>
+
+                    <form asp-action="EsqueceuSenha" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Usuario</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tipoUsuario" id="tipoAluno" value="Aluno" checked>
+                                    <label class="form-check-label" for="tipoAluno">
+                                        <i class="bi bi-mortarboard"></i> Aluno
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tipoUsuario" id="tipoEmpresa" value="Empresa">
+                                    <label class="form-check-label" for="tipoEmpresa">
+                                        <i class="bi bi-building"></i> Empresa
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required
+                                   placeholder="Digite seu email cadastrado">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-arrow-right"></i> Continuar
+                            </button>
+                            <a asp-action="Login" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar ao Login
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

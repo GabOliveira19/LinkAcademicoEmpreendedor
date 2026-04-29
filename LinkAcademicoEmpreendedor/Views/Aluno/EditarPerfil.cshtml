@@ -1,0 +1,172 @@
+﻿@model LinkAcademicoEmpreendedor.Models.Aluno
+@{
+    ViewData["Title"] = "Editar Perfil";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-pencil"></i> Editar Meu Perfil</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="EditarPerfil" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="Email" />
+                        <input type="hidden" asp-for="Senha" />
+                        <input type="hidden" asp-for="DataCadastro" />
+
+                        <!-- Foto de Perfil -->
+                        <div class="text-center mb-4">
+                            <div class="position-relative d-inline-block">
+                                @if (!string.IsNullOrEmpty(Model.FotoPerfil))
+                                {
+                                    <img src="@Model.FotoPerfil" id="previewFoto" class="rounded-circle"
+                                         style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #0d6efd;" />
+                                }
+                                else
+                                {
+                                    <div id="avatarPlaceholder" class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+                                         style="width: 120px; height: 120px; font-size: 3rem; border: 3px solid #0d6efd;">
+                                        @Model.Nome?.Substring(0, 1).ToUpper()
+                                    </div>
+                                    <img src="" id="previewFoto" class="rounded-circle d-none"
+                                         style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #0d6efd;" />
+                                }
+                            </div>
+                            <div class="mt-3">
+                                <label for="fotoPerfil" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-camera"></i> Alterar Foto
+                                </label>
+                                <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/*"
+                                       class="d-none" onchange="previewImage(this)" />
+
+                                @if (!string.IsNullOrEmpty(Model.FotoPerfil))
+                                {
+                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                            onclick="confirmarRemoverFoto()">
+                                        <i class="bi bi-trash"></i> Remover
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Nome" class="form-label">Nome Completo *</label>
+                            <input asp-for="Nome" class="form-control" />
+                            <span asp-validation-for="Nome" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="Curso" class="form-label">Curso</label>
+                                <input asp-for="Curso" class="form-control" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="AnoIngresso" class="form-label">Ano de Ingresso</label>
+                                <input asp-for="AnoIngresso" type="number" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Instituicao" class="form-label">Instituicao</label>
+                            <input asp-for="Instituicao" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Sobre" class="form-label">Sobre Mim</label>
+                            <textarea asp-for="Sobre" class="form-control" rows="3"
+                                      placeholder="Conte um pouco sobre voce..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Habilidades" class="form-label">Habilidades</label>
+                            <input asp-for="Habilidades" class="form-control"
+                                   placeholder="Ex: C#, JavaScript, SQL (separadas por virgula)" />
+                            <small class="text-muted">Separe as habilidades por virgula</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LinkedIn" class="form-label">
+                                    <i class="bi bi-linkedin"></i> LinkedIn
+                                </label>
+                                <input asp-for="LinkedIn" class="form-control"
+                                       placeholder="https://linkedin.com/in/seu-perfil" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="GitHub" class="form-label">
+                                    <i class="bi bi-github"></i> GitHub
+                                </label>
+                                <input asp-for="GitHub" class="form-control"
+                                       placeholder="https://github.com/seu-usuario" />
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <a asp-controller="Account" asp-action="AlterarSenha" class="btn btn-outline-warning">
+                                <i class="bi bi-lock"></i> Alterar Senha
+                            </a>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Dashboard" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> Salvar Alteracoes
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Secao Excluir Conta -->
+                    <hr class="my-4">
+                    <div class="border border-danger rounded p-3 bg-light">
+                        <h6 class="text-danger mb-2"><i class="bi bi-exclamation-triangle"></i> Zona de Perigo</h6>
+                        <p class="text-muted small mb-2">Ao excluir sua conta, todos os seus dados, projetos e candidaturas serao permanentemente removidos. Esta acao nao pode ser desfeita.</p>
+                        <a asp-controller="Account" asp-action="ExcluirConta" class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash"></i> Excluir Minha Conta
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Form para remover foto -->
+<form id="formRemoverFoto" asp-action="RemoverFoto" method="post" class="d-none">
+    @Html.AntiForgeryToken()
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var preview = document.getElementById('previewFoto');
+                    var placeholder = document.getElementById('avatarPlaceholder');
+
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+
+                    if (placeholder) {
+                        placeholder.classList.add('d-none');
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function confirmarRemoverFoto() {
+            if (confirm('Deseja realmente remover sua foto de perfil?')) {
+                document.getElementById('formRemoverFoto').submit();
+            }
+        }
+    </script>
+}

@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["Title"] = "Avaliar Empresa";
+    var empresa = ViewBag.Empresa as LinkAcademicoEmpreendedor.Models.Empresa;
+    var avaliacaoExistente = ViewBag.AvaliacaoExistente as LinkAcademicoEmpreendedor.Models.Avaliacao;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="bi bi-star"></i>
+                        @(avaliacaoExistente != null ? "Atualizar Avaliacao" : "Avaliar Empresa")
+                    </h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["Erro"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["Erro"]</div>
+                    }
+
+                    @if (avaliacaoExistente != null)
+                    {
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Voce ja avaliou esta empresa. Pode atualizar sua avaliacao abaixo.
+                        </div>
+                    }
+
+                    <!-- Info da Empresa -->
+                    <div class="text-center mb-4">
+                        @if (!string.IsNullOrEmpty(empresa?.LogoEmpresa))
+                        {
+                            <img src="@empresa.LogoEmpresa" class="rounded mb-2" width="100" height="100" style="object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="bg-success rounded d-inline-flex align-items-center justify-content-center mb-2" style="width: 100px; height: 100px;">
+                                <i class="bi bi-building text-white fs-1"></i>
+                            </div>
+                        }
+                        <h5 class="mb-1">@(empresa?.NomeFantasia ?? empresa?.RazaoSocial)</h5>
+                        <p class="text-muted mb-0">@empresa?.AreaAtuacao</p>
+                        <small class="text-muted">@empresa?.Cidade - @empresa?.Estado</small>
+                    </div>
+
+                    <form asp-action="AvaliarEmpresa" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="empresaId" value="@empresa?.Id" />
+
+                        <!-- Estrelas -->
+                        <div class="mb-4 text-center">
+                            <label class="form-label d-block fw-bold">Sua Avaliacao</label>
+                            <div class="rating-stars fs-1" id="ratingStars">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    var isSelected = avaliacaoExistente != null && i <= avaliacaoExistente.Nota;
+                                    <i class="bi @(isSelected ? "bi-star-fill" : "bi-star") star-icon"
+                                       data-value="@i"
+                                       style="cursor: pointer; color: @(isSelected ? "#ffc107" : "#ddd"); transition: color 0.2s;"></i>
+                                }
+                            </div>
+                            <input type="hidden" name="nota" id="notaInput" value="@(avaliacaoExistente?.Nota ?? 0)" required />
+                            <small class="text-muted d-block mt-2">Clique nas estrelas para avaliar</small>
+                        </div>
+
+                        <!-- Comentario -->
+                        <div class="mb-4">
+                            <label for="comentario" class="form-label">Comentario (opcional)</label>
+                            <textarea class="form-control" id="comentario" name="comentario" rows="4"
+                                      placeholder="Deixe um comentario sobre a empresa...">@avaliacaoExistente?.Comentario</textarea>
+                            <small class="text-muted">Maximo 500 caracteres</small>
+                        </div>
+
+                        <!-- Botoes -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg" id="btnEnviar"
+                                    @(avaliacaoExistente == null ? "disabled" : "")>
+                                <i class="bi bi-send"></i>
+                                @(avaliacaoExistente != null ? "Atualizar Avaliacao" : "Enviar Avaliacao")
+                            </button>
+                            <a asp-controller="Aluno" asp-action="Dashboard" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var stars = document.querySelectorAll('.star-icon');
+            var notaInput = document.getElementById('notaInput');
+            var btnEnviar = document.getElementById('btnEnviar');
+
+            stars.forEach(function(star) {
+                star.addEventListener('click', function() {
+                    var value = parseInt(this.getAttribute('data-value'));
+                    notaInput.value = value;
+                    btnEnviar.disabled = false;
+
+                    stars.forEach(function(s, index) {
+                        if (index < value) {
+                            s.classList.remove('bi-star');
+                            s.classList.add('bi-star-fill');
+                            s.style.color = '#ffc107';
+                        } else {
+                            s.classList.remove('bi-star-fill');
+                            s.classList.add('bi-star');
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+
+                star.addEventListener('mouseover', function() {
+                    var value = parseInt(this.getAttribute('data-value'));
+                    stars.forEach(function(s, index) {
+                        if (index < value) {
+                            s.style.color = '#ffc107';
+                        }
+                    });
+                });
+
+                star.addEventListener('mouseout', function() {
+                    var currentValue = parseInt(notaInput.value);
+                    stars.forEach(function(s, index) {
+                        if (index < currentValue) {
+                            s.style.color = '#ffc107';
+                        } else {
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

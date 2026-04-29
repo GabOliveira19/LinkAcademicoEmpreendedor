@@ -1,0 +1,70 @@
+﻿@model LinkAcademicoEmpreendedor.Models.Projeto
+@{
+    ViewData["Title"] = "Novo Projeto";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-folder-plus"></i> Criar Novo Projeto</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Criar" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Titulo" class="form-label">Título do Projeto *</label>
+                            <input asp-for="Titulo" class="form-control" />
+                            <span asp-validation-for="Titulo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Descricao" class="form-label">Descrição *</label>
+                            <textarea asp-for="Descricao" class="form-control" rows="5" placeholder="Descreva seu projeto em detalhes..."></textarea>
+                            <span asp-validation-for="Descricao" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Tipo" class="form-label">Tipo de Projeto</label>
+                                <select asp-for="Tipo" class="form-select">
+                                    <option value="">Selecione...</option>
+                                    <option value="TCC">TCC</option>
+                                    <option value="Pesquisa">Pesquisa</option>
+                                    <option value="Extensão">Extensão</option>
+                                    <option value="Estágio">Estágio</option>
+                                    <option value="Projeto Pessoal">Projeto Pessoal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Tecnologias" class="form-label">Tecnologias</label>
+                                <input asp-for="Tecnologias" class="form-control" placeholder="C#, JavaScript, SQL (separadas por vírgula)" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LinkRepositorio" class="form-label">Link do Repositório</label>
+                            <input asp-for="LinkRepositorio" class="form-control" placeholder="https://github.com/seu-usuario/projeto" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LinkDemonstracao" class="form-label">Link de Demonstração</label>
+                            <input asp-for="LinkDemonstracao" class="form-control" placeholder="https://seu-projeto.com" />
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-controller="Aluno" asp-action="Dashboard" class="btn btn-outline-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> Criar Projeto
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

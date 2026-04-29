@@ -1,0 +1,87 @@
+﻿@model IEnumerable<LinkAcademicoEmpreendedor.Models.Projeto>
+@{
+    ViewData["Title"] = "Projetos";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4"><i class="bi bi-folder-fill text-primary"></i> Explorar Projetos</h2>
+
+    <!-- Filtros -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="busca" class="form-control" placeholder="Buscar projetos..." value="@ViewBag.Busca" />
+                </div>
+                <div class="col-md-3">
+                    <select name="tipo" class="form-select">
+                        <option value="">Todos os tipos</option>
+                        <option value="TCC" selected="@(ViewBag.Tipo == "TCC")">TCC</option>
+                        <option value="Pesquisa" selected="@(ViewBag.Tipo == "Pesquisa")">Pesquisa</option>
+                        <option value="Extensão" selected="@(ViewBag.Tipo == "Extensão")">Extensão</option>
+                        <option value="Estágio" selected="@(ViewBag.Tipo == "Estágio")">Estágio</option>
+                        <option value="Projeto Pessoal" selected="@(ViewBag.Tipo == "Projeto Pessoal")">Projeto Pessoal</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="tecnologia" class="form-control" placeholder="Tecnologia..." value="@ViewBag.Tecnologia" />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de Projetos -->
+    <div class="row">
+        @foreach (var projeto in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="badge bg-secondary">@projeto.Tipo</span>
+                            <small class="text-muted">@projeto.DataCriacao.ToString("dd/MM/yyyy")</small>
+                        </div>
+                        <h5 class="card-title">@projeto.Titulo</h5>
+                        <p class="card-text text-muted small">
+                            @(projeto.Descricao.Length > 120 ? projeto.Descricao.Substring(0, 120) + "..." : projeto.Descricao)
+                        </p>
+                        @if (!string.IsNullOrEmpty(projeto.Tecnologias))
+                        {
+                            <div class="mb-2">
+                                @foreach (var tech in projeto.Tecnologias.Split(',').Take(3))
+                                {
+                                    <span class="badge bg-light text-dark me-1">@tech.Trim()</span>
+                                }
+                            </div>
+                        }
+                        <p class="mb-0">
+                            <small><i class="bi bi-person"></i> @projeto.Aluno?.Nome</small>
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="me-2"><i class="bi bi-heart-fill text-danger"></i> @projeto.TotalCurtidas</span>
+                                <span><i class="bi bi-chat-fill text-primary"></i> @projeto.TotalComentarios</span>
+                            </div>
+                            <a asp-action="Detalhes" asp-route-id="@projeto.Id" class="btn btn-sm btn-outline-primary">Ver mais</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-folder-x display-1 text-muted"></i>
+            <p class="lead text-muted mt-3">Nenhum projeto encontrado</p>
+        </div>
+    }
+</div>

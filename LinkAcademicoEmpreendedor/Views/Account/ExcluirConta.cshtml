@@ -1,0 +1,79 @@
+﻿@model LinkAcademicoEmpreendedor.ViewModels.ExcluirContaViewModel
+@{
+    ViewData["Title"] = "Excluir Conta";
+    var tipoUsuario = Context.Session.GetString("TipoUsuario");
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white text-center">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Excluir Conta</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h5><i class="bi bi-exclamation-circle"></i> Atencao!</h5>
+                        <p class="mb-0">Esta acao e <strong>irreversivel</strong>. Ao excluir sua conta:</p>
+                        <ul class="mb-0 mt-2">
+                            @if (tipoUsuario == "Aluno")
+                            {
+                                <li>Todos os seus <strong>projetos</strong> serao excluidos</li>
+                                <li>Todas as suas <strong>candidaturas</strong> serao removidas</li>
+                                <li>Seus <strong>comentarios e curtidas</strong> serao apagados</li>
+                            }
+                            else
+                            {
+                                <li>Todas as suas <strong>oportunidades</strong> serao excluidas</li>
+                                <li>Todas as <strong>candidaturas recebidas</strong> serao removidas</li>
+                            }
+                            <li>Suas <strong>notificacoes</strong> serao apagadas</li>
+                            <li>Seus <strong>dados pessoais</strong> serao permanentemente removidos</li>
+                        </ul>
+                    </div>
+
+                    <form asp-action="ExcluirConta" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label asp-for="Senha" class="form-label">Confirme sua senha</label>
+                            <input asp-for="Senha" type="password" class="form-control" placeholder="Digite sua senha atual" />
+                            <span asp-validation-for="Senha" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ConfirmacaoTexto" class="form-label">
+                                Digite <strong class="text-danger">EXCLUIR</strong> para confirmar
+                            </label>
+                            <input asp-for="ConfirmacaoTexto" type="text" class="form-control" placeholder="Digite EXCLUIR" />
+                            <span asp-validation-for="ConfirmacaoTexto" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir sua conta? Esta acao NAO pode ser desfeita!')">
+                                <i class="bi bi-trash"></i> Excluir Minha Conta Permanentemente
+                            </button>
+
+                            @if (tipoUsuario == "Aluno")
+                            {
+                                <a asp-controller="Aluno" asp-action="Dashboard" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left"></i> Cancelar
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Empresa" asp-action="Dashboard" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left"></i> Cancelar
+                                </a>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

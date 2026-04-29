@@ -1,0 +1,254 @@
+﻿@model LinkAcademicoEmpreendedor.ViewModels.EditarPerfilEmpresaViewModel
+@{
+    ViewData["Title"] = "Editar Perfil";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-pencil-square"></i> Editar Perfil da Empresa</h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["Sucesso"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <i class="bi bi-check-circle"></i> @TempData["Sucesso"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <form asp-action="EditarPerfil" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Logo da Empresa -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <i class="bi bi-image"></i> Logo da Empresa
+                            </div>
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 text-center">
+                                        @if (!string.IsNullOrEmpty(Model.LogoEmpresa))
+                                        {
+                                            <img src="@Model.LogoEmpresa" alt="Logo" class="img-fluid rounded mb-2" style="max-height: 150px;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-secondary text-white rounded d-flex align-items-center justify-content-center" style="width: 150px; height: 150px; margin: 0 auto;">
+                                                <i class="bi bi-building" style="font-size: 4rem;"></i>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Alterar Logo</label>
+                                        <input type="file" name="logoEmpresaFile" class="form-control" accept="image/*" />
+                                        <small class="text-muted">Formatos aceitos: JPG, PNG, GIF. Tamanho maximo: 5MB</small>
+                                    </div>
+                                    <div class="col-md-3">
+                                        @if (!string.IsNullOrEmpty(Model.LogoEmpresa))
+                                        {
+                                            <form asp-action="RemoverLogo" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Deseja remover o logo?')">
+                                                    <i class="bi bi-trash"></i> Remover Logo
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dados da Empresa (Somente Leitura) -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <i class="bi bi-lock"></i> Dados da Receita Federal (Somente Leitura)
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="Cnpj" class="form-label">CNPJ</label>
+                                        <input asp-for="Cnpj" class="form-control" readonly />
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="SituacaoCadastral" class="form-label">Situacao Cadastral</label>
+                                        <input asp-for="SituacaoCadastral" class="form-control" readonly />
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="DataAbertura" class="form-label">Data de Abertura</label>
+                                        <input type="text" class="form-control" value="@(Model.DataAbertura?.ToString("dd/MM/yyyy") ?? "")" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dados Editaveis -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <i class="bi bi-building"></i> Dados da Empresa
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="RazaoSocial" class="form-label">Razao Social *</label>
+                                        <input asp-for="RazaoSocial" class="form-control" />
+                                        <span asp-validation-for="RazaoSocial" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="NomeFantasia" class="form-label">Nome Fantasia</label>
+                                        <input asp-for="NomeFantasia" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="NaturezaJuridica" class="form-label">Natureza Juridica</label>
+                                        <input asp-for="NaturezaJuridica" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="AreaAtuacao" class="form-label">Area de Atuacao</label>
+                                        <input asp-for="AreaAtuacao" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Descricao" class="form-label">Descricao da Empresa</label>
+                                    <textarea asp-for="Descricao" class="form-control" rows="4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Endereco -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <i class="bi bi-geo-alt"></i> Endereco
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Endereco" class="form-label">Logradouro</label>
+                                        <input asp-for="Endereco" class="form-control" />
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label asp-for="Numero" class="form-label">Numero</label>
+                                        <input asp-for="Numero" class="form-control" />
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="Bairro" class="form-label">Bairro</label>
+                                        <input asp-for="Bairro" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5 mb-3">
+                                        <label asp-for="Cidade" class="form-label">Cidade</label>
+                                        <input asp-for="Cidade" class="form-control" />
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label asp-for="Estado" class="form-label">Estado</label>
+                                        <select asp-for="Estado" class="form-select">
+                                            <option value="">Selecione</option>
+                                            <option value="AC">AC</option>
+                                            <option value="AL">AL</option>
+                                            <option value="AP">AP</option>
+                                            <option value="AM">AM</option>
+                                            <option value="BA">BA</option>
+                                            <option value="CE">CE</option>
+                                            <option value="DF">DF</option>
+                                            <option value="ES">ES</option>
+                                            <option value="GO">GO</option>
+                                            <option value="MA">MA</option>
+                                            <option value="MT">MT</option>
+                                            <option value="MS">MS</option>
+                                            <option value="MG">MG</option>
+                                            <option value="PA">PA</option>
+                                            <option value="PB">PB</option>
+                                            <option value="PR">PR</option>
+                                            <option value="PE">PE</option>
+                                            <option value="PI">PI</option>
+                                            <option value="RJ">RJ</option>
+                                            <option value="RN">RN</option>
+                                            <option value="RS">RS</option>
+                                            <option value="RO">RO</option>
+                                            <option value="RR">RR</option>
+                                            <option value="SC">SC</option>
+                                            <option value="SP">SP</option>
+                                            <option value="SE">SE</option>
+                                            <option value="TO">TO</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="Cep" class="form-label">CEP</label>
+                                        <input asp-for="Cep" class="form-control" id="inputCep" placeholder="00000-000" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contato -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <i class="bi bi-telephone"></i> Contato
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="Email" class="form-label">E-mail *</label>
+                                        <input asp-for="Email" class="form-control" readonly />
+                                        <small class="text-muted">O e-mail nao pode ser alterado.</small>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="Telefone" class="form-label">Telefone</label>
+                                        <input asp-for="Telefone" class="form-control" id="inputTelefone" placeholder="(00) 00000-0000" />
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label asp-for="NomeResponsavel" class="form-label">Nome do Responsavel</label>
+                                        <input asp-for="NomeResponsavel" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botoes -->
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Dashboard" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-lg"></i> Salvar Alteracoes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Mascara de Telefone
+        document.getElementById('inputTelefone')?.addEventListener('input', function (e) {
+            let valor = e.target.value.replace(/\D/g, '');
+            if (valor.length > 11) valor = valor.substring(0, 11);
+            if (valor.length > 10) {
+                valor = valor.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+            } else if (valor.length > 6) {
+                valor = valor.replace(/^(\d{2})(\d{4})(\d*).*/, '($1) $2-$3');
+            } else if (valor.length > 2) {
+                valor = valor.replace(/^(\d{2})(\d*).*/, '($1) $2');
+            }
+            e.target.value = valor;
+        });
+
+        // Mascara de CEP
+        document.getElementById('inputCep')?.addEventListener('input', function (e) {
+            let valor = e.target.value.replace(/\D/g, '');
+            if (valor.length > 8) valor = valor.substring(0, 8);
+            if (valor.length > 5) {
+                valor = valor.replace(/^(\d{5})(\d*)/, '$1-$2');
+            }
+            e.target.value = valor;
+        });
+    </script>
+}

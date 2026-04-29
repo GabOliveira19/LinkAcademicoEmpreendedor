@@ -1,0 +1,84 @@
+﻿@model LinkAcademicoEmpreendedor.Models.Empresa
+@{
+    ViewData["Title"] = Model.RazaoSocial;
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-body text-center">
+                    <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 120px; height: 120px; font-size: 3rem;">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <h3>@Model.RazaoSocial</h3>
+                    <p class="text-muted">@Model.AreaAtuacao</p>
+                    <p class="text-muted small"><i class="bi bi-hash"></i> CNPJ: @Model.Cnpj</p>
+
+                    @if (!string.IsNullOrEmpty(Model.Descricao))
+                    {
+                        <hr>
+                        <p>@Model.Descricao</p>
+                    }
+
+                    <hr>
+
+
+                    @if (!string.IsNullOrEmpty(Model.Telefone))
+                    {
+                        <p class="mt-3"><i class="bi bi-telephone"></i> @Model.Telefone</p>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.Endereco))
+                    {
+                        <p><i class="bi bi-geo-alt"></i> @Model.Endereco</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-briefcase"></i> Oportunidades Abertas</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Oportunidades != null && Model.Oportunidades.Any())
+                    {
+                        @foreach (var op in Model.Oportunidades)
+                        {
+                            <div class="border rounded p-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="mb-1">@op.Titulo</h5>
+                                        <span class="badge bg-success me-1">@op.Tipo</span>
+                                        <span class="badge bg-info">@op.Modalidade</span>
+                                    </div>
+                                    @if (op.Salario.HasValue)
+                                    {
+                                        <span class="text-success fw-bold">R$ @op.Salario.Value.ToString("N2")</span>
+                                    }
+                                </div>
+                                <p class="text-muted mt-2 mb-2">
+                                    @(op.Descricao.Length > 150 ? op.Descricao.Substring(0, 150) + "..." : op.Descricao)
+                                </p>
+                                <a asp-controller="Oportunidade" asp-action="Detalhes" asp-route-id="@op.Id"
+                                   class="btn btn-outline-success btn-sm">
+                                    Ver Detalhes
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="bi bi-briefcase display-4 text-muted"></i>
+                            <p class="text-muted mt-2">Nenhuma oportunidade aberta no momento</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

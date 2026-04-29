@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = "Início";
+}
+
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold">Conectando Talentos ao Mercado</h1>
+                <p class="lead">Plataforma que une estudantes e empresas, valorizando experiências acadêmicas e criando oportunidades profissionais.</p>
+                <div class="mt-4">
+                    <a href="/Account/CadastroAluno" class="btn btn-light btn-lg me-2">
+                        <i class="bi bi-mortarboard"></i> Sou Aluno
+                    </a>
+                    <a href="/Account/CadastroEmpresa" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-building"></i> Sou Empresa
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="bi bi-people-fill display-1"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Estatísticas -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-mortarboard-fill text-primary display-4"></i>
+                        <h2 class="mt-3">@ViewBag.TotalAlunos</h2>
+                        <p class="text-muted">Alunos Cadastrados</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-building text-primary display-4"></i>
+                        <h2 class="mt-3">@ViewBag.TotalEmpresas</h2>
+                        <p class="text-muted">Empresas Parceiras</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-folder-fill text-primary display-4"></i>
+                        <h2 class="mt-3">@ViewBag.TotalProjetos</h2>
+                        <p class="text-muted">Projetos Publicados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Projetos em Destaque -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Projetos em Destaque</h2>
+        <div class="row">
+            @if (ViewBag.ProjetosDestaque != null)
+            {
+                foreach (var projeto in ViewBag.ProjetosDestaque)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <span class="badge bg-secondary mb-2">@projeto.Tipo</span>
+                                <h5 class="card-title">@projeto.Titulo</h5>
+                                <p class="card-text text-muted small">
+                                    @(projeto.Descricao.Length > 100 ? projeto.Descricao.Substring(0, 100) + "..." : projeto.Descricao)
+                                </p>
+                                <p class="mb-1"><small><i class="bi bi-person"></i> @projeto.Aluno?.Nome</small></p>
+                            </div>
+                            <div class="card-footer bg-white border-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="me-3"><i class="bi bi-heart-fill text-danger"></i> @projeto.TotalCurtidas</span>
+                                        <span><i class="bi bi-chat-fill text-primary"></i> @projeto.TotalComentarios</span>
+                                    </div>
+                                    <a href="/Projeto/Detalhes/@projeto.Id" class="btn btn-sm btn-outline-primary">Ver mais</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="text-center mt-3">
+            <a href="/Projeto" class="btn btn-primary">Ver Todos os Projetos</a>
+        </div>
+    </div>
+</section>
+
+<!-- Oportunidades Recentes -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Oportunidades Recentes</h2>
+        <div class="row">
+            @if (ViewBag.OportunidadesRecentes != null)
+            {
+                foreach (var oportunidade in ViewBag.OportunidadesRecentes)
+                {
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <span class="badge bg-success">@oportunidade.Tipo</span>
+                                    <span class="badge bg-info">@oportunidade.Modalidade</span>
+                                </div>
+                                <h5 class="card-title mt-2">@oportunidade.Titulo</h5>
+                                <p class="text-muted mb-1"><i class="bi bi-building"></i> @oportunidade.Empresa?.RazaoSocial</p>
+                                <p class="text-muted mb-1"><i class="bi bi-geo-alt"></i> @oportunidade.Local</p>
+                            </div>
+                            <div class="card-footer bg-white border-0">
+                                <a href="/Oportunidade/Detalhes/@oportunidade.Id" class="btn btn-outline-success btn-sm">Ver Detalhes</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="text-center mt-3">
+            <a href="/Oportunidade" class="btn btn-success">Ver Todas as Oportunidades</a>
+        </div>
+    </div>
+</section>
