@@ -134,3 +134,28 @@ footer {
     border-radius: 8px;
     border: none;
 }
+
+.botao-ia {
+    position: fixed;
+    right: 20px;
+    bottom: 90px;
+    width: 65px;
+    height: 65px;
+    background-color: #198754;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 9999;
+    transition: 0.3s;
+}
+
+    .botao-ia:hover {
+        transform: scale(1.1);
+        background-color: #157347;
+        color: white;
+    }

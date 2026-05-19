@@ -16,7 +16,6 @@ namespace LinkAcademicoEmpreendedor.Services
         // Ranking de Alunos
         public async Task<List<RankingAlunoViewModel>> ObterRankingAlunosAsync(int top = 50)
         {
-            // Buscar todos os alunos
             var alunos = await _context.Alunos
                 .Select(a => new
                 {
@@ -28,28 +27,38 @@ namespace LinkAcademicoEmpreendedor.Services
                 })
                 .ToListAsync();
 
-            // Contar projetos por aluno
             var projetosPorAluno = await _context.Projetos
-     .Where(p => p.AlunoId != null)
-     .GroupBy(p => p.AlunoId)
-     .Select(g => new { AlunoId = g.Key, Total = g.Count() })
-     .ToDictionaryAsync(x => x.AlunoId!, x => x.Total);
+                .Where(p => p.AlunoId != null)
+                .GroupBy(p => p.AlunoId)
+                .Select(g => new
+                {
+                    AlunoId = g.Key,
+                    Total = g.Count()
+                })
+                .ToDictionaryAsync(x => x.AlunoId, x => x.Total);
 
-            // Contar comentarios por aluno
-            var comentariosPorAluno = await _context.Comentarios
-     .Where(c => c.AlunoId != null)
-     .GroupBy(c => c.AlunoId)
-     .Select(g => new { AlunoId = g.Key, Total = g.Count() })
-     .ToDictionaryAsync(x => x.AlunoId!, x => x.Total);
+            var comentariosRecebidosPorAluno = await _context.Comentarios
+                .Include(c => c.Projeto)
+                .Where(c => c.Projeto != null && c.Projeto.AlunoId != null)
+                .GroupBy(c => c.Projeto!.AlunoId)
+                .Select(g => new
+                {
+                    AlunoId = g.Key,
+                    Total = g.Count()
+                })
+                .ToDictionaryAsync(x => x.AlunoId, x => x.Total);
 
-            // Contar curtidas por aluno
-            var curtidasPorAluno = await _context.Curtidas
-     .Where(c => c.AlunoId != null)
-     .GroupBy(c => c.AlunoId)
-     .Select(g => new { AlunoId = g.Key, Total = g.Count() })
-     .ToDictionaryAsync(x => x.AlunoId!, x => x.Total);
+            var curtidasRecebidasPorAluno = await _context.Curtidas
+                .Include(c => c.Projeto)
+                .Where(c => c.Projeto != null && c.Projeto.AlunoId != null)
+                .GroupBy(c => c.Projeto!.AlunoId)
+                .Select(g => new
+                {
+                    AlunoId = g.Key,
+                    Total = g.Count()
+                })
+                .ToDictionaryAsync(x => x.AlunoId, x => x.Total);
 
-            // Montar ranking
             var ranking = alunos.Select(a => new RankingAlunoViewModel
             {
                 AlunoId = a.Id,
@@ -57,12 +66,11 @@ namespace LinkAcademicoEmpreendedor.Services
                 FotoPerfil = a.FotoPerfil,
                 Curso = a.Curso,
                 Instituicao = a.Instituicao,
-                TotalProjetos = projetosPorAluno.ContainsKey(a.Id) ? projetosPorAluno[a.Id] : 0,
-                TotalComentarios = comentariosPorAluno.ContainsKey(a.Id) ? comentariosPorAluno[a.Id] : 0,
-                TotalCurtidas = curtidasPorAluno.ContainsKey(a.Id) ? curtidasPorAluno[a.Id] : 0
+                TotalProjetos = projetosPorAluno.GetValueOrDefault(a.Id, 0),
+                TotalComentarios = comentariosRecebidosPorAluno.GetValueOrDefault(a.Id, 0),
+                TotalCurtidas = curtidasRecebidasPorAluno.GetValueOrDefault(a.Id, 0)
             }).ToList();
 
-            // Calcular pontuacao e ordenar
             foreach (var item in ranking)
             {
                 item.CalcularPontuacao();
@@ -73,7 +81,6 @@ namespace LinkAcademicoEmpreendedor.Services
                 .Take(top)
                 .ToList();
 
-            // Atribuir posicoes
             for (int i = 0; i < ranking.Count; i++)
             {
                 ranking[i].Posicao = i + 1;

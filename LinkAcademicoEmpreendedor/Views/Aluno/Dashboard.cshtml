@@ -9,15 +9,26 @@
         <div class="card-body">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-                         style="width: 80px; height: 80px; font-size: 2rem;">
-                        @Model.Aluno?.Nome?.Substring(0, 1).ToUpper()
-                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Aluno.FotoPerfil))
+                    {
+                        <img src="@Model.Aluno.FotoPerfil"
+                             class="rounded-circle shadow"
+                             style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #0d6efd;" />
+                    }
+                    else
+                    {
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow"
+                             style="width: 80px; height: 80px; font-size: 2rem;">
+                            @Model.Aluno?.Nome?.Substring(0, 1).ToUpper()
+                        </div>
+                    }
                 </div>
+
                 <div class="col">
                     <h4 class="mb-1">@Model.Aluno?.Nome</h4>
                     <p class="text-muted mb-0">@Model.Aluno?.Curso - @Model.Aluno?.Instituicao</p>
                 </div>
+
                 <div class="col-auto">
                     <a asp-action="EditarPerfil" class="btn btn-outline-primary">
                         <i class="bi bi-pencil"></i> Editar Perfil
@@ -26,6 +37,44 @@
             </div>
         </div>
     </div>
+
+    @if (!string.IsNullOrEmpty(Model.Aluno.Curriculo))
+    {
+        <div class="card border-danger shadow-sm mb-4">
+            <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h6 class="mb-1 text-danger">
+                        <i class="bi bi-file-earmark-pdf-fill"></i> Currículo Profissional
+                    </h6>
+                    <small class="text-muted">
+                        Seu currículo está disponível para visualização e download.
+                    </small>
+                </div>
+
+                <div class="d-flex gap-2 mt-2 mt-md-0">
+                    <a href="@Model.Aluno.Curriculo"
+                       target="_blank"
+                       class="btn btn-danger btn-lg">
+                        <i class="bi bi-file-earmark-pdf"></i> Ver Currículo
+                    </a>
+
+                    <form asp-action="RemoverCurriculo" method="post"
+                          onsubmit="return confirm('Deseja realmente excluir seu currículo?')">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">
+                            Excluir Currículo
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-secondary mb-4">
+            <i class="bi bi-info-circle"></i> Nenhum currículo enviado
+        </div>
+    }
 
     <!-- Estatisticas -->
     <div class="row mb-4">
@@ -135,6 +184,7 @@
             </a>
         </div>
     </div>
+
     <!-- ========================================== -->
     <!-- SECAO DE RANKING E AVALIACOES - ADICIONAR -->
     <!-- ========================================== -->
@@ -176,6 +226,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Card para Avaliar Empresas -->
         <div class="col-md-6 mb-4">
             <div class="card shadow h-100">

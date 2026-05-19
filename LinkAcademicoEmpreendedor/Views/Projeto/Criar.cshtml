@@ -17,7 +17,7 @@
 
                 <div class="card-body">
 
-                    <form asp-action="Criar" method="post">
+                    <form asp-action="Criar" method="post" enctype="multipart/form-data">
 
                         <!-- TÍTULO -->
                         <div class="mb-3">
@@ -31,7 +31,7 @@
                             <input type="file" name="pdfFile" class="form-control" accept=".pdf" />
                         </div>
 
-                        <!-- DESCRIÇÃO -->
+                        <!-- Descricao -->
                         <div class="mb-3">
                             <label asp-for="Descricao" class="form-label fw-bold"></label>
                             <div id="editor" style="height:200px;"></div>
@@ -135,15 +135,7 @@
         };
     </script>
 }
-<script>
-    var quill = new Quill('#editor', {
-        theme: 'snow'
-    });
 
-    document.querySelector('form').onsubmit = function () {
-        document.querySelector('#Descricao').value = quill.root.innerHTML;
-    };
-</script>
 
 <script>
     let index = 1;

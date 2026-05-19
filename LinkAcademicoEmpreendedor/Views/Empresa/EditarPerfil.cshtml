@@ -42,20 +42,23 @@
                                             </div>
                                         }
                                     </div>
+
                                     <div class="col-md-6">
                                         <label class="form-label">Alterar Logo</label>
                                         <input type="file" name="logoEmpresaFile" class="form-control" accept="image/*" />
                                         <small class="text-muted">Formatos aceitos: JPG, PNG, GIF. Tamanho maximo: 5MB</small>
                                     </div>
+
                                     <div class="col-md-3">
                                         @if (!string.IsNullOrEmpty(Model.LogoEmpresa))
                                         {
-                                            <form asp-action="RemoverLogo" method="post" class="d-inline">
-                                                @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Deseja remover o logo?')">
-                                                    <i class="bi bi-trash"></i> Remover Logo
-                                                </button>
-                                            </form>
+                                            <button type="submit"
+                                                    formaction="@Url.Action("RemoverLogo", "Empresa")"
+                                                    formmethod="post"
+                                                    class="btn btn-outline-danger btn-sm"
+                                                    onclick="return confirm('Deseja remover o logo?')">
+                                                <i class="bi bi-trash"></i> Remover Logo
+                                            </button>
                                         }
                                     </div>
                                 </div>
@@ -195,11 +198,10 @@
                                     <div class="col-md-4 mb-3">
                                         <label asp-for="Email" class="form-label">E-mail *</label>
                                         <input asp-for="Email" class="form-control" readonly />
-                                        <small class="text-muted">O e-mail nao pode ser alterado.</small>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label asp-for="Telefone" class="form-label">Telefone</label>
-                                        <input asp-for="Telefone" class="form-control" id="inputTelefone" placeholder="(00) 00000-0000" />
+                                        <input asp-for="Telefone" class="form-control" id="inputTelefone" />
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label asp-for="NomeResponsavel" class="form-label">Nome do Responsavel</label>
@@ -224,31 +226,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        // Mascara de Telefone
-        document.getElementById('inputTelefone')?.addEventListener('input', function (e) {
-            let valor = e.target.value.replace(/\D/g, '');
-            if (valor.length > 11) valor = valor.substring(0, 11);
-            if (valor.length > 10) {
-                valor = valor.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
-            } else if (valor.length > 6) {
-                valor = valor.replace(/^(\d{2})(\d{4})(\d*).*/, '($1) $2-$3');
-            } else if (valor.length > 2) {
-                valor = valor.replace(/^(\d{2})(\d*).*/, '($1) $2');
-            }
-            e.target.value = valor;
-        });
-
-        // Mascara de CEP
-        document.getElementById('inputCep')?.addEventListener('input', function (e) {
-            let valor = e.target.value.replace(/\D/g, '');
-            if (valor.length > 8) valor = valor.substring(0, 8);
-            if (valor.length > 5) {
-                valor = valor.replace(/^(\d{5})(\d*)/, '$1-$2');
-            }
-            e.target.value = valor;
-        });
-    </script>
-}

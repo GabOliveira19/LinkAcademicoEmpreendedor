@@ -55,7 +55,32 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
             return View(viewModel);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoverCurriculo()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Login", "Account");
 
+            var aluno = await _context.Alunos.FindAsync(userId);
+            if (aluno == null)
+                return NotFound();
+
+            if (!string.IsNullOrEmpty(aluno.Curriculo))
+            {
+                var caminho = Path.Combine(_webHostEnvironment.WebRootPath, aluno.Curriculo.TrimStart('/'));
+
+                if (System.IO.File.Exists(caminho))
+                    System.IO.File.Delete(caminho);
+
+                aluno.Curriculo = null;
+                await _context.SaveChangesAsync();
+            }
+
+            TempData["Sucesso"] = "Currículo removido com sucesso!";
+            return RedirectToAction("Dashboard");
+        }
         // Perfil do Aluno (publico)
         public async Task<IActionResult> Perfil(int id)
         {
@@ -89,7 +114,10 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditarPerfil(Aluno model, IFormFile? fotoPerfil)
+        public async Task<IActionResult> EditarPerfil(
+             Aluno model,
+             IFormFile? fotoPerfil,
+             IFormFile? curriculo)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null || userId != model.Id)
@@ -124,6 +152,43 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
                 aluno.FotoPerfil = $"/uploads/alunos/{fileName}";
                 HttpContext.Session.SetString("UserFoto", aluno.FotoPerfil);
+            }
+
+            
+            // Upload do currículo PDF
+            if (curriculo != null && curriculo.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(
+                    _webHostEnvironment.WebRootPath,
+                    "uploads",
+                    "curriculos"
+                );
+
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                // Remove currículo antigo
+                if (!string.IsNullOrEmpty(aluno.Curriculo))
+                {
+                    var oldPath = Path.Combine(
+                        _webHostEnvironment.WebRootPath,
+                        aluno.Curriculo.TrimStart('/')
+                    );
+
+                    if (System.IO.File.Exists(oldPath))
+                        System.IO.File.Delete(oldPath);
+                }
+
+                var fileName = $"{userId}_CURRICULO_{DateTime.Now.Ticks}{Path.GetExtension(curriculo.FileName)}";
+
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await curriculo.CopyToAsync(stream);
+                }
+
+                aluno.Curriculo = $"/uploads/curriculos/{fileName}";
             }
 
             // atualizar campos editáveis

@@ -221,17 +221,22 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
             if (!string.IsNullOrEmpty(habilidade))
             {
-                query = query.Where(a => a.Habilidades != null && a.Habilidades.Contains(habilidade));
+                query = query.Where(a =>
+                    a.Habilidades != null &&
+                    a.Habilidades.Contains(habilidade));
             }
 
             if (!string.IsNullOrEmpty(curso))
             {
-                query = query.Where(a => a.Curso != null && a.Curso.Contains(curso));
+                query = query.Where(a =>
+                    a.Curso != null &&
+                    a.Curso.Contains(curso));
             }
 
-            var alunos = await query
+            var alunos = query
+                .AsEnumerable() // força ordenação em memória
                 .OrderByDescending(a => a.Projetos.Sum(p => p.Curtidas.Count))
-                .ToListAsync();
+                .ToList();
 
             ViewBag.Busca = busca;
             ViewBag.Habilidade = habilidade;

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace LinkAcademicoEmpreendedor.Models
 {
@@ -11,12 +12,12 @@ namespace LinkAcademicoEmpreendedor.Models
         [StringLength(150)]
         public string Titulo { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "A descrição é obrigatória")]
+        [Required(ErrorMessage = "A Descricao é obrigatória")]
         [StringLength(2000)]
         public string Descricao { get; set; } = string.Empty;
 
         [StringLength(100)]
-        public string? Tipo { get; set; } // Pesquisa, Extensão, TCC, Estágio, Projeto Pessoal
+        public string? Tipo { get; set; }
 
         [StringLength(200)]
         public string? Tecnologias { get; set; }
@@ -33,14 +34,13 @@ namespace LinkAcademicoEmpreendedor.Models
 
         public bool Ativo { get; set; } = true;
 
-
-        // Chave estrangeira
+        // CHAVE ESTRANGEIRA
         public int AlunoId { get; set; }
 
         [ForeignKey("AlunoId")]
         public virtual Aluno? Aluno { get; set; }
 
-        // Navegação
+        // NAVEGAÇÃO
         public virtual ICollection<Curtida> Curtidas { get; set; } = new List<Curtida>();
         public virtual ICollection<Comentario> Comentarios { get; set; } = new List<Comentario>();
         public virtual ICollection<ProjetoLink> Links { get; set; } = new List<ProjetoLink>();
@@ -52,11 +52,36 @@ namespace LinkAcademicoEmpreendedor.Models
         public int TotalComentarios => Comentarios?.Count ?? 0;
 
         [StringLength(100)]
-        public string? Area { get; set; } // Nova propriedade para a área do projeto
+        public string? Area { get; set; }
 
-        // Adicione esta propriedade para armazenar os campos dinâmicos
+        // ============================
+        // JSON DOS CAMPOS DINÂMICOS
+        // ============================
+        public string? DadosDinamicosJson { get; set; }
+
         [NotMapped]
-        public Dictionary<string, string>? DadosDinamicos { get; set; }
+        public Dictionary<string, string> DadosDinamicos
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(DadosDinamicosJson))
+                    return new Dictionary<string, string>();
+
+                try
+                {
+                    return JsonSerializer.Deserialize<Dictionary<string, string>>(DadosDinamicosJson)
+                           ?? new Dictionary<string, string>();
+                }
+                catch
+                {
+                    return new Dictionary<string, string>();
+                }
+            }
+            set
+            {
+                DadosDinamicosJson = JsonSerializer.Serialize(value);
+            }
+        }
 
         public string? ArquivoPdf { get; set; }
     }

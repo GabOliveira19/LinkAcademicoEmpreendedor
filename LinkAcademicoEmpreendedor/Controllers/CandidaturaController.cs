@@ -236,6 +236,79 @@ namespace LinkAcademicoEmpreendedor.Controllers
             TempData["Sucesso"] = "Candidatura cancelada com sucesso!";
             return RedirectToAction("MinhasCandidaturas");
         }
+        // ACEITAR CANDIDATURA
+        public async Task<IActionResult> Aceitar(int id)
+        {
+            var empresaId = HttpContext.Session.GetInt32("UserId");
+            var tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
 
+            if (empresaId == null || tipoUsuario != "Empresa")
+                return RedirectToAction("Login", "Account");
+
+            var candidatura = await _context.Candidaturas
+                .Include(c => c.Oportunidade)
+                .Include(c => c.Aluno)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (candidatura == null || candidatura.Oportunidade.EmpresaId != empresaId)
+                return NotFound();
+
+            candidatura.Status = "Aceita";
+            candidatura.DataResposta = DateTime.Now;
+
+            _context.Notificacoes.Add(new Notificacao
+            {
+                Titulo = "Candidatura Aceita",
+                Mensagem = $"Sua candidatura para '{candidatura.Oportunidade.Titulo}' foi aceita!",
+                Link = $"/Candidatura/Detalhes/{candidatura.Id}",
+                TipoDestinatario = "Aluno",
+                DestinatarioId = candidatura.AlunoId,
+                DataCriacao = DateTime.Now,
+                Lida = false
+            });
+
+            await _context.SaveChangesAsync();
+
+            TempData["Sucesso"] = "Candidato aceito com sucesso!";
+            return RedirectToAction("Candidatos", new { oportunidadeId = candidatura.OportunidadeId });
+        }
+
+
+        // REJEITAR CANDIDATURA
+        public async Task<IActionResult> Rejeitar(int id)
+        {
+            var empresaId = HttpContext.Session.GetInt32("UserId");
+            var tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
+
+            if (empresaId == null || tipoUsuario != "Empresa")
+                return RedirectToAction("Login", "Account");
+
+            var candidatura = await _context.Candidaturas
+                .Include(c => c.Oportunidade)
+                .Include(c => c.Aluno)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (candidatura == null || candidatura.Oportunidade.EmpresaId != empresaId)
+                return NotFound();
+
+            candidatura.Status = "Rejeitada";
+            candidatura.DataResposta = DateTime.Now;
+
+            _context.Notificacoes.Add(new Notificacao
+            {
+                Titulo = "Candidatura Rejeitada",
+                Mensagem = $"Sua candidatura para '{candidatura.Oportunidade.Titulo}' foi rejeitada.",
+                Link = $"/Candidatura/Detalhes/{candidatura.Id}",
+                TipoDestinatario = "Aluno",
+                DestinatarioId = candidatura.AlunoId,
+                DataCriacao = DateTime.Now,
+                Lida = false
+            });
+
+            await _context.SaveChangesAsync();
+
+            TempData["Sucesso"] = "Candidato rejeitado com sucesso!";
+            return RedirectToAction("Candidatos", new { oportunidadeId = candidatura.OportunidadeId });
+        }
     }
 }

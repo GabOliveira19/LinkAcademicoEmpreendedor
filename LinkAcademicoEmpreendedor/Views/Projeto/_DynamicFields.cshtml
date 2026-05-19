@@ -2,21 +2,26 @@
 
 @if (Model != null && Model.Any())
 {
+    var valores = ViewBag.DadosDinamicos as Dictionary<string, string>
+                  ?? new Dictionary<string, string>();
+
     <div class="card border-0 shadow-sm mt-3">
         <div class="card-body">
-            <h5 class="mb-4 text-dark">
-                <i class="bi bi-ui-checks"></i> Informações específicas
-            </h5>
-
             <div class="row">
                 @foreach (var campo in Model)
                 {
+                    var valorAtual = valores.ContainsKey(campo.Key)
+                    ? valores[campo.Key]
+                    : "";
+
                     <div class="col-md-6 mb-4">
                         <div class="form-floating">
                             <input type="text"
                                    class="form-control"
                                    name="campo_@campo.Key"
+                                   value="@valorAtual"
                                    placeholder="@campo.Value" />
+
                             <label>@campo.Value</label>
                         </div>
                     </div>

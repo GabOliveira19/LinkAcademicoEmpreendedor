@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Editar Projeto";
+
+    var linksLista = Model.Links?.ToList()
+        ?? new List<LinkAcademicoEmpreendedor.Models.ProjetoLink>();
 }
 
 <div class="container py-4">
@@ -16,17 +19,36 @@
                 </div>
 
                 <div class="card-body">
+                    <form asp-action="Editar"
+                          asp-route-id="@Model.Id"
+                          method="post"
+                          enctype="multipart/form-data">
 
-                    <form asp-action="Editar" asp-route-id="@Model.Id" method="post">
-
-                        <!-- TÍTULO -->
                         <div class="mb-3">
                             <label asp-for="Titulo" class="form-label fw-bold"></label>
                             <input asp-for="Titulo" class="form-control" />
                             <span asp-validation-for="Titulo" class="text-danger"></span>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">PDF do Projeto</label>
 
-                        <!-- DESCRIÇÃO (QUILL EDITOR) -->
+                            @if (!string.IsNullOrEmpty(Model.ArquivoPdf))
+                            {
+                                <div class="mb-2">
+                                    <a href="@Model.ArquivoPdf"
+                                       target="_blank"
+                                       class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-file-earmark-pdf"></i>
+                                        Ver PDF Atual
+                                    </a>
+                                </div>
+                            }
+
+                            <input type="file"
+                                   name="pdfFile"
+                                   class="form-control"
+                                   accept=".pdf" />
+                        </div>
                         <div class="mb-3">
                             <label asp-for="Descricao" class="form-label fw-bold"></label>
 
@@ -36,26 +58,23 @@
                             <span asp-validation-for="Descricao" class="text-danger"></span>
                         </div>
 
-                        <!-- TIPO -->
                         <div class="mb-3">
                             <label class="form-label fw-bold">Tipo do Projeto</label>
                             <select name="Tipo" class="form-select">
                                 <option value="">Selecione...</option>
-                                <option>Acadêmico</option>
-                                <option>Pesquisa</option>
-                                <option>Extensão</option>
-                                <option>Startup</option>
-                                <option>Outro</option>
+                                <option selected="@(Model.Tipo == "Acadêmico")">Acadêmico</option>
+                                <option selected="@(Model.Tipo == "Pesquisa")">Pesquisa</option>
+                                <option selected="@(Model.Tipo == "Extensão")">Extensão</option>
+                                <option selected="@(Model.Tipo == "Startup")">Startup</option>
+                                <option selected="@(Model.Tipo == "Outro")">Outro</option>
                             </select>
                         </div>
 
-                        <!-- ÁREA -->
                         <div class="mb-3">
                             <label class="form-label fw-bold">Área</label>
                             <input class="form-control bg-light" value="@Model.Area" readonly />
                         </div>
 
-                        <!-- CAMPOS DINÂMICOS -->
                         <div class="mt-4">
                             <h5 class="text-primary">
                                 <i class="bi bi-diagram-3"></i> Informações específicas da área
@@ -65,39 +84,70 @@
                             (Dictionary<string, string>)ViewBag.DynamicFieldsDefinition)
                         </div>
 
-                        <!-- LINKS -->
                         <div class="mt-4">
                             <h5 class="text-success">
                                 <i class="bi bi-link-45deg"></i> Links do Projeto
                             </h5>
 
                             <div id="links-container">
-                                <div class="row mb-2">
-                                    <div class="col-md-4">
-                                        <select name="Links[0].Tipo" class="form-select">
-                                            <option>GitHub</option>
-                                            <option>Google Drive</option>
-                                            <option>Figma</option>
-                                            <option>YouTube</option>
-                                            <option>Artigo Científico</option>
-                                            <option>Outro</option>
-                                        </select>
-                                    </div>
 
-                                    <div class="col-md-8">
-                                        <input name="Links[0].Url" class="form-control" />
+                                @if (linksLista.Any())
+                                {
+                                    for (int i = 0; i < linksLista.Count; i++)
+                                    {
+                                        <div class="row mb-2 link-row">
+                                            <div class="col-md-4">
+                                                <select name="Links[@i].Tipo" class="form-select">
+                                                    <option selected="@(linksLista[i].Tipo == "GitHub")">GitHub</option>
+                                                    <option selected="@(linksLista[i].Tipo == "Google Drive")">Google Drive</option>
+                                                    <option selected="@(linksLista[i].Tipo == "Figma")">Figma</option>
+                                                    <option selected="@(linksLista[i].Tipo == "YouTube")">YouTube</option>
+                                                    <option selected="@(linksLista[i].Tipo == "Artigo Científico")">Artigo Científico</option>
+                                                    <option selected="@(linksLista[i].Tipo == "Outro")">Outro</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <input name="Links[@i].Url"
+                                                       class="form-control"
+                                                       value="@linksLista[i].Url" />
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="row mb-2 link-row">
+                                        <div class="col-md-4">
+                                            <select name="Links[0].Tipo" class="form-select">
+                                                <option>GitHub</option>
+                                                <option>Google Drive</option>
+                                                <option>Figma</option>
+                                                <option>YouTube</option>
+                                                <option>Artigo Científico</option>
+                                                <option>Outro</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-8">
+                                            <input name="Links[0].Url" class="form-control" />
+                                        </div>
                                     </div>
-                                </div>
+                                }
+
                             </div>
 
-                            <button type="button" class="btn btn-outline-primary mt-2" onclick="addLink()">
+                            <button type="button"
+                                    class="btn btn-outline-primary mt-2"
+                                    onclick="addLink()">
                                 + Adicionar Link
                             </button>
                         </div>
 
-                        <!-- BOTÕES -->
                         <div class="d-flex justify-content-between mt-4">
-                            <a asp-controller="Aluno" asp-action="Dashboard" class="btn btn-outline-secondary">
+                            <a asp-controller="Aluno"
+                               asp-action="Dashboard"
+                               class="btn btn-outline-secondary">
                                 Cancelar
                             </a>
 
@@ -123,43 +173,43 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script>
-        var quill = new Quill('#editor', {
+        const quill = new Quill('#editor', {
             theme: 'snow'
         });
 
-        // 🔥 carrega descrição do banco
-        var descricaoInicial = document.getElementById("Descricao").value || "";
+        const descricaoInicial = document.getElementById("Descricao").value || "";
         quill.root.innerHTML = descricaoInicial;
 
-        // 🔥 salva no submit
-        document.querySelector('form').onsubmit = function () {
-            document.querySelector('#Descricao').value = quill.root.innerHTML;
-        };
+        document.querySelector('form').addEventListener('submit', function () {
+            document.getElementById('Descricao').value = quill.root.innerHTML;
+        });
     </script>
 
     <script>
-        let index = 1;
+        let index = document.querySelectorAll('#links-container .link-row').length;
 
         function addLink() {
             const container = document.getElementById("links-container");
 
             const html = `
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <select name="Links[${index}].Tipo" class="form-select">
-                        <option>GitHub</option>
-                        <option>Google Drive</option>
-                        <option>Figma</option>
-                        <option>YouTube</option>
-                        <option>Artigo Científico</option>
-                        <option>Outro</option>
-                    </select>
-                </div>
+                <div class="row mb-2 link-row">
+                    <div class="col-md-4">
+                        <select name="Links[${index}].Tipo" class="form-select">
+                            <option>GitHub</option>
+                            <option>Google Drive</option>
+                            <option>Figma</option>
+                            <option>YouTube</option>
+                            <option>Artigo Científico</option>
+                            <option>Outro</option>
+                        </select>
+                    </div>
 
-                <div class="col-md-8">
-                    <input name="Links[${index}].Url" class="form-control" />
-                </div>
-            </div>`;
+                    <div class="col-md-8">
+                        <input name="Links[${index}].Url"
+                               class="form-control"
+                               placeholder="Cole o link aqui" />
+                    </div>
+                </div>`;
 
             container.insertAdjacentHTML("beforeend", html);
             index++;

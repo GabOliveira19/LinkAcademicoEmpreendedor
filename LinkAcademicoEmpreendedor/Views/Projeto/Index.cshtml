@@ -47,8 +47,17 @@
                             <small class="text-muted">@projeto.DataCriacao.ToString("dd/MM/yyyy")</small>
                         </div>
                         <h5 class="card-title">@projeto.Titulo</h5>
+                        @using System.Text.RegularExpressions
+
+                    @{
+                            var descricaoLimpa = Regex.Replace(projeto.Descricao ?? "", "<.*?>", "");
+                            var resumo = descricaoLimpa.Length > 120
+                            ? descricaoLimpa.Substring(0, 120) + "..."
+                            : descricaoLimpa;
+                        }
+
                         <p class="card-text text-muted small">
-                            @(projeto.Descricao.Length > 120 ? projeto.Descricao.Substring(0, 120) + "..." : projeto.Descricao)
+                            @resumo
                         </p>
                         @if (!string.IsNullOrEmpty(projeto.Tecnologias))
                         {

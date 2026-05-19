@@ -45,6 +45,8 @@ namespace LinkAcademicoEmpreendedor.Models
         [StringLength(300)]
         public string? GitHub { get; set; }
 
+
+
         public DateTime DataCadastro { get; set; } = DateTime.Now;
 
         // Campos para recuperacao de senha
@@ -63,7 +65,7 @@ namespace LinkAcademicoEmpreendedor.Models
         public virtual ICollection<Comentario> Comentarios { get; set; } = new List<Comentario>();
         public virtual ICollection<Candidatura> Candidaturas { get; set; } = new List<Candidatura>();
 
-        public string Curriculo { get; set; } = string.Empty;
+        public string? Curriculo { get; set; }
 
         public List<RedeSocial> RedesSociais { get; set; } = new List<RedeSocial>();
     }

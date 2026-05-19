@@ -4,6 +4,7 @@ using LinkAcademicoEmpreendedor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LinkAcademicoEmpreendedor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260430195107_PermitirCurriculoNulo")]
+    partial class PermitirCurriculoNulo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -821,9 +824,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
 
                     b.Property<bool>("Ativo")
                         .HasColumnType("bit");
-
-                    b.Property<string>("DadosDinamicosJson")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");

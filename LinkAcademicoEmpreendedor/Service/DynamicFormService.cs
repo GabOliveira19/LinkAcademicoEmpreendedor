@@ -34,7 +34,7 @@ namespace LinkAcademicoEmpreendedor.Services
                     break;
 
                 default:
-                    fields.Add("Descricao", "Descrição geral");
+                    fields.Add("Descricao", "Descricao geral");
                     break;
             }
 

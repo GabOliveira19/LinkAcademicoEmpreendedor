@@ -5,286 +5,312 @@
 
 <div class="container py-4">
     <div class="row">
+
+        <!-- CONTEÚDO PRINCIPAL -->
         <div class="col-lg-8">
-            <!-- Projeto -->
+
             <div class="card shadow mb-4">
                 <div class="card-body">
+
+                    <!-- CABEÇALHO -->
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <span class="badge bg-secondary mb-2">@Model.Tipo</span>
                             <h2>@Model.Titulo</h2>
                         </div>
+
                         <div class="text-end">
                             <span class="h4 text-danger me-3">
-                                <i class="bi bi-heart-fill"></i> <span id="totalCurtidas">@Model.TotalCurtidas</span>
+                                <i class="bi bi-heart-fill"></i>
+                                <span id="totalCurtidas">@Model.TotalCurtidas</span>
                             </span>
+
                             <span class="h4 text-primary">
-                                <i class="bi bi-chat-fill"></i> @Model.TotalComentarios
+                                <i class="bi bi-chat-fill"></i>
+                                @Model.TotalComentarios
                             </span>
                         </div>
                     </div>
 
-                    <div>
+                    <!-- Descricao -->
+                    <div class="mb-4">
                         @Html.Raw(Model.Descricao)
                     </div>
+
+                    <!-- ÁREA -->
+                    <span class="badge bg-success mb-3">@Model.Area</span>
+
+                    <!-- PDF -->
+                    @if (!string.IsNullOrEmpty(Model.ArquivoPdf))
+                    {
+                        <div class="mb-4">
+                            <a href="@Model.ArquivoPdf"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="btn btn-outline-danger">
+                                <i class="bi bi-file-earmark-pdf"></i>
+                                Ver PDF do Projeto
+                            </a>
+                        </div>
+                    }
+
+                    <!-- DADOS DINÂMICOS -->
+                    @if (Model.DadosDinamicos != null && Model.DadosDinamicos.Any())
+                    {
+                        <hr />
+
+                        <h5 class="mb-3">
+                            <i class="bi bi-info-circle"></i>
+                            Informações Complementares
+                        </h5>
+
+                        <div class="row">
+                            @foreach (var campo in Model.DadosDinamicos)
+                            {
+                                bool ehLink =
+                                !string.IsNullOrWhiteSpace(campo.Value) &&
+                                (
+                                campo.Value.StartsWith("http://") ||
+                                campo.Value.StartsWith("https://") ||
+                                campo.Value.StartsWith("www.")
+                                );
+
+                                <div class="col-md-6 mb-3">
+                                    <strong>@campo.Key</strong>
+                                    <br />
+
+                                    @if (ehLink)
+                                    {
+                                        <a href="@(campo.Value.StartsWith("www.") ? "https://" + campo.Value : campo.Value)"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           class="btn btn-sm btn-outline-primary mt-2">
+                                            <i class="bi bi-box-arrow-up-right"></i>
+                                            Abrir Link
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">@campo.Value</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
                     @if (Model.Links != null && Model.Links.Any())
                     {
-                        <h5 class="mt-4">Links do Projeto</h5>
+                        <hr />
+
+                        <h5 class="mb-3">
+                            <i class="bi bi-link-45deg"></i> Links Relacionados
+                        </h5>
 
                         <div class="row">
                             @foreach (var link in Model.Links)
                             {
                                 <div class="col-md-6 mb-3">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <h6 class="fw-bold">@link.Tipo</h6>
+                                    <strong>@link.Tipo</strong>
+                                    <br />
 
-                                            <p class="text-muted small text-truncate">
-                                                @link.Url
-                                            </p>
-
-                                            <a href="@link.Url" target="_blank" class="btn btn-sm btn-primary">
-                                                🔗 Acessar
-                                            </a>
-                                        </div>
-                                    </div>
+                                    <a href="@link.Url"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="btn btn-sm btn-outline-primary mt-1">
+                                        <i class="bi bi-box-arrow-up-right"></i> Abrir Link
+                                    </a>
                                 </div>
                             }
                         </div>
-
-                    }
-                    @if (!string.IsNullOrEmpty(Model.Tecnologias))
-                    {
-                        <div class="mt-3">
-                            <h6>Tecnologias:</h6>
-
-                            @foreach (var tech in Model.Tecnologias.Split(","))
-                            {
-                                <span class="badge bg-primary me-1">@tech.Trim()</span>
-                            }
-                        </div>
-                    }
-                    <span class="badge bg-success">@Model.Area</span>
-
-                    @if (!string.IsNullOrEmpty(Model.ArquivoPdf))
-                    {
-                        <a href="@Model.ArquivoPdf" target="_blank" class="btn btn-outline-danger mt-3">
-                            📄 Ver PDF do Projeto
-                        </a>
                     }
 
-                    @if (!string.IsNullOrEmpty(Model.Tecnologias))
-                    {
-                        <div class="mb-3">
-                            <strong>Tecnologias:</strong>
-                            @foreach (var tech in Model.Tecnologias.Split(','))
-                            {
-                                <span class="badge bg-primary me-1">@tech.Trim()</span>
-                            }
-                        </div>
-                    }
+                    <hr />
 
-                    <div class="mb-3">
-                        @if (!string.IsNullOrEmpty(Model.LinkRepositorio))
-                        {
-                            <a href="@Model.LinkRepositorio" target="_blank" class="btn btn-outline-dark me-2">
-                                <i class="bi bi-github"></i> Repositorio
-                            </a>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.LinkDemonstracao))
-                        {
-                            <a href="@Model.LinkDemonstracao" target="_blank" class="btn btn-outline-primary">
-                                <i class="bi bi-link-45deg"></i> Demonstracao
-                            </a>
-                        }
-                    </div>
-
-                    <hr>
-
+                    <!-- CURTIR -->
                     <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">Publicado em @Model.DataCriacao.ToString("dd/MM/yyyy")</small>
-                        @if (ViewBag.UserId != null && (ViewBag.TipoUsuario == "Aluno" || ViewBag.TipoUsuario == "Empresa"))
+                        <small class="text-muted">
+                            Publicado em @Model.DataCriacao.ToString("dd/MM/yyyy")
+                        </small>
+
+                        @if (ViewBag.UserId != null &&
+                                                (ViewBag.TipoUsuario == "Aluno" || ViewBag.TipoUsuario == "Empresa"))
                         {
                             <form id="formCurtir" method="post">
                                 @Html.AntiForgeryToken()
-                                <button type="button" id="btnCurtir"
+
+                                <button type="button"
+                                        id="btnCurtir"
                                         class="btn @(ViewBag.JaCurtiu ? "btn-danger" : "btn-outline-danger")"
                                         onclick="curtirProjeto(@Model.Id)">
+
                                     <i class="bi @(ViewBag.JaCurtiu ? "bi-heart-fill" : "bi-heart")"></i>
-                                    <span id="textoCurtir">@(ViewBag.JaCurtiu ? "Curtido" : "Curtir")</span>
+
+                                    <span id="textoCurtir">
+                                        @(ViewBag.JaCurtiu ? "Curtido" : "Curtir")
+                                    </span>
                                 </button>
                             </form>
                         }
-                        else if (ViewBag.UserId == null)
+                        else
                         {
                             <a href="/Account/Login" class="btn btn-outline-danger">
-                                <i class="bi bi-heart"></i> Faca login para curtir
+                                <i class="bi bi-heart"></i>
+                                Faça login para curtir
                             </a>
                         }
                     </div>
+
                 </div>
             </div>
 
-            <!-- Comentarios -->
+            <!-- COMENTÁRIOS -->
             <div class="card shadow">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-chat-dots"></i> Comentarios (@Model.Comentarios.Count)</h5>
+                    <h5 class="mb-0">
+                        <i class="bi bi-chat-dots"></i>
+                        Comentários (@Model.Comentarios.Count)
+                    </h5>
                 </div>
+
                 <div class="card-body">
+
                     @if (ViewBag.UserId != null)
                     {
-                        if (ViewBag.TipoUsuario == "Aluno" || ViewBag.TipoUsuario == "Empresa")
-                        {
-                            <form asp-action="Comentar" method="post" class="mb-4">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="projetoId" value="@Model.Id" />
+                        <form asp-action="Comentar" method="post" class="mb-4">
+                            @Html.AntiForgeryToken()
 
-                                <div class="mb-2">
-                                    <textarea name="texto" class="form-control" rows="3"
-                                      placeholder="Escreva um comentario..." required></textarea>
-                                </div>
+                            <input type="hidden" name="projetoId" value="@Model.Id" />
 
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-send"></i> Comentar
-                                </button>
-                            </form>
-                        }
+                            <textarea name="texto"
+                                  class="form-control mb-2"
+                                  rows="3"
+                                  placeholder="Escreva um comentário..."
+                                  required></textarea>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send"></i>
+                                Comentar
+                            </button>
+                        </form>
                     }
-                    else
+
+                    @foreach (var comentario in Model.Comentarios.OrderByDescending(c => c.DataComentario))
                     {
-                        <div class="alert alert-info mb-4">
-                            <a href="/Account/Login">Faca login</a> para comentar neste projeto.
+                        <div class="border rounded p-3 mb-2">
+                            <div class="d-flex justify-content-between">
+                                <strong>
+                                    @(comentario.Aluno?.Nome ?? comentario.Empresa?.RazaoSocial)
+
+                                    @if (comentario.EmpresaId != null)
+                                    {
+                                        <span class="badge bg-primary ms-2">Empresa</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success ms-2">Aluno</span>
+                                    }
+                                </strong>
+
+                                <small class="text-muted">
+                                    @comentario.DataComentario.ToString("dd/MM/yyyy HH:mm")
+                                </small>
+                            </div>
+
+                            <p class="mb-0 mt-2">@comentario.Texto</p>
                         </div>
                     }
 
-                    @if (Model.Comentarios != null && Model.Comentarios.Any())
-                    {
-                        @foreach (var comentario in Model.Comentarios.OrderByDescending(c => c.DataComentario))
-                        {
-                            <div class="border rounded p-3 mb-2">
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        @if (!string.IsNullOrEmpty(comentario.Aluno?.FotoPerfil))
-                                        {
-                                            <img src="@comentario.Aluno.FotoPerfil" class="rounded-circle me-2"
-                                                 style="width: 35px; height: 35px; object-fit: cover;" />
-                                        }
-                                        else if (!string.IsNullOrEmpty(comentario.Empresa?.LogoEmpresa))
-                                        {
-                                            <img src="@comentario.Empresa.LogoEmpresa" class="rounded-circle me-2"
-                                                 style="width: 35px; height: 35px; object-fit: cover;" />
-                                        }
-                                        else
-                                        {
-                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
-                                                 style="width: 35px; height: 35px; font-size: 0.9rem;">
-                                                @(comentario.Aluno?.Nome?.Substring(0, 1) ??
-                                                                                    comentario.Empresa?.RazaoSocial?.Substring(0, 1)?.ToUpper())
-                                </div>
-                                                                }
-                                       
-                                        <strong>
-                                            @(comentario.Aluno?.Nome ?? comentario.Empresa?.RazaoSocial)
-                                        </strong>
-                                    </div>
-                                    <small class="text-muted">@comentario.DataComentario.ToString("dd/MM/yyyy HH:mm")</small>
-                                </div>
-                                <p class="mb-0 mt-2">@comentario.Texto</p>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <p class="text-muted text-center">Nenhum comentario ainda. Seja o primeiro!</p>
-                    }
                 </div>
             </div>
+
         </div>
 
-        <!-- Sidebar - Autor -->
+        <!-- SIDEBAR AUTOR -->
         <div class="col-lg-4">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-person"></i> Autor</h5>
+                    <h5 class="mb-0">
+                        <i class="bi bi-person"></i>
+                        Autor
+                    </h5>
                 </div>
+
                 <div class="card-body text-center">
+
                     @if (!string.IsNullOrEmpty(Model.Aluno?.FotoPerfil))
                     {
-                        <img src="@Model.Aluno.FotoPerfil" class="rounded-circle mb-3"
-                             style="width: 80px; height: 80px; object-fit: cover;" />
+                        <img src="@Model.Aluno.FotoPerfil"
+                             class="rounded-circle mb-3"
+                             style="width:80px;height:80px;object-fit:cover;" />
                     }
-                    else
-                    {
-                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                             style="width: 80px; height: 80px; font-size: 2rem;">
-                            @Model.Aluno?.Nome?.Substring(0, 1).ToUpper()
-                        </div>
-                    }
+
                     <h5>@Model.Aluno?.Nome</h5>
                     <p class="text-muted">@Model.Aluno?.Curso</p>
                     <p class="text-muted">@Model.Aluno?.Instituicao</p>
 
-                    @if (!string.IsNullOrEmpty(Model.Aluno?.Habilidades))
-                    {
-                        <div class="mb-3">
-                            @foreach (var hab in Model.Aluno.Habilidades.Split(',').Take(5))
-                            {
-                                <span class="badge bg-light text-dark">@hab.Trim()</span>
-                            }
-                        </div>
-                    }
-
-                    <a asp-controller="Aluno" asp-action="Perfil" asp-route-id="@Model.AlunoId"
+                    <a asp-controller="Aluno"
+                       asp-action="Perfil"
+                       asp-route-id="@Model.AlunoId"
                        class="btn btn-outline-primary w-100">
                         Ver Perfil Completo
                     </a>
+
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
 @section Scripts {
     <script>
         function curtirProjeto(projetoId) {
-            var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const token =
+                document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-                    fetch('/Projeto/Curtir', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'RequestVerificationToken': token
-            },
-            body: 'id=' + projetoId + '&__RequestVerificationToken=' + encodeURIComponent(token)
-        })
-            .then(response => response.json())
+            fetch('/Projeto/Curtir', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': token
+                },
+                body: 'id=' + projetoId +
+                      '&__RequestVerificationToken=' +
+                      encodeURIComponent(token)
+            })
+            .then(r => r.json())
             .then(data => {
-                if (data.success) {
-                    document.getElementById('totalCurtidas').textContent = data.total;
-                    var btn = document.getElementById('btnCurtir');
-                    var texto = document.getElementById('textoCurtir');
-                    var icon = btn.querySelector('i');
-
-                    if (data.curtiu) {
-                        btn.classList.remove('btn-outline-danger');
-                        btn.classList.add('btn-danger');
-                        texto.textContent = 'Curtido';
-                        icon.classList.remove('bi-heart');
-                        icon.classList.add('bi-heart-fill');
-                    } else {
-                        btn.classList.remove('btn-danger');
-                        btn.classList.add('btn-outline-danger');
-                        texto.textContent = 'Curtir';
-                        icon.classList.remove('bi-heart-fill');
-                        icon.classList.add('bi-heart');
-                    }
-                } else {
+                if (!data.success) {
                     alert(data.message);
+                    return;
+                }
+
+                document.getElementById('totalCurtidas').textContent = data.total;
+
+                const btn = document.getElementById('btnCurtir');
+                const texto = document.getElementById('textoCurtir');
+                const icon = btn.querySelector('i');
+
+                if (data.curtiu) {
+                    btn.classList.remove('btn-outline-danger');
+                    btn.classList.add('btn-danger');
+
+                    texto.textContent = 'Curtido';
+
+                    icon.classList.remove('bi-heart');
+                    icon.classList.add('bi-heart-fill');
+                }
+                else {
+                    btn.classList.remove('btn-danger');
+                    btn.classList.add('btn-outline-danger');
+
+                    texto.textContent = 'Curtir';
+
+                    icon.classList.remove('bi-heart-fill');
+                    icon.classList.add('bi-heart');
                 }
             })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao curtir. Tente novamente.');
+            .catch(() => {
+                alert('Erro ao curtir projeto.');
             });
         }
     </script>

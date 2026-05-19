@@ -171,6 +171,7 @@
                         var userName = Context.Session.GetString("UserName");
                         var userFoto = Context.Session.GetString("UserFoto");
 
+
                         <li class="nav-item d-none d-lg-block">
                             <a class="nav-link position-relative" asp-controller="Notificacao" asp-action="Index">
                                 <i class="bi bi-bell fs-5"></i>
@@ -486,5 +487,33 @@
     }
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Botão Flutuante IA -->
+    <a href="/ChatBot/Index" class="botao-ia">
+        🤖
+    </a>
+    <!-- VLibras -->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+
+    </div>
+
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+    <!--Menu Acessibilidade
+    <script>
+        (function(d){
+            var s = d.createElement("script");
+            s.setAttribute("data-account", "LTXzckbQ9A");
+            s.setAttribute("src", "https://cdn.userway.org/widget.js");
+            (d.body || d.head).appendChild(s);
+        })(document);
+    </script>-->
 </body>
 </html>
