@@ -63,8 +63,8 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
             _context.Candidaturas.Add(candidatura);
 
-            // Criar notificacao para a empresa
-            var notificacao = new Notificacao
+            // Criar Notificacao para a empresa
+            var Notificacao = new Notificacao
             {
                 Titulo = "Nova Candidatura Recebida",
                 Mensagem = $"{aluno?.Nome} se candidatou para a vaga: {oportunidade.Titulo}",
@@ -75,11 +75,11 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 Lida = false
             };
 
-            _context.Notificacoes.Add(notificacao);
+            _context.Notificacoes.Add(Notificacao);
             await _context.SaveChangesAsync();
 
-            // Atualizar o link da notificacao com o ID correto
-            notificacao.Link = $"/Candidatura/Detalhes/{candidatura.Id}";
+            // Atualizar o link da Notificacao com o ID correto
+            Notificacao.Link = $"/Candidatura/Detalhes/{candidatura.Id}";
             await _context.SaveChangesAsync();
 
             TempData["Sucesso"] = "Candidatura enviada com sucesso! A empresa sera notificada.";
@@ -193,9 +193,9 @@ namespace LinkAcademicoEmpreendedor.Controllers
             candidatura.MensagemResposta = mensagemResposta?.Trim();
             candidatura.DataResposta = DateTime.Now;
 
-            // Criar notificacao para o aluno
+            // Criar Notificacao para o aluno
             var statusTexto = status == "Aprovada" ? "aprovada" : "atualizada";
-            var notificacao = new Notificacao
+            var Notificacao = new Notificacao
             {
                 Titulo = $"Candidatura {statusTexto}",
                 Mensagem = $"Sua candidatura para '{candidatura.Oportunidade.Titulo}' foi {statusTexto}.",
@@ -206,7 +206,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 Lida = false
             };
 
-            _context.Notificacoes.Add(notificacao);
+            _context.Notificacoes.Add(Notificacao);
             await _context.SaveChangesAsync();
 
             TempData["Sucesso"] = "Resposta enviada com sucesso!";

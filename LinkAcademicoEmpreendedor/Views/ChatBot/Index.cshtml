@@ -10,6 +10,7 @@
 
             <div class="card shadow border-0 rounded-4">
 
+                <!-- Cabeçalho -->
                 <div class="card-header bg-success text-white rounded-top-4">
                     <h4 class="mb-0 fw-bold">
                         🤖 SkillBot
@@ -38,18 +39,96 @@
                     </div>
 
                     <!-- Campo mensagem -->
-                    <div class="mt-3 d-flex">
+                    <div class="mt-3">
 
-                        <input type="text"
-                               id="mensagem"
-                               class="form-control rounded-pill"
-                               placeholder="Digite sua pergunta..."
-                               onkeypress="if(event.key === 'Enter') enviarMensagem()" />
+                        <div class="d-flex align-items-center">
 
-                        <button class="btn btn-success ms-2 rounded-pill px-4"
-                                onclick="enviarMensagem()">
-                            Enviar
-                        </button>
+                            <!-- Botão raio -->
+                            <div class="dropdown me-2">
+
+                                <button class="btn btn-warning rounded-circle fw-bold shadow-sm"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        title="Sugestões rápidas"
+                                        style="
+                                            width: 48px;
+                                            height: 48px;
+                                            font-size: 22px;
+                                        ">
+                                    ⚡
+                                </button>
+
+                                <!-- Sugestões -->
+                                <ul class="dropdown-menu shadow border-0 rounded-4 p-2"
+                                    style="min-width: 280px;">
+
+                                    <li>
+                                        <button class="dropdown-item rounded-3"
+                                                onclick="usarSugestao('Criar Projeto')">
+                                            📁 Criar Projeto
+                                        </button>
+                                    </li>
+
+                                    <li>
+                                        <button class="dropdown-item rounded-3"
+                                                onclick="usarSugestao('Ver ranking de alunos')">
+                                            🏆 Ver ranking de alunos
+                                        </button>
+                                    </li>
+
+                                    <li>
+                                        <button class="dropdown-item rounded-3"
+                                                onclick="usarSugestao('Ver ranking de empresas')">
+                                            🏢 Ver ranking de empresas
+                                        </button>
+                                    </li>
+
+                                    <li>
+                                        <button class="dropdown-item rounded-3"
+                                                onclick="usarSugestao('Como editar meu perfil?')">
+                                            👤 Como editar meu perfil?
+                                        </button>
+                                    </li>
+
+                                    <li>
+                                        <button class="dropdown-item rounded-3"
+                                                onclick="usarSugestao('Quero ver vagas')">
+                                            💼 Quero ver vagas
+                                        </button>
+                                    </li>
+
+                                    <li>
+                                        <button class="dropdown-item rounded-3"
+                                                onclick="usarSugestao('Ver currículos de alunos')">
+                                            📄 Ver currículos de alunos
+                                        </button>
+                                    </li>
+
+                                    <li>
+                                        <button class="dropdown-item rounded-3"
+                                                onclick="usarSugestao('Ajuda')">
+                                            ❓ Ajuda
+                                        </button>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                            <!-- Input -->
+                            <input type="text"
+                                   id="mensagem"
+                                   class="form-control rounded-pill"
+                                   placeholder="Digite sua pergunta..."
+                                   onkeypress="if(event.key === 'Enter') enviarMensagem()" />
+
+                            <!-- Botão enviar -->
+                            <button class="btn btn-success ms-2 rounded-pill px-4"
+                                    onclick="enviarMensagem()">
+                                Enviar
+                            </button>
+
+                        </div>
 
                     </div>
 
@@ -63,7 +142,30 @@
 
 </div>
 
+<style>
+
+    .dropdown-item {
+        transition: all 0.2s ease;
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+
+        .dropdown-item:hover {
+            background-color: #f1f3f5;
+            transform: translateX(3px);
+        }
+
+</style>
+
 <script>
+
+    // Usar sugestão
+    function usarSugestao(texto) {
+
+        document.getElementById('mensagem').value = texto;
+
+        enviarMensagem();
+    }
 
     async function enviarMensagem() {
 
@@ -76,7 +178,7 @@
 
         let chatBox = document.getElementById('chatBox');
 
-        // Mostra mensagem do usuário
+        // Mensagem usuário
         chatBox.innerHTML += `
             <div class="mb-3 text-end">
                 <div style="
@@ -86,6 +188,7 @@
                     padding: 10px 15px;
                     border-radius: 15px;
                     max-width: 75%;
+                    text-align: left;
                 ">
                     <strong>Você:</strong><br>
                     ${mensagem}
@@ -115,7 +218,7 @@
 
             const data = await response.json();
 
-            // Mostra resposta da IA
+            // Resposta IA
             chatBox.innerHTML += `
                 <div class="mb-3">
                     <div style="
@@ -135,7 +238,7 @@
             // Scroll automático
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // REDIRECIONAMENTO AUTOMÁTICO
+            // Redirecionamento
             if (data.redirecionar && data.redirecionar !== "") {
 
                 setTimeout(() => {

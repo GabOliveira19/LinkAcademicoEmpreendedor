@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿    using Microsoft.AspNetCore.Mvc;
 
 namespace LinkAcademicoEmpreendedor.Controllers
 {
@@ -444,6 +444,17 @@ namespace LinkAcademicoEmpreendedor.Controllers
                      mensagem.Contains("chatbot"))
             {
                 resposta = "Sou o assistente virtual do SkillBridge e posso ajudar você com dúvidas e navegação da plataforma.";
+            }
+
+            else if (mensagem.Contains("ajuda") ||
+         mensagem.Contains("suporte") ||
+         mensagem.Contains("não ajudou") ||
+         mensagem.Contains("nao ajudou") ||
+         mensagem.Contains("não resolveu") ||
+         mensagem.Contains("nao resolveu"))
+            {
+                resposta = "Redirecionando para a Central de Ajuda completa do SkillBridge...";
+                redirecionar = "/Ajuda";
             }
 
             // =========================

@@ -28,21 +28,28 @@
             --desktop-footer-height: 60px;
         }
 
-        html, body {
+        html {
             height: 100%;
         }
 
         body {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            margin: 0;
             padding-top: var(--top-navbar-height);
             padding-bottom: var(--mobile-bottom-nav-height);
+            background-color: #f8f9fa;
         }
 
         main {
-            flex: 1;
-            padding-bottom: 10px;
+            flex: 1 0 auto;
+            width: 100%;
+            padding-bottom: 20px;
+        }
+
+        .desktop-footer {
+            flex-shrink: 0;
         }
 
         .bottom-nav {
@@ -98,42 +105,25 @@
             }
 
         .desktop-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
             width: 100%;
-            height: var(--desktop-footer-height);
-            z-index: 999;
+            min-height: var(--desktop-footer-height);
+            background: #212529;
             display: flex;
             align-items: center;
-            background: rgba(33, 37, 41, 1);
-            transition: all 0.35s ease;
-            backdrop-filter: blur(0px);
-            -webkit-backdrop-filter: blur(0px);
+            justify-content: center;
+            padding: 18px 0;
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.08);
         }
 
             .desktop-footer .container {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                height: 100%;
-                transition: all 0.35s ease;
+                text-align: center;
+                color: white;
             }
 
-            /* EFEITO AO PASSAR O MOUSE */
-            .desktop-footer:hover {
-                background: rgba(33, 37, 41, 0.25) !important;
-                backdrop-filter: blur(6px);
-                -webkit-backdrop-filter: blur(6px);
-                box-shadow: 0 -4px 20px rgba(0,0,0,0.10);
-                pointer-events: none;
-            }
-
-                .desktop-footer:hover p {
-                    color: rgba(255,255,255,0.85);
-                }
-
-       
     </style>
 </head>
 <body>
@@ -161,6 +151,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Aluno" asp-action="Listar">Talentos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Ajuda" asp-action="Index">Ajuda</a>
                     </li>
                 </ul>
 
@@ -336,12 +329,14 @@
         @RenderBody()
     </main>
 
-    <!-- Footer Desktop Fixo -->
-    <footer class="text-light py-0 desktop-footer">
-        <div class="container text-center">
-            <p class="mb-0">SkillBridge &copy; @DateTime.Now.Year</p>
+    <!-- Footer Desktop Fixo
+    <footer class="desktop-footer">
+        <div class="container">
+            <p class="mb-0">
+                SkillBridge &copy; @DateTime.Now.Year
+            </p>
         </div>
-    </footer>
+    </footer> -->
 
     <!-- Navegação Fixa no Rodapé Mobile -->
     <nav class="bottom-nav d-lg-none">
@@ -478,7 +473,7 @@
                             if (badgeMobile) badgeMobile.classList.add('d-none');
                         }
                     })
-                    .catch(error => console.log('Erro ao buscar notificações'));
+                    .catch(error => console.log('Erro ao buscar Notificacoes'));
             }
 
             atualizarNotificacoes();

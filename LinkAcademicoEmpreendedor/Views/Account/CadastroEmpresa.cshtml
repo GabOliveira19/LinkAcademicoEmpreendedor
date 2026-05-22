@@ -67,7 +67,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label asp-for="RazaoSocial" class="form-label">Razao Social *</label>
+                                        <label asp-for="RazaoSocial" class="form-label">Razão Social *</label>
                                         <input asp-for="RazaoSocial" class="form-control" id="inputRazaoSocial" />
                                         <span asp-validation-for="RazaoSocial" class="text-danger"></span>
                                     </div>
@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label asp-for="SituacaoCadastral" class="form-label">Situacao Cadastral</label>
+                                        <label asp-for="SituacaoCadastral" class="form-label">Situação Cadastral</label>
                                         <input asp-for="SituacaoCadastral" class="form-control" id="inputSituacaoCadastral" />
                                     </div>
                                     <div class="col-md-4 mb-3">
@@ -86,17 +86,17 @@
                                         <input asp-for="DataAbertura" class="form-control" id="inputDataAbertura" placeholder="dd/mm/aaaa" />
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label asp-for="NaturezaJuridica" class="form-label">Natureza Juridica</label>
+                                        <label asp-for="NaturezaJuridica" class="form-label">Natureza Jurídica</label>
                                         <input asp-for="NaturezaJuridica" class="form-control" id="inputNaturezaJuridica" />
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label asp-for="Endereco" class="form-label">Endereco</label>
+                                        <label asp-for="Endereco" class="form-label">Endereço</label>
                                         <input asp-for="Endereco" class="form-control" id="inputEndereco" />
                                     </div>
                                     <div class="col-md-2 mb-3">
-                                        <label asp-for="Numero" class="form-label">Numero</label>
+                                        <label asp-for="Numero" class="form-label">Número</label>
                                         <input asp-for="Numero" class="form-control" id="inputNumero" />
                                     </div>
                                     <div class="col-md-4 mb-3">
@@ -182,16 +182,16 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label asp-for="NomeResponsavel" class="form-label">Nome do Responsavel</label>
+                                        <label asp-for="NomeResponsavel" class="form-label">Nome do Responsável</label>
                                         <input asp-for="NomeResponsavel" class="form-control" />
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label asp-for="AreaAtuacao" class="form-label">Area de Atuacao</label>
+                                        <label asp-for="AreaAtuacao" class="form-label">Área de Atuação</label>
                                         <input asp-for="AreaAtuacao" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label asp-for="Descricao" class="form-label">Descricao da Empresa</label>
+                                    <label asp-for="Descricao" class="form-label">Descrição da Empresa</label>
                                     <textarea asp-for="Descricao" class="form-control" rows="3"></textarea>
                                 </div>
                             </div>
@@ -208,7 +208,7 @@
                                 </button>
                             </div>
                             <p class="text-center text-muted mt-3">
-                                Ja tem cadastro? <a asp-action="Login">Faca login</a>
+                                Já tem cadastro? <a asp-action="Login">Faça login</a>
                             </p>
                         </div>
                     </form>
@@ -399,7 +399,7 @@
                 var cnpjLimpo = cnpjComMascara.replace(/\D/g, '');
 
                 if (cnpjLimpo.length !== 14) {
-                    mostrarAlerta('<i class="bi bi-exclamation-circle"></i> Informe um CNPJ valido com 14 digitos.', 'warning');
+                    mostrarAlerta('<i class="bi bi-exclamation-circle"></i> Informe um CNPJ válido com 14 digitos.', 'warning');
                     return;
                 }
 

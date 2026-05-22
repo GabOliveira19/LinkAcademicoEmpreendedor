@@ -212,35 +212,36 @@
         <div class="col-md-6 mb-3">
             <div class="card shadow h-100 border-primary">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-star-fill"></i> Minhas Avaliacoes</h5>
+                    <h5 class="mb-0"><i class="bi bi-star-fill"></i> Minhas Avaliações</h5>
                 </div>
                 <div class="card-body text-center">
                     <i class="bi bi-star-fill text-warning" style="font-size: 3rem;"></i>
-                    <p class="mt-3">Veja as avaliacoes que voce recebeu das empresas.</p>
+                    <p class="mt-3">Veja as avaliações que você recebeu das empresas.</p>
                     <a asp-controller="Avaliacao" asp-action="MinhasAvaliacoes" class="btn btn-primary">
-                        <i class="bi bi-star"></i> Avaliacoes Recebidas
+                        <i class="bi bi-star"></i> Avaliações Recebidas
                     </a>
                     <a asp-controller="Avaliacao" asp-action="AvaliacoesFeitas" class="btn btn-outline-primary mt-2">
-                        <i class="bi bi-send"></i> Avaliacoes que Fiz
+                        <i class="bi bi-send"></i> Avaliações que Fiz
                     </a>
                 </div>
-            </div>
+            </div>,
+
         </div>
 
         <!-- Card para Avaliar Empresas -->
         <div class="col-md-6 mb-4">
             <div class="card shadow h-100">
                 <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0"><i class="bi bi-star-fill"></i> Avaliacoes</h5>
+                    <h5 class="mb-0"><i class="bi bi-star-fill"></i> Avaliações</h5>
                 </div>
                 <div class="card-body">
-                    <p>Avalie as empresas que voce teve contato e veja suas avaliacoes recebidas.</p>
+                    <p>Avalie as empresas que você teve contato e veja suas avaliações recebidas.</p>
                     <div class="d-grid gap-2">
                         <a asp-controller="Avaliacao" asp-action="MinhasAvaliacoes" class="btn btn-warning">
-                            <i class="bi bi-star"></i> Minhas Avaliacoes Recebidas
+                            <i class="bi bi-star"></i> Minhas Avaliações Recebidas
                         </a>
                         <a asp-controller="Avaliacao" asp-action="AvaliacoesFeitas" class="btn btn-outline-warning">
-                            <i class="bi bi-send"></i> Avaliacoes que Fiz
+                            <i class="bi bi-send"></i> Avaliações que Fiz
                         </a>
                         <a asp-controller="Candidatura" asp-action="MinhasCandidaturas" class="btn btn-outline-primary">
                             <i class="bi bi-briefcase"></i> Ver Candidaturas (Avaliar Empresas)

@@ -9,12 +9,12 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2><i class="bi bi-star-fill text-warning"></i> Minhas Avaliacoes Recebidas</h2>
-            <p class="text-muted mb-0">Veja o que estao falando sobre voce</p>
+            <h2><i class="bi bi-star-fill text-warning"></i> Minhas Avaliações Recebidas</h2>
+            <p class="text-muted mb-0">Veja o que estão falando sobre você</p>
         </div>
         <div class="d-flex gap-2">
             <a asp-action="AvaliacoesFeitas" class="btn btn-outline-primary">
-                <i class="bi bi-send"></i> Avaliacoes Feitas
+                <i class="bi bi-send"></i> Avaliações Feitas
             </a>
             @if (tipoUsuario == "Aluno")
             {
@@ -47,7 +47,7 @@
                             @:--
                         }
                     </h2>
-                    <small>Media Geral</small>
+                    <small>Média Geral</small>
                 </div>
             </div>
         </div>
@@ -56,7 +56,7 @@
                 <div class="card-body text-center">
                     <i class="bi bi-chat-dots fs-2"></i>
                     <h2 class="mb-0 mt-2">@total</h2>
-                    <small>Total Avaliacoes</small>
+                    <small>Total de Avaliações</small>
                 </div>
             </div>
         </div>
@@ -76,8 +76,8 @@
         <div class="card">
             <div class="card-body text-center py-5">
                 <i class="bi bi-star fs-1 text-muted d-block mb-3"></i>
-                <h5>Nenhuma avaliacao recebida ainda</h5>
-                <p class="text-muted">Quando alguem avaliar voce, aparecera aqui.</p>
+                <h5>Nenhuma avaliação recebida ainda</h5>
+                <p class="text-muted">Quando alguém avaliar você, aparecerá aqui.</p>
             </div>
         </div>
     }

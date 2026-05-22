@@ -13,7 +13,7 @@ namespace LinkAcademicoEmpreendedor.Services
             _context = context;
         }
 
-        // Obter notificacoes do usuario
+        // Obter Notificacoes do usuario
         public async Task<List<Notificacao>> ObterNotificacoesAsync(int destinatarioId, string tipoDestinatario, int limite = 20)
         {
             return await _context.Notificacoes
@@ -40,12 +40,12 @@ namespace LinkAcademicoEmpreendedor.Services
         }
 
         // Marcar como lida
-        public async Task MarcarComoLidaAsync(int notificacaoId)
+        public async Task MarcarComoLidaAsync(int NotificacaoId)
         {
-            var notificacao = await _context.Notificacoes.FindAsync(notificacaoId);
-            if (notificacao != null)
+            var Notificacao = await _context.Notificacoes.FindAsync(NotificacaoId);
+            if (Notificacao != null)
             {
-                notificacao.Lida = true;
+                Notificacao.Lida = true;
                 await _context.SaveChangesAsync();
             }
         }
@@ -53,22 +53,22 @@ namespace LinkAcademicoEmpreendedor.Services
         // Marcar todas como lidas
         public async Task MarcarTodasComoLidasAsync(int destinatarioId, string tipoDestinatario)
         {
-            var notificacoes = await _context.Notificacoes
+            var Notificacoes = await _context.Notificacoes
                 .Where(n => n.DestinatarioId == destinatarioId && n.TipoDestinatario == tipoDestinatario && !n.Lida)
                 .ToListAsync();
 
-            foreach (var notificacao in notificacoes)
+            foreach (var Notificacao in Notificacoes)
             {
-                notificacao.Lida = true;
+                Notificacao.Lida = true;
             }
 
             await _context.SaveChangesAsync();
         }
 
-        // Criar notificacao
+        // Criar Notificacao
         public async Task CriarAsync(int destinatarioId, string tipoDestinatario, string titulo, string mensagem, string? link = null)
         {
-            var notificacao = new Notificacao
+            var Notificacao = new Notificacao
             {
                 DestinatarioId = destinatarioId,
                 TipoDestinatario = tipoDestinatario,
@@ -79,7 +79,7 @@ namespace LinkAcademicoEmpreendedor.Services
                 DataCriacao = DateTime.Now
             };
 
-            _context.Notificacoes.Add(notificacao);
+            _context.Notificacoes.Add(Notificacao);
             await _context.SaveChangesAsync();
         }
     }

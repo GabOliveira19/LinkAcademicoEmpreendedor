@@ -150,7 +150,7 @@ namespace LinkAcademicoEmpreendedor.Services
                 nomeAvaliador = empresa?.RazaoSocial ?? "Empresa";
             }
 
-            var notificacao = new Notificacao
+            var Notificacao = new Notificacao
             {
                 DestinatarioId = avaliadoId,
                 TipoDestinatario = tipoAvaliado,
@@ -161,7 +161,7 @@ namespace LinkAcademicoEmpreendedor.Services
                 DataCriacao = DateTime.Now
             };
 
-            _context.Notificacoes.Add(notificacao);
+            _context.Notificacoes.Add(Notificacao);
         }
 
         // Obter avaliacoes recebidas

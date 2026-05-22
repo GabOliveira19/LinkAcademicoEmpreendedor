@@ -7,8 +7,8 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2><i class="bi bi-send text-primary"></i> Avaliacoes que Fiz</h2>
-            <p class="text-muted mb-0">Historico de avaliacoes enviadas</p>
+            <h2><i class="bi bi-send text-primary"></i> Avaliações que Fiz</h2>
+            <p class="text-muted mb-0">Histórico de avaliações enviadas</p>
         </div>
         <div class="d-flex gap-2">
             <a asp-action="MinhasAvaliacoes" class="btn btn-outline-warning">
@@ -47,8 +47,8 @@
         <div class="card">
             <div class="card-body text-center py-5">
                 <i class="bi bi-send fs-1 text-muted d-block mb-3"></i>
-                <h5>Voce ainda nao fez nenhuma avaliacao</h5>
-                <p class="text-muted">Suas avaliacoes aparecerao aqui.</p>
+                <h5>Você ainda não fez nenhuma avaliação</h5>
+                <p class="text-muted">Suas avaliações aparecerão aqui.</p>
             </div>
         </div>
     }
@@ -100,7 +100,7 @@
                             @if (!string.IsNullOrEmpty(avaliacao.Comentario))
                             {
                                 <div class="bg-light rounded p-2">
-                                    <small class="text-muted">Seu comentario:</small>
+                                    <small class="text-muted">Seu comentário:</small>
                                     <p class="mb-0 small">"@avaliacao.Comentario"</p>
                                 </div>
                             }

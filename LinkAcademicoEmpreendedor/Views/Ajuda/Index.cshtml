@@ -1,0 +1,378 @@
+﻿@{
+    ViewData["Title"] = "Central de Ajuda";
+}
+
+<style>
+    :root {
+        --sb-primary: #2563eb;
+        --sb-primary-dark: #1d4ed8;
+        --sb-bg: #f8fafc;
+        --sb-card: #ffffff;
+        --sb-border: #e2e8f0;
+        --sb-text: #0f172a;
+        --sb-muted: #64748b;
+        --sb-accent: #eff6ff;
+    }
+
+    .help-wrapper {
+        background: var(--sb-bg);
+        min-height: 100vh;
+        padding: 0 0 60px 0;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        color: var(--sb-text);
+    }
+
+    .help-hero {
+        background: linear-gradient(135deg, var(--sb-primary) 0%, var(--sb-primary-dark) 100%);
+        color: #fff;
+        padding: 60px 20px 70px;
+        text-align: center;
+    }
+
+        .help-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .help-hero p {
+            font-size: 1.1rem;
+            opacity: .9;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+
+    .help-search {
+        max-width: 520px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+        .help-search input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,.15);
+            outline: none;
+        }
+
+        .help-search::before {
+            content: "🔍";
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+        }
+
+    .help-container {
+        max-width: 1200px;
+        margin: -40px auto 0;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 30px;
+    }
+
+    @@media (max-width: 900px) {
+        .help-container {
+            grid-template-columns: 1fr;
+        }
+
+        .help-sidebar {
+            position: static !important;
+        }
+    }
+
+    .help-sidebar {
+        background: var(--sb-card);
+        border: 1px solid var(--sb-border);
+        border-radius: 14px;
+        padding: 20px;
+        position: sticky;
+        top: 20px;
+        height: fit-content;
+        box-shadow: 0 4px 12px rgba(0,0,0,.04);
+    }
+
+        .help-sidebar h3 {
+            font-size: .85rem;
+            text-transform: uppercase;
+            color: var(--sb-muted);
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .help-sidebar a {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: var(--sb-text);
+            text-decoration: none;
+            font-size: .95rem;
+            margin-bottom: 4px;
+            transition: all .2s;
+        }
+
+            .help-sidebar a:hover {
+                background: var(--sb-accent);
+                color: var(--sb-primary);
+            }
+
+    .help-content {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .help-card {
+        background: var(--sb-card);
+        border: 1px solid var(--sb-border);
+        border-radius: 14px;
+        padding: 28px 32px;
+        box-shadow: 0 4px 12px rgba(0,0,0,.04);
+        scroll-margin-top: 20px;
+    }
+
+        .help-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--sb-primary-dark);
+        }
+
+        .help-card h4 {
+            margin-top: 18px;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+            color: var(--sb-text);
+            font-weight: 600;
+        }
+
+        .help-card p {
+            color: #334155;
+            line-height: 1.65;
+            margin-bottom: 12px;
+        }
+
+    .help-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 10px 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 8px;
+    }
+
+        .help-list li {
+            background: var(--sb-accent);
+            color: var(--sb-primary-dark);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: .92rem;
+            border-left: 3px solid var(--sb-primary);
+        }
+
+    .help-badge {
+        display: inline-block;
+        background: var(--sb-accent);
+        color: var(--sb-primary-dark);
+        font-size: .75rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 50px;
+        margin-left: 8px;
+    }
+</style>
+
+<div class="help-wrapper">
+
+    <section class="help-hero">
+        <h1>❓ Central de Ajuda - SkillBridge</h1>
+    </section>
+
+    <div class="help-container">
+
+        <aside class="help-sidebar">
+            <h3>Tópicos</h3>
+            <a href="#sobre">📌 Sobre o SkillBridge</a>
+            <a href="#alunos">👨‍🎓 Área dos Alunos</a>
+            <a href="#empresas">🏢 Área das Empresas</a>
+            <a href="#projetos">📁 Projetos</a>
+            <a href="#vagas">💼 Vagas</a>
+            <a href="#rankings">🏆 Rankings</a>
+            <a href="#avaliacoes">⭐ Avaliações</a>
+            <a href="#skillbot">🤖 SkillBot</a>
+            <a href="#seguranca">🔐 Segurança</a>
+            <a href="#acessibilidade">♿ Acessibilidade</a>
+            <a href="#suporte">🆘 Suporte</a>
+        </aside>
+
+        <main class="help-content">
+
+            <article id="sobre" class="help-card">
+                <h2>📌 O que é o SkillBridge?</h2>
+                <p>O SkillBridge é uma plataforma acadêmica e profissional criada para conectar alunos e empresas através de projetos, currículos, habilidades e oportunidades.</p>
+                <p>O sistema permite que estudantes apresentem seus projetos acadêmicos, portfólios e competências profissionais, enquanto empresas podem buscar talentos, divulgar vagas e avaliar candidatos.</p>
+                <p>O principal objetivo do SkillBridge é aproximar o ambiente acadêmico do mercado de trabalho, incentivando o desenvolvimento profissional dos alunos e facilitando o recrutamento de novos talentos.</p>
+            </article>
+
+            <article id="alunos" class="help-card">
+                <h2>👨‍🎓 Área dos Alunos</h2>
+                <p>Os alunos possuem acesso a diversas funcionalidades dentro da plataforma.</p>
+
+                <h4>Funcionalidades disponíveis</h4>
+                <ul class="help-list">
+                    <li>Cadastro e edição do perfil acadêmico</li>
+                    <li>Atualização de currículo profissional</li>
+                    <li>Adição de habilidades e competências</li>
+                    <li>Criação e gerenciamento de projetos</li>
+                    <li>Upload de arquivos PDF dos projetos</li>
+                    <li>Inserção de links externos como GitHub e portfólio</li>
+                    <li>Participação em rankings</li>
+                    <li>Candidatura para oportunidades</li>
+                    <li>Recebimento de avaliações de empresas</li>
+                </ul>
+
+                <h4>Como editar o perfil</h4>
+                <p>O aluno pode acessar a área de perfil através do dashboard da conta. Nessa seção é possível alterar:</p>
+                <ul class="help-list">
+                    <li>Nome</li>
+                    <li>Foto de perfil</li>
+                    <li>Currículo</li>
+                    <li>Descrição pessoal</li>
+                    <li>Curso</li>
+                    <li>Habilidades</li>
+                </ul>
+            </article>
+
+            <article id="empresas" class="help-card">
+                <h2>🏢 Área das Empresas</h2>
+                <p>Empresas cadastradas possuem funcionalidades específicas voltadas para recrutamento e busca de talentos acadêmicos.</p>
+
+                <h4>Funcionalidades disponíveis</h4>
+                <ul class="help-list">
+                    <li>Cadastro e edição do perfil empresarial</li>
+                    <li>Upload da logo da empresa</li>
+                    <li>Publicação de vagas e oportunidades</li>
+                    <li>Busca de talentos por habilidades</li>
+                    <li>Visualização de currículos</li>
+                    <li>Avaliação de alunos</li>
+                    <li>Gerenciamento de candidatos</li>
+                </ul>
+
+                <h4>Buscar Talentos</h4>
+                <p>A funcionalidade “Buscar Talentos” permite que empresas encontrem alunos cadastrados na plataforma utilizando filtros como:</p>
+                <ul class="help-list">
+                    <li>Curso</li>
+                    <li>Área de atuação</li>
+                    <li>Projetos cadastrados</li>
+                    <li>Habilidades</li>
+                </ul>
+                <p>Ao acessar o perfil de um aluno, a empresa poderá visualizar informações profissionais, projetos publicados e currículo.</p>
+            </article>
+
+            <article id="projetos" class="help-card">
+                <h2>📁 Projetos</h2>
+                <p>Os projetos representam trabalhos acadêmicos, sistemas, pesquisas, designs, artigos ou qualquer atividade desenvolvida pelo aluno.</p>
+
+                <h4>Os projetos podem conter</h4>
+                <ul class="help-list">
+                    <li>Título</li>
+                    <li>Descrição detalhada</li>
+                    <li>Área do projeto</li>
+                    <li>Tecnologias utilizadas</li>
+                    <li>Links externos</li>
+                    <li>Arquivo PDF</li>
+                    <li>Imagens e previews</li>
+                </ul>
+
+                <h4>Interações disponíveis</h4>
+                <ul class="help-list">
+                    <li>Curtidas</li>
+                    <li>Comentários</li>
+                    <li>Visualizações</li>
+                </ul>
+                <p>Os alunos podem editar ou excluir apenas os próprios projetos.</p>
+            </article>
+
+            <article id="vagas" class="help-card">
+                <h2>💼 Vagas e Oportunidades</h2>
+                <p>Empresas podem cadastrar oportunidades profissionais dentro da plataforma.</p>
+                <p>Os alunos conseguem visualizar vagas disponíveis e realizar candidaturas.</p>
+
+                <h4>As vagas podem conter</h4>
+                <ul class="help-list">
+                    <li>Nome da vaga</li>
+                    <li>Descrição</li>
+                    <li>Área de atuação</li>
+                    <li>Requisitos</li>
+                    <li>Benefícios</li>
+                    <li>Empresa responsável</li>
+                </ul>
+            </article>
+
+            <article id="rankings" class="help-card">
+                <h2>🏆 Rankings</h2>
+                <p>O SkillBridge possui rankings de alunos e empresas.</p>
+
+                <h4>Ranking de Alunos</h4>
+                <p>O ranking de alunos pode considerar:</p>
+                <ul class="help-list">
+                    <li>Projetos publicados</li>
+                    <li>Avaliações recebidas</li>
+                    <li>Participação na plataforma</li>
+                    <li>Popularidade dos projetos</li>
+                </ul>
+
+                <h4>Ranking de Empresas</h4>
+                <p>O ranking empresarial destaca empresas mais participativas dentro da plataforma.</p>
+                <p>Os rankings podem ser acessados até mesmo sem login.</p>
+            </article>
+
+            <article id="avaliacoes" class="help-card">
+                <h2>⭐ Avaliações</h2>
+                <p>Empresas podem avaliar alunos após interações profissionais ou participação em oportunidades.</p>
+                <p>As avaliações ajudam outros usuários a identificarem talentos com melhor desempenho e participação.</p>
+            </article>
+
+            <article id="skillbot" class="help-card">
+                <h2>🤖 SkillBot <span class="help-badge">Assistente</span></h2>
+                <p>O SkillBot é o assistente virtual inteligente do SkillBridge.</p>
+                <p>Ele auxilia usuários com:</p>
+                <ul class="help-list">
+                    <li>Navegação dentro do sistema</li>
+                    <li>Redirecionamento automático</li>
+                    <li>Dúvidas sobre funcionalidades</li>
+                    <li>Acesso rápido a páginas importantes</li>
+                    <li>Ajuda sobre perfil, vagas e projetos</li>
+                </ul>
+                <p>Algumas ações só podem ser realizadas por usuários logados, garantindo segurança e privacidade das informações.</p>
+            </article>
+
+            <article id="seguranca" class="help-card">
+                <h2>🔐 Segurança e Privacidade</h2>
+                <p>O sistema protege informações pessoais dos usuários e impede alterações indevidas em contas de terceiros.</p>
+                <p>Cada usuário possui acesso apenas aos dados da própria conta.</p>
+                <p>Empresas não podem editar informações de alunos e alunos não podem editar dados empresariais.</p>
+            </article>
+
+            <article id="acessibilidade" class="help-card">
+                <h2>♿ Acessibilidade</h2>
+                <p>O SkillBridge possui integração com o VLibras, ferramenta oficial de acessibilidade em Libras.</p>
+                <p>O recurso auxilia usuários surdos na navegação e compreensão do conteúdo da plataforma.</p>
+            </article>
+
+            <article id="suporte" class="help-card">
+                <h2>🆘 Suporte e Ajuda</h2>
+                <p>Caso o SkillBot não consiga resolver alguma dúvida, utilize esta Central de Ajuda para encontrar informações detalhadas sobre todas as funcionalidades da plataforma.</p>
+                <p>Recomendamos utilizar o menu principal para navegar entre as áreas do sistema de forma organizada.</p>
+            </article>
+
+        </main>
+    </div>
+</div>

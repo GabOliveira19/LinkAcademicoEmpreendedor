@@ -6,11 +6,11 @@ namespace LinkAcademicoEmpreendedor.Controllers
 {
     public class NotificacaoController : Controller
     {
-        private readonly NotificacaoService _notificacaoService;
+        private readonly NotificacaoService _NotificacaoService;
 
         public NotificacaoController(ApplicationDbContext context)
         {
-            _notificacaoService = new NotificacaoService(context);
+            _NotificacaoService = new NotificacaoService(context);
         }
 
         // GET: /Notificacao
@@ -22,8 +22,8 @@ namespace LinkAcademicoEmpreendedor.Controllers
             if (userId == null || string.IsNullOrEmpty(tipoUsuario))
                 return RedirectToAction("Login", "Account");
 
-            var notificacoes = await _notificacaoService.ObterNotificacoesAsync(userId.Value, tipoUsuario, 50);
-            return View(notificacoes);
+            var Notificacoes = await _NotificacaoService.ObterNotificacoesAsync(userId.Value, tipoUsuario, 50);
+            return View(Notificacoes);
         }
 
         // GET: /Notificacao/NaoLidas (API JSON)
@@ -34,15 +34,15 @@ namespace LinkAcademicoEmpreendedor.Controllers
             var tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
 
             if (userId == null || string.IsNullOrEmpty(tipoUsuario))
-                return Json(new { count = 0, notificacoes = new List<object>() });
+                return Json(new { count = 0, Notificacoes = new List<object>() });
 
-            var notificacoes = await _notificacaoService.ObterNaoLidasAsync(userId.Value, tipoUsuario);
-            var count = notificacoes.Count;
+            var Notificacoes = await _NotificacaoService.ObterNaoLidasAsync(userId.Value, tipoUsuario);
+            var count = Notificacoes.Count;
 
             return Json(new
             {
                 count,
-                notificacoes = notificacoes.Take(5).Select(n => new
+                Notificacoes = Notificacoes.Take(5).Select(n => new
                 {
                     n.Id,
                     n.Titulo,
@@ -57,7 +57,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
         [HttpPost]
         public async Task<IActionResult> MarcarLida(int id)
         {
-            await _notificacaoService.MarcarComoLidaAsync(id);
+            await _NotificacaoService.MarcarComoLidaAsync(id);
             return Ok();
         }
 
@@ -71,7 +71,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
             if (userId == null || string.IsNullOrEmpty(tipoUsuario))
                 return Unauthorized();
 
-            await _notificacaoService.MarcarTodasComoLidasAsync(userId.Value, tipoUsuario);
+            await _NotificacaoService.MarcarTodasComoLidasAsync(userId.Value, tipoUsuario);
             return Ok();
         }
     }

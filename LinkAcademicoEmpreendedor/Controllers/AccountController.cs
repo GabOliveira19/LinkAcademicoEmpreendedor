@@ -602,11 +602,11 @@ namespace LinkAcademicoEmpreendedor.Controllers
                         return View(model);
                     }
 
-                    var notificacoesAluno = await _context.Notificacoes
+                    var NotificacoesAluno = await _context.Notificacoes
                         .Where(n => n.TipoDestinatario == "Aluno" && n.DestinatarioId == userId)
                         .ToListAsync();
-                    if (notificacoesAluno.Any())
-                        _context.Notificacoes.RemoveRange(notificacoesAluno);
+                    if (NotificacoesAluno.Any())
+                        _context.Notificacoes.RemoveRange(NotificacoesAluno);
 
                     var candidaturas = await _context.Candidaturas
                         .Where(c => c.AlunoId == userId)
@@ -668,11 +668,11 @@ namespace LinkAcademicoEmpreendedor.Controllers
                         return View(model);
                     }
 
-                    var notificacoesEmpresa = await _context.Notificacoes
+                    var NotificacoesEmpresa = await _context.Notificacoes
                         .Where(n => n.TipoDestinatario == "Empresa" && n.DestinatarioId == userId)
                         .ToListAsync();
-                    if (notificacoesEmpresa.Any())
-                        _context.Notificacoes.RemoveRange(notificacoesEmpresa);
+                    if (NotificacoesEmpresa.Any())
+                        _context.Notificacoes.RemoveRange(NotificacoesEmpresa);
 
                     var oportunidades = await _context.Oportunidades
                         .Where(o => o.EmpresaId == userId)
