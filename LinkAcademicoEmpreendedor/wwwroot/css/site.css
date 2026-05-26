@@ -159,3 +159,12 @@ footer {
         background-color: #157347;
         color: white;
     }
+
+
+.navbar-nav .nav-link {
+    white-space: nowrap;
+}
+
+.navbar-nav {
+    align-items: center;
+}

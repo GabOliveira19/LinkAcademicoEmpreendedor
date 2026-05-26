@@ -14,14 +14,14 @@
                         {
                             <img src="@Model.FotoPerfil"
                                  class="rounded-circle"
-                                 style="width:150px;height:150px;object-fit:cover;" />
+                                 style="width:150px;height:150px;object-fit:cover;"
+                                 onerror="this.src='/images/default-avatar.jpg';" />
                         }
                         else
                         {
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:150px;height:150px;font-size:3rem;">
-                                @Model.Nome.Substring(0, 1).ToUpper()
-                            </div>
+                            <img src="/images/default-avatar.jpg"
+                                 class="rounded-circle"
+                                 style="width:150px;height:150px;object-fit:cover;" />
                         }
                     </div>
                     <h3>@Model.Nome</h3>

@@ -36,7 +36,7 @@ namespace LinkAcademicoEmpreendedor.Services
                     .Where(c => c.AlunoId == avaliadoId
                                 && c.Oportunidade != null
                                 && c.Oportunidade.EmpresaId == avaliadorId
-                                && c.Status == "Aprovada")
+                                && (c.Status == "Aceita" || c.Status == "Aprovada"))
                     .OrderByDescending(c => c.DataResposta)
                     .FirstOrDefaultAsync();
             }
@@ -47,7 +47,7 @@ namespace LinkAcademicoEmpreendedor.Services
                     .Where(c => c.AlunoId == avaliadorId
                                 && c.Oportunidade != null
                                 && c.Oportunidade.EmpresaId == avaliadoId
-                                && c.Status == "Aprovada")
+                                && (c.Status == "Aceita" || c.Status == "Aprovada"))
                     .OrderByDescending(c => c.DataResposta)
                     .FirstOrDefaultAsync();
             }
@@ -69,7 +69,7 @@ namespace LinkAcademicoEmpreendedor.Services
             var vinculo = await ObterVinculoAtivoAsync(avaliadorId, tipoAvaliador, avaliadoId, tipoAvaliado);
             if (vinculo == null)
             {
-                throw new InvalidOperationException("Avaliacao somente permitida enquanto existir um vínculo ativo (candidatura aprovada) entre as partes.");
+                throw new InvalidOperationException("Avaliação somente permitida enquanto existir um vínculo ativo (candidatura aprovada) entre as partes.");
             }
 
             // Buscar avaliacao mais recente do mesmo par avaliador/avaliado

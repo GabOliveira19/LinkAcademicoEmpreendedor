@@ -69,7 +69,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
             try
             {
                 await _avaliacaoService.AvaliarAsync(empresaId.Value, "Empresa", alunoId, "Aluno", nota, comentario);
-                TempData["Sucesso"] = "Avaliacao enviada com sucesso!";
+                TempData["Sucesso"] = "Avaliação enviada com sucesso!";
             }
             catch (InvalidOperationException ex)
             {

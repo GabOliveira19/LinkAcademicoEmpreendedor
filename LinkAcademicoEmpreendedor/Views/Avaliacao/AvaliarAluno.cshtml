@@ -66,10 +66,10 @@
 
                         <!-- Comentario -->
                         <div class="mb-4">
-                            <label for="comentario" class="form-label">Comentario (opcional)</label>
+                            <label for="comentario" class="form-label">Comentário (opcional)</label>
                             <textarea class="form-control" id="comentario" name="comentario" rows="4"
-                                      placeholder="Deixe um comentario sobre o aluno...">@avaliacaoExistente?.Comentario</textarea>
-                            <small class="text-muted">Maximo 500 caracteres</small>
+                                      placeholder="Deixe um comentário sobre o aluno...">@avaliacaoExistente?.Comentario</textarea>
+                            <small class="text-muted">Máximo 500 caracteres</small>
                         </div>
 
                         <!-- Botoes -->
@@ -77,7 +77,7 @@
                             <button type="submit" class="btn btn-primary btn-lg" id="btnEnviar"
                                     @(avaliacaoExistente == null ? "disabled" : "")>
                                 <i class="bi bi-send"></i>
-                                @(avaliacaoExistente != null ? "Atualizar Avaliacao" : "Enviar Avaliacao")
+                                @(avaliacaoExistente != null ? "Atualizar Avaliação" : "Enviar Avaliação")
                             </button>
                             <a asp-controller="Empresa" asp-action="Dashboard" class="btn btn-outline-secondary">
                                 <i class="bi bi-arrow-left"></i> Cancelar

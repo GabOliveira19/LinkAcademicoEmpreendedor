@@ -253,7 +253,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
             if (candidatura == null || candidatura.Oportunidade.EmpresaId != empresaId)
                 return NotFound();
 
-            candidatura.Status = "Aceita";
+            candidatura.Status = "Aprovada";
             candidatura.DataResposta = DateTime.Now;
 
             _context.Notificacoes.Add(new Notificacao

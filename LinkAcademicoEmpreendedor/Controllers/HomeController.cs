@@ -52,5 +52,28 @@ namespace LinkAcademicoEmpreendedor.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        public async Task<IActionResult> Desenvolvedores()
+        {
+            var nomesDesenvolvedores = new List<string>
+    {
+        "Gabriel Cézar de Oliveira",
+        "Guilherme Oliveira da Silva",
+        "Matheus Moura Leite",
+        "Gabriel Siqueira Assis",
+        "João Gabriel Martins Pereira",
+        "João Marcos Corrêa Silveira",
+        "Fábio Lopes"
+    };
+
+            var desenvolvedores = await _context.Alunos
+                .Where(a => nomesDesenvolvedores.Contains(a.Nome))
+                .ToListAsync();
+
+            ViewBag.NomesDesenvolvedores = nomesDesenvolvedores;
+
+            return View(desenvolvedores);
+        }
+
     }
+
 }

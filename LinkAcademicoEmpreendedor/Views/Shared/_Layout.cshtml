@@ -28,8 +28,9 @@
             --desktop-footer-height: 60px;
         }
 
-        html {
+        html, body {
             height: 100%;
+            margin: 0;
         }
 
         body {
@@ -37,6 +38,7 @@
             display: flex;
             flex-direction: column;
             margin: 0;
+            min-height: 100vh;
             padding-top: var(--top-navbar-height);
             padding-bottom: var(--mobile-bottom-nav-height);
             background-color: #f8f9fa;
@@ -46,10 +48,6 @@
             flex: 1 0 auto;
             width: 100%;
             padding-bottom: 20px;
-        }
-
-        .desktop-footer {
-            flex-shrink: 0;
         }
 
         .bottom-nav {
@@ -104,24 +102,37 @@
                 padding: 2px 5px;
             }
 
-        .desktop-footer {
-            width: 100%;
-            min-height: var(--desktop-footer-height);
-            background: #212529;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 18px 0;
-            margin-top: auto;
-            border-top: 1px solid rgba(255,255,255,0.08);
+        main, .page-content {
+            flex: 1 0 auto;
         }
 
-            .desktop-footer .container {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                color: white;
+        .desktop-footer {
+            flex-shrink: 0;
+            width: 100%;
+            background: #e6f0fa;
+            color: #1e3a5f;
+            padding: 35px 0 15px;
+            margin-top: auto;
+            border-top: 1px solid #c8dcef;
+        }
+
+            .desktop-footer a {
+                color: #1e3a5f;
+                text-decoration: none;
+            }
+
+                .desktop-footer a:hover {
+                    color: #0d6efd;
+                    text-decoration: underline;
+                }
+
+            .desktop-footer h5 {
+                font-size: 1rem;
+                margin-bottom: 15px;
+            }
+
+            .desktop-footer ul li {
+                margin-bottom: 8px;
             }
 
     </style>
@@ -329,15 +340,82 @@
         @RenderBody()
     </main>
 
-    <!-- Footer Desktop Fixo
+    <!-- Footer Desktop Fixo -->
     <footer class="desktop-footer">
         <div class="container">
-            <p class="mb-0">
-                SkillBridge &copy; @DateTime.Now.Year
-            </p>
-        </div>
-    </footer> -->
+            <div class="row w-100 text-start">
 
+                <div class="col-md-3 mb-3">
+                    <h5 class="fw-bold">SkillBridge</h5>
+                    <p class="mb-0">
+                        Plataforma que conecta talentos acadêmicos e empresas.
+                    </p>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <h5 class="fw-bold">Geral</h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a asp-controller="Account" asp-action="CadastroAluno">
+                                Cadastre-se
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Ajuda" asp-action="Index">
+                                Central de Ajuda
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Home" asp-action="Sobre">
+                                Sobre
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <h5 class="fw-bold">Navegação</h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a asp-controller="Oportunidade" asp-action="Index">
+                                Vagas
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Projeto" asp-action="Index">
+                                Projetos
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Aluno" asp-action="Listar">
+                                Talentos
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <h5 class="fw-bold">Equipe</h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a asp-controller="Home" asp-action="Desenvolvedores">
+                                Desenvolvedores
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <hr class="my-3">
+
+            <div class="text-center w-100">
+                <p class="mb-0">
+                    SkillBridge &copy; @DateTime.Now.Year - Todos os direitos reservados
+                </p>
+            </div>
+        </div>
+    </footer>
     <!-- Navegação Fixa no Rodapé Mobile -->
     <nav class="bottom-nav d-lg-none">
         <div class="container-fluid px-0">

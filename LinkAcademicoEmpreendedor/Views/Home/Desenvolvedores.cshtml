@@ -1,0 +1,182 @@
+﻿@model List<LinkAcademicoEmpreendedor.Models.Aluno>
+
+@{
+    ViewData["Title"] = "Desenvolvedores";
+    var nomesDesenvolvedores = ViewBag.NomesDesenvolvedores as List<string>;
+}
+
+<style>
+    .dev-hero {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2d6bb5 60%, #4a90d9 100%);
+        color: #fff;
+        padding: 70px 20px 90px;
+        text-align: center;
+        border-radius: 0 0 30px 30px;
+        margin: -20px 0 -50px 0; /* sobe e cobre a faixa branca abaixo do navbar */
+        box-shadow: 0 8px 24px rgba(30,58,95,0.25);
+        position: relative;
+        z-index: 1;
+    }
+
+        .dev-hero h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .dev-hero p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+    .dev-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 80px 20px 60px;
+    }
+
+    .dev-card {
+        background: #fff;
+        border: 1px solid #e6f0fa;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 4px 18px rgba(30,58,95,0.08);
+        transition: transform .25s ease, box-shadow .25s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .dev-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(30,58,95,0.15);
+        }
+
+    .dev-card-img-wrapper {
+        width: 100%;
+        height: 280px;
+        aspect-ratio: 1 / 1.15;
+        overflow: hidden;
+        background: #e6f0fa;
+        flex-shrink: 0;
+    }
+
+    .dev-card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .dev-card-body {
+        padding: 20px;
+        color: #1e3a5f;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+    }
+
+        .dev-card-body h3 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+    .dev-badge {
+        display: inline-block;
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        border-radius: 999px;
+        width: fit-content;
+        font-weight: 600;
+    }
+
+        .dev-badge.ok {
+            background: #dff5e6;
+            color: #1f7a3a;
+        }
+
+        .dev-badge.miss {
+            background: #fde8e8;
+            color: #a32525;
+        }
+
+    .dev-btn {
+        margin-top: auto;
+        display: inline-block;
+        text-align: center;
+        padding: 10px 16px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        background: linear-gradient(135deg, #2d6bb5, #4a90d9);
+        color: #fff;
+        transition: opacity .2s ease, transform .2s ease;
+    }
+
+        .dev-btn:hover {
+            opacity: 0.92;
+            transform: translateY(-2px);
+            color: #fff;
+        }
+
+        .dev-btn.disabled {
+            background: #c8d3df;
+            color: #fff;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+    @@media (max-width: 480px) {
+        .dev-card-img-wrapper {
+            height: 220px;
+        }
+
+        .dev-grid {
+            padding: 60px 14px 40px;
+            gap: 18px;
+        }
+    }
+</style>
+
+<section class="dev-hero">
+    <h1>Equipe de Desenvolvimento</h1>
+    <p>Conheça os responsáveis pelo desenvolvimento da plataforma SkillBridge.</p>
+</section>
+
+<div class="dev-grid">
+    @foreach (var nome in nomesDesenvolvedores)
+    {
+        var dev = Model.FirstOrDefault(x => x.Nome == nome);
+        <article class="dev-card">
+            <div class="dev-card-img-wrapper">
+                @if (dev != null && !string.IsNullOrEmpty(dev.FotoPerfil))
+                {
+                    <img src="@dev.FotoPerfil" alt="@dev.Nome" class="dev-card-img" />
+                }
+                else
+                {
+                    <img src="~/images/default-avatar.jpg" alt="Sem foto" class="dev-card-img" />
+                }
+            </div>
+            <div class="dev-card-body">
+                <h3>@nome</h3>
+                @if (dev != null)
+                {
+                    <span class="dev-badge ok">✓ Perfil cadastrado</span>
+                    <a class="dev-btn" href="@Url.Action("Perfil", "Aluno", new { id = dev.Id })">Ver perfil</a>
+                }
+                else
+                {
+                    <span class="dev-badge miss">✕ Perfil não encontrado</span>
+                    <a class="dev-btn disabled" href="#">Ver perfil</a>
+                }
+            </div>
+        </article>
+    }
+</div>
