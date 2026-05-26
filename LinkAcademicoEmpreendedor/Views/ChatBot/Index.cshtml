@@ -2,271 +2,518 @@
     ViewData["Title"] = "Assistente IA";
 }
 
-<div class="container py-4">
-
+<div class="container py-5">
     <div class="row justify-content-center">
+        <div class="col-lg-8">
 
-        <div class="col-md-8">
-
-            <div class="card shadow border-0 rounded-4">
+            <div class="chat-shell">
 
                 <!-- Cabeçalho -->
-                <div class="card-header bg-success text-white rounded-top-4">
-                    <h4 class="mb-0 fw-bold">
-                        🤖 SkillBot
-                    </h4>
+                <div class="chat-header">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bot-avatar">
+                            <i class="bi bi-robot"></i>
+                            <span class="status-dot"></span>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-bold text-white">SkillBot</h5>
+                            <small class="text-white-50">
+                                <span class="pulse-dot"></span> Online · Assistente virtual SkillBridge
+                            </small>
+                        </div>
+                    </div>
+                    <span class="badge-pill-soft d-none d-sm-inline-flex">
+                        <i class="bi bi-stars"></i> IA
+                    </span>
                 </div>
 
-                <div class="card-body">
-
-                    <!-- Caixa do chat -->
-                    <div id="chatBox"
-                         style="
-                            height: 450px;
-                            overflow-y: auto;
-                            border: 1px solid #dee2e6;
-                            border-radius: 15px;
-                            padding: 20px;
-                            background-color: #f8f9fa;
-                         ">
-
-                        <!-- Mensagem inicial -->
-                        <div class="mb-3">
-                            <strong>SkillBot:</strong>
-                            Bem-vindo ao SkillBridge! Sou o assistente virtual da plataforma. Como posso ajudar você hoje?
+                <!-- Caixa do chat -->
+                <div id="chatBox" class="chat-box">
+                    <div class="msg msg-bot">
+                        <div class="msg-avatar"><i class="bi bi-robot"></i></div>
+                        <div class="msg-bubble">
+                            <div class="msg-name">SkillBot</div>
+                            Bem-vindo ao <strong>SkillBridge</strong>! Sou o assistente virtual da plataforma.
+                            Como posso ajudar você hoje?
                         </div>
-
                     </div>
+                </div>
 
-                    <!-- Campo mensagem -->
-                    <div class="mt-3">
+                <!-- Área de input -->
+                <div class="chat-input-area">
+                    <div class="input-row">
 
-                        <div class="d-flex align-items-center">
-
-                            <!-- Botão raio -->
-                            <div class="dropdown me-2">
-
-                                <button class="btn btn-outline-warning rounded-circle fw-bold shadow-sm"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        title="Sugestões rápidas"
-                                        style="
-                                            width: 52px;
-                                            height: 48px;
-                                            font-size: 22px;
-                                        ">
-                                    ⚡
-                                </button>
-
-                                <!-- Sugestões -->
-                                <ul class="dropdown-menu shadow border-0 rounded-4 p-2"
-                                    style="min-width: 280px;">
-
-                                    <li>
-                                        <button class="dropdown-item rounded-3"
-                                                onclick="usarSugestao('Criar Projeto')">
-                                            📁 Criar Projeto
-                                        </button>
-                                    </li>
-
-                                    <li>
-                                        <button class="dropdown-item rounded-3"
-                                                onclick="usarSugestao('Ver ranking de alunos')">
-                                            🏆 Ver ranking de alunos
-                                        </button>
-                                    </li>
-
-                                    <li>
-                                        <button class="dropdown-item rounded-3"
-                                                onclick="usarSugestao('Ver ranking de empresas')">
-                                            🏢 Ver ranking de empresas
-                                        </button>
-                                    </li>
-
-                                    <li>
-                                        <button class="dropdown-item rounded-3"
-                                                onclick="usarSugestao('Como editar meu perfil?')">
-                                            👤 Como editar meu perfil?
-                                        </button>
-                                    </li>
-
-                                    <li>
-                                        <button class="dropdown-item rounded-3"
-                                                onclick="usarSugestao('Quero ver vagas')">
-                                            💼 Quero ver vagas
-                                        </button>
-                                    </li>
-
-                                    <li>
-                                        <button class="dropdown-item rounded-3"
-                                                onclick="usarSugestao('Ver currículos de alunos')">
-                                            📄 Ver currículos de alunos
-                                        </button>
-                                    </li>
-
-                                    <li>
-                                        <button class="dropdown-item rounded-3"
-                                                onclick="usarSugestao('Ajuda')">
-                                            ❓ Ajuda
-                                        </button>
-                                    </li>
-
-                                </ul>
-
-                            </div>
-
-                            <!-- Input -->
-                            <input type="text"
-                                   id="mensagem"
-                                   class="form-control rounded-pill"
-                                   placeholder="Digite sua pergunta..."
-                                   onkeypress="if(event.key === 'Enter') enviarMensagem()" />
-
-                            <!-- Botão enviar -->
-                            <button class="btn btn-success ms-2 rounded-pill px-4"
-                                    onclick="enviarMensagem()">
-                                Enviar
+                        <!-- Sugestões rápidas -->
+                        <div class="dropdown">
+                            <button class="btn-suggest"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    data-bs-offset="0,12"
+                                    title="Sugestões rápidas">
+                                <i class="bi bi-lightning-charge-fill"></i>
                             </button>
 
+                            <ul class="dropdown-menu shadow border-0 rounded-4 p-2 suggest-menu">
+                                <li class="suggest-title px-2 pb-1">Sugestões rápidas</li>
+                                <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Criar Projeto')"><i class="bi bi-folder-plus me-2 text-primary"></i> Criar Projeto</button></li>
+                                <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Ver ranking de alunos')"><i class="bi bi-trophy-fill me-2 text-warning"></i> Ranking de alunos</button></li>
+                                <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Ver ranking de empresas')"><i class="bi bi-building-fill-up me-2 text-info"></i> Ranking de empresas</button></li>
+                                <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Como editar meu perfil?')"><i class="bi bi-person-gear me-2 text-secondary"></i> Editar meu perfil</button></li>
+                                <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Quero ver vagas')"><i class="bi bi-briefcase-fill me-2 text-success"></i> Ver vagas</button></li>
+                                <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Ver currículos de alunos')"><i class="bi bi-file-earmark-person-fill me-2 text-primary"></i> Currículos de alunos</button></li>
+                                <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Ajuda')"><i class="bi bi-question-circle-fill me-2 text-danger"></i> Ajuda</button></li>
+                            </ul>
                         </div>
 
+                        <input type="text"
+                               id="mensagem"
+                               class="chat-input"
+                               placeholder="Digite sua pergunta..."
+                               autocomplete="off"
+                               onkeypress="if(event.key === 'Enter') enviarMensagem()" />
+
+                        <button class="btn-send" onclick="enviarMensagem()" title="Enviar">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
                     </div>
 
+                    <p class="hint">
+                        <i class="bi bi-shield-lock"></i>
+                        Suas conversas ajudam a melhorar o SkillBot.
+                    </p>
                 </div>
 
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 <style>
+    :root {
+        --brand-1: #4f46e5;
+        --brand-2: #7c3aed;
+        --brand-soft: #eef2ff;
+        --ink: #0f172a;
+        --muted: #64748b;
+    }
+
+    .chat-shell {
+        background: #fff;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        border: 1px solid #eef2f7;
+        box-shadow: 0 30px 60px -30px rgba(79,70,229,.25);
+    }
+
+    /* Header */
+    .chat-header {
+        background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff;
+    }
+
+    .bot-avatar {
+        position: relative;
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: rgba(255,255,255,.18);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255,255,255,.25);
+    }
+
+    .status-dot {
+        position: absolute;
+        right: -2px;
+        bottom: -2px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #22c55e;
+        border: 2px solid #fff;
+    }
+
+    .pulse-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #22c55e;
+        margin-right: 4px;
+        vertical-align: middle;
+        animation: pulse 1.6s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(34,197,94,.6);
+        }
+
+        70% {
+            box-shadow: 0 0 0 8px rgba(34,197,94,0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(34,197,94,0);
+        }
+    }
+
+    .badge-pill-soft {
+        background: rgba(255,255,255,.18);
+        border: 1px solid rgba(255,255,255,.3);
+        color: #fff;
+        font-weight: 600;
+        font-size: .8rem;
+        padding: .4rem .8rem;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+    }
+
+    /* Chat box */
+    .chat-box {
+        height: 480px;
+        overflow-y: auto;
+        padding: 1.5rem;
+        background: radial-gradient(circle at 20% 0%, #eef2ff 0%, transparent 40%), radial-gradient(circle at 80% 100%, #f5f3ff 0%, transparent 45%), #fafbff;
+    }
+
+        .chat-box::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-box::-webkit-scrollbar-thumb {
+            background: #d6d9e6;
+            border-radius: 999px;
+        }
+
+    .msg {
+        display: flex;
+        gap: .65rem;
+        margin-bottom: 1rem;
+        animation: fadeUp .25s ease;
+    }
+
+    @@keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .msg-avatar {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        background: var(--brand-soft);
+        color: var(--brand-1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+
+    .msg-bubble {
+        background: #fff;
+        border: 1px solid #e9ecf3;
+        padding: .75rem 1rem;
+        border-radius: 16px 16px 16px 4px;
+        max-width: 78%;
+        color: var(--ink);
+        box-shadow: 0 6px 14px -10px rgba(15,23,42,.18);
+        line-height: 1.5;
+    }
+
+    .msg-name {
+        font-size: .75rem;
+        font-weight: 700;
+        color: var(--brand-1);
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        margin-bottom: .15rem;
+    }
+
+    /* Mensagens do usuário */
+    .msg-user {
+        flex-direction: row-reverse;
+    }
+
+        .msg-user .msg-avatar {
+            background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+            color: #fff;
+        }
+
+        .msg-user .msg-bubble {
+            background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+            color: #fff;
+            border: none;
+            border-radius: 16px 16px 4px 16px;
+        }
+
+        .msg-user .msg-name {
+            color: rgba(255,255,255,.85);
+        }
+
+    /* Erro */
+    .msg-error .msg-bubble {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #991b1b;
+    }
+
+    .msg-error .msg-avatar {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    /* Typing */
+    .typing-dots {
+        display: inline-flex;
+        gap: 4px;
+        padding: 4px 2px;
+    }
+
+        .typing-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--brand-1);
+            opacity: .5;
+            animation: typing 1.2s infinite ease-in-out;
+        }
+
+            .typing-dots span:nth-child(2) {
+                animation-delay: .15s;
+            }
+
+            .typing-dots span:nth-child(3) {
+                animation-delay: .3s;
+            }
+
+    @@keyframes typing {
+        0%, 80%, 100% {
+            transform: scale(.7);
+            opacity: .4;
+        }
+
+        40% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    /* Input */
+    .chat-input-area {
+        padding: 1rem 1.25rem 1.25rem;
+        background: #fff;
+        border-top: 1px solid #eef2f7;
+    }
+
+    .input-row {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        background: #f5f6fb;
+        border: 1px solid #e6e8f0;
+        border-radius: 999px;
+        padding: .35rem .4rem .35rem .55rem;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+        .input-row:focus-within {
+            border-color: var(--brand-1);
+            box-shadow: 0 0 0 4px rgba(79,70,229,.12);
+            background: #fff;
+        }
+
+    .btn-suggest {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(135deg, #fde68a, #fbbf24);
+        color: #7c2d12;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform .2s;
+    }
+
+        .btn-suggest:hover {
+            transform: scale(1.05);
+        }
+
+    .chat-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: .95rem;
+        color: var(--ink);
+        padding: .5rem .25rem;
+    }
+
+        .chat-input::placeholder {
+            color: #94a3b8;
+        }
+
+    .btn-send {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: none;
+        color: #fff;
+        background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform .2s, box-shadow .2s;
+        box-shadow: 0 8px 18px -8px rgba(79,70,229,.6);
+    }
+
+        .btn-send:hover {
+            transform: translateY(-1px) scale(1.03);
+        }
+
+    .hint {
+        margin: .75rem 0 0;
+        text-align: center;
+        font-size: .75rem;
+        color: var(--muted);
+    }
+
+        .hint i {
+            color: var(--brand-1);
+        }
+
+    /* Sugestões dropdown */
+    .suggest-menu {
+        min-width: 280px;
+        border: 1px solid #eef2f7;
+    }
+
+    .suggest-title {
+        font-size: .7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: var(--muted);
+    }
 
     .dropdown-item {
-        transition: all 0.2s ease;
-        padding: 10px 12px;
-        font-size: 0.95rem;
+        transition: all .2s ease;
+        padding: .55rem .75rem;
+        font-size: .9rem;
+        color: var(--ink);
     }
 
         .dropdown-item:hover {
-            background-color: #f1f3f5;
+            background-color: var(--brand-soft);
+            color: var(--brand-1);
             transform: translateX(3px);
         }
-
 </style>
 
 <script>
-
-    // Usar sugestão
     function usarSugestao(texto) {
-
         document.getElementById('mensagem').value = texto;
-
         enviarMensagem();
     }
 
-    async function enviarMensagem() {
+    function appendMessage(html) {
+        const chatBox = document.getElementById('chatBox');
+        chatBox.insertAdjacentHTML('beforeend', html);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-        let mensagemInput = document.getElementById('mensagem');
-
-        let mensagem = mensagemInput.value.trim();
-
-        if (mensagem === '')
-            return;
-
-        let chatBox = document.getElementById('chatBox');
-
-        // Mensagem usuário
-        chatBox.innerHTML += `
-            <div class="mb-3 text-end">
-                <div style="
-                    display: inline-block;
-                    background-color: #198754;
-                    color: white;
-                    padding: 10px 15px;
-                    border-radius: 15px;
-                    max-width: 75%;
-                    text-align: left;
-                ">
-                    <strong>Você:</strong><br>
-                    ${mensagem}
+    function showTyping() {
+        appendMessage(`
+            <div class="msg msg-bot" id="typingIndicator">
+                <div class="msg-avatar"><i class="bi bi-robot"></i></div>
+                <div class="msg-bubble">
+                    <div class="typing-dots"><span></span><span></span><span></span></div>
                 </div>
             </div>
-        `;
+        `);
+    }
+    function removeTyping() {
+        document.getElementById('typingIndicator')?.remove();
+    }
 
-        // Limpa input
+    function escapeHtml(s) {
+        return s.replace(/[&<>"']/g, c => ({
+            '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+        })[c]);
+    }
+
+    async function enviarMensagem() {
+        const mensagemInput = document.getElementById('mensagem');
+        const mensagem = mensagemInput.value.trim();
+        if (mensagem === '') return;
+
+        // Mensagem do usuário
+        appendMessage(`
+            <div class="msg msg-user">
+                <div class="msg-avatar"><i class="bi bi-person-fill"></i></div>
+                <div class="msg-bubble">
+                    <div class="msg-name">Você</div>
+                    ${escapeHtml(mensagem)}
+                </div>
+            </div>
+        `);
+
         mensagemInput.value = '';
-
-        // Scroll automático
-        chatBox.scrollTop = chatBox.scrollHeight;
+        showTyping();
 
         try {
-
-            // Envia para controller
             const response = await fetch('/ChatBot/EnviarMensagem', {
-
                 method: 'POST',
-
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `mensagem=${encodeURIComponent(mensagem)}`
             });
 
             const data = await response.json();
+            removeTyping();
 
-            // Resposta IA
-            chatBox.innerHTML += `
-                <div class="mb-3">
-                    <div style="
-                        display: inline-block;
-                        background-color: white;
-                        border: 1px solid #dee2e6;
-                        padding: 10px 15px;
-                        border-radius: 15px;
-                        max-width: 75%;
-                    ">
-                        <strong>SkillBot:</strong><br>
+            appendMessage(`
+                <div class="msg msg-bot">
+                    <div class="msg-avatar"><i class="bi bi-robot"></i></div>
+                    <div class="msg-bubble">
+                        <div class="msg-name">SkillBot</div>
                         ${data.resposta}
                     </div>
                 </div>
-            `;
+            `);
 
-            // Scroll automático
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            // Redirecionamento
             if (data.redirecionar && data.redirecionar !== "") {
-
-                setTimeout(() => {
-
-                    window.location.href = data.redirecionar;
-
-                }, 2000);
+                setTimeout(() => { window.location.href = data.redirecionar; }, 2000);
             }
-
-        }
-        catch (erro) {
-
-            chatBox.innerHTML += `
-                <div class="mb-3">
-                    <div style="
-                        display: inline-block;
-                        background-color: #f8d7da;
-                        color: #842029;
-                        border: 1px solid #f5c2c7;
-                        padding: 10px 15px;
-                        border-radius: 15px;
-                    ">
-                        <strong>Erro:</strong><br>
+        } catch (erro) {
+            removeTyping();
+            appendMessage(`
+                <div class="msg msg-bot msg-error">
+                    <div class="msg-avatar"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                    <div class="msg-bubble">
+                        <div class="msg-name">Erro</div>
                         Não foi possível conectar ao assistente virtual.
                     </div>
                 </div>
-            `;
+            `);
         }
     }
-
 </script>

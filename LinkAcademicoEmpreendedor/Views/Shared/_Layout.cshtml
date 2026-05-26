@@ -17,132 +17,314 @@
     <meta property="og:url" content="https://www.skillbridge.example/" />
     <meta name="theme-color" content="#0d6efd" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <style>
         :root {
-            --top-navbar-height: 70px;
-            --mobile-bottom-nav-height: 65px;
+            --top-navbar-height: 72px;
+            --mobile-bottom-nav-height: 68px;
             --desktop-footer-height: 60px;
+
+            --sb-blue-900: #0a2b5e;
+            --sb-blue-700: #0d47a1;
+            --sb-blue-600: #1565c0;
+            --sb-blue-500: #1976d2;
+            --sb-blue-400: #2f8bf0;
+            --sb-blue-100: #e3f0ff;
+            --sb-blue-50:  #f3f8ff;
+            --sb-white:    #ffffff;
+            --sb-text:     #0f1f3a;
+            --sb-muted:    #5b6b86;
+
+            --sb-gradient: linear-gradient(135deg, #0d47a1 0%, #1976d2 55%, #2f8bf0 100%);
+            --sb-shadow-sm: 0 4px 12px rgba(13, 71, 161, 0.08);
+            --sb-shadow-md: 0 10px 30px rgba(13, 71, 161, 0.15);
+            --sb-shadow-lg: 0 20px 45px rgba(13, 71, 161, 0.22);
         }
 
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
+        * { box-sizing: border-box; }
+
+        html, body { height: 100%; margin: 0; }
 
         body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+            color: var(--sb-text);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            margin: 0;
-            min-height: 100vh;
             padding-top: var(--top-navbar-height);
             padding-bottom: var(--mobile-bottom-nav-height);
-            background-color: #f8f9fa;
+            background:
+                radial-gradient(1200px 600px at 100% -10%, rgba(47,139,240,0.12), transparent 60%),
+                radial-gradient(900px 500px at -10% 110%, rgba(13,71,161,0.08), transparent 60%),
+                #f5f8fd;
+            -webkit-font-smoothing: antialiased;
         }
 
-        main {
-            flex: 1 0 auto;
-            width: 100%;
-            padding-bottom: 20px;
+        main { flex: 1 0 auto; width: 100%; padding-bottom: 24px; }
+
+        /* ====== NAVBAR ====== */
+        .navbar.sb-navbar {
+            height: var(--top-navbar-height);
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: saturate(180%) blur(14px);
+            -webkit-backdrop-filter: saturate(180%) blur(14px);
+            border-bottom: 1px solid rgba(13, 71, 161, 0.08);
+            box-shadow: var(--sb-shadow-sm);
+            transition: all .25s ease;
         }
 
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            height: var(--mobile-bottom-nav-height);
-            background: #ffffff;
-            border-top: 1px solid #dee2e6;
-            z-index: 9999;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
-            padding: 5px 0;
+        .sb-navbar .navbar-brand {
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: -0.02em;
+            background: var(--sb-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
         }
 
-            .bottom-nav .nav-link {
-                color: #6c757d;
-                padding: 6px 0;
-                font-size: 0.7rem;
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                text-decoration: none;
-                transition: all 0.2s ease;
-                height: 100%;
-            }
-
-                .bottom-nav .nav-link:hover,
-                .bottom-nav .nav-link.active {
-                    color: #0d6efd;
-                }
-
-                    .bottom-nav .nav-link.active i {
-                        transform: scale(1.1);
-                    }
-
-                .bottom-nav .nav-link i {
-                    font-size: 1.3rem;
-                    margin-bottom: 2px;
-                    transition: transform 0.2s ease;
-                }
-
-            .bottom-nav .position-relative .badge {
-                position: absolute;
-                top: 0;
-                right: 50%;
-                transform: translateX(15px);
-                font-size: 0.55rem;
-                padding: 2px 5px;
-            }
-
-        main, .page-content {
-            flex: 1 0 auto;
+        .sb-navbar .navbar-brand i {
+            color: var(--sb-blue-600);
+            -webkit-text-fill-color: var(--sb-blue-600);
+            font-size: 1.6rem;
         }
 
+        .sb-navbar .nav-link {
+            color: var(--sb-text) !important;
+            font-weight: 500;
+            padding: .55rem .9rem !important;
+            border-radius: 10px;
+            position: relative;
+            transition: all .2s ease;
+        }
+
+        .sb-navbar .nav-link:hover {
+            color: var(--sb-blue-600) !important;
+            background: var(--sb-blue-50);
+        }
+
+        .sb-navbar .main-menu .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 4px;
+            width: 0;
+            height: 2px;
+            background: var(--sb-gradient);
+            border-radius: 2px;
+            transition: all .25s ease;
+            transform: translateX(-50%);
+        }
+
+        .sb-navbar .main-menu .nav-link:hover::after { width: 60%; }
+
+        .sb-navbar .dropdown-menu {
+            border: 1px solid rgba(13, 71, 161, 0.08);
+            border-radius: 14px;
+            box-shadow: var(--sb-shadow-md);
+            padding: .5rem;
+            margin-top: .5rem;
+        }
+
+        .sb-navbar .dropdown-item {
+            border-radius: 8px;
+            padding: .55rem .75rem;
+            font-weight: 500;
+            transition: all .15s ease;
+        }
+
+        .sb-navbar .dropdown-item:hover {
+            background: var(--sb-blue-50);
+            color: var(--sb-blue-700);
+        }
+
+        .sb-navbar .dropdown-item i { margin-right: .4rem; color: var(--sb-blue-600); }
+        .sb-navbar .dropdown-item.text-danger i { color: #dc3545; }
+
+        .navbar-toggler {
+            border: 1px solid rgba(13,71,161,0.15);
+            padding: .35rem .55rem;
+        }
+        .navbar-toggler:focus { box-shadow: 0 0 0 .2rem rgba(25,118,210,.2); }
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%231565c0' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        /* ====== ALERTS ====== */
+        main .alert {
+            border: none;
+            border-radius: 14px;
+            box-shadow: var(--sb-shadow-sm);
+            font-weight: 500;
+        }
+        main .alert-success { background: #e6f7ee; color: #0a6b3b; border-left: 4px solid #1ea561; }
+        main .alert-danger  { background: #fdecec; color: #8a1a1a; border-left: 4px solid #dc3545; }
+
+        /* ====== FOOTER ====== */
         .desktop-footer {
             flex-shrink: 0;
             width: 100%;
-            background: #e6f0fa;
-            color: #1e3a5f;
-            padding: 35px 0 15px;
+            background: var(--sb-gradient);
+            color: #eaf2ff;
+            padding: 45px 0 18px;
             margin-top: auto;
-            border-top: 1px solid #c8dcef;
+            position: relative;
+            overflow: hidden;
         }
 
-            .desktop-footer a {
-                color: #1e3a5f;
-                text-decoration: none;
-            }
+        .desktop-footer::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(600px 240px at 10% 0%, rgba(255,255,255,0.12), transparent 60%),
+                radial-gradient(500px 240px at 90% 100%, rgba(255,255,255,0.08), transparent 60%);
+            pointer-events: none;
+        }
 
-                .desktop-footer a:hover {
-                    color: #0d6efd;
-                    text-decoration: underline;
-                }
+        .desktop-footer > .container { position: relative; z-index: 1; }
 
-            .desktop-footer h5 {
-                font-size: 1rem;
-                margin-bottom: 15px;
-            }
+        .desktop-footer h5 {
+            font-size: .95rem;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
 
-            .desktop-footer ul li {
-                margin-bottom: 8px;
-            }
+        .desktop-footer a {
+            color: #d6e4ff;
+            text-decoration: none;
+            transition: all .2s ease;
+            font-weight: 400;
+        }
 
+        .desktop-footer a:hover {
+            color: #ffffff;
+            padding-left: 4px;
+        }
+
+        .desktop-footer ul li { margin-bottom: 10px; }
+
+        .desktop-footer hr {
+            border-color: rgba(255,255,255,0.18);
+            opacity: 1;
+        }
+
+        .desktop-footer .copyright {
+            font-size: .875rem;
+            color: #c9d8f5;
+        }
+
+        /* ====== BOTTOM NAV MOBILE ====== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            width: 100%;
+            height: var(--mobile-bottom-nav-height);
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(13,71,161,0.1);
+            z-index: 9999;
+            box-shadow: 0 -8px 24px rgba(13,71,161,0.12);
+            padding: 6px 0;
+        }
+
+        .bottom-nav .nav-link {
+            color: var(--sb-muted);
+            padding: 6px 0;
+            font-size: .68rem;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all .2s ease;
+            height: 100%;
+            border-radius: 12px;
+            margin: 0 4px;
+        }
+
+        .bottom-nav .nav-link:hover,
+        .bottom-nav .nav-link.active {
+            color: var(--sb-blue-600);
+            background: var(--sb-blue-50);
+        }
+
+        .bottom-nav .nav-link.active i { transform: scale(1.15); }
+
+        .bottom-nav .nav-link i {
+            font-size: 1.35rem;
+            margin-bottom: 2px;
+            transition: transform .2s ease;
+        }
+
+        .bottom-nav .position-relative .badge {
+            position: absolute;
+            top: 0;
+            right: 50%;
+            transform: translateX(15px);
+            font-size: .55rem;
+            padding: 2px 5px;
+        }
+
+        /* ====== BOTÃO IA FLUTUANTE ====== */
+        .botao-ia {
+            position: fixed;
+            right: 22px;
+            bottom: calc(var(--mobile-bottom-nav-height) + 18px);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--sb-gradient);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            text-decoration: none;
+            box-shadow: var(--sb-shadow-lg);
+            z-index: 9998;
+            transition: all .25s ease;
+            animation: sbPulse 2.4s ease-in-out infinite;
+        }
+
+        .botao-ia:hover {
+            transform: translateY(-3px) scale(1.05);
+            color: #fff;
+        }
+
+        @@keyframes sbPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(25,118,210,0.45), var(--sb-shadow-lg); }
+            50%      { box-shadow: 0 0 0 14px rgba(25,118,210,0), var(--sb-shadow-lg); }
+        }
+
+        @@media (min-width: 992px) {
+            body { padding-bottom: 0; }
+            .botao-ia { bottom: 90px; }
+        }
     </style>
 </head>
 <body>
     <!-- Header Principal -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <nav class="navbar navbar-expand-lg sb-navbar fixed-top">
         <div class="container">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                <i class="bi bi-link-45deg"></i> SkillBridge
+            <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                <span style="font-size: 1.4rem;">🔗</span>
+                <span class="fw-bold">SkillBridge</span>
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -151,30 +333,19 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto main-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Projeto" asp-action="Index">Projetos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Oportunidade" asp-action="Index">Vagas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Aluno" asp-action="Listar">Talentos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Ajuda" asp-action="Index">Ajuda</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Projeto" asp-action="Index">Projetos</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Oportunidade" asp-action="Index">Vagas</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Aluno" asp-action="Listar">Talentos</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Ajuda" asp-action="Index">Ajuda</a></li>
                 </ul>
 
-                <ul class="navbar-nav">
+                <ul class="navbar-nav align-items-lg-center">
                     @if (Context.Session.GetInt32("UserId") != null)
                     {
                         var tipoUsuario = Context.Session.GetString("TipoUsuario");
                         var userName = Context.Session.GetString("UserName");
                         var userFoto = Context.Session.GetString("UserFoto");
-
 
                         <li class="nav-item d-none d-lg-block">
                             <a class="nav-link position-relative" asp-controller="Notificacao" asp-action="Index">
@@ -187,7 +358,7 @@
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
                                 @if (!string.IsNullOrEmpty(userFoto))
                                 {
-                                    <img src="@userFoto" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;" alt="@userName" />
+                                    <img src="@userFoto" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover; border: 2px solid var(--sb-blue-100);" alt="@userName" />
                                 }
                                 else
                                 {
@@ -199,67 +370,23 @@
                             <ul class="dropdown-menu dropdown-menu-end">
                                 @if (tipoUsuario == "Aluno")
                                 {
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Aluno" asp-action="Dashboard">
-                                            <i class="bi bi-speedometer2"></i> Meu painel
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Candidatura" asp-action="MinhasCandidaturas">
-                                            <i class="bi bi-file-earmark-person"></i> Minhas candidaturas
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Projeto" asp-action="Criar">
-                                            <i class="bi bi-folder-plus"></i> Novo projeto
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Aluno" asp-action="EditarPerfil">
-                                            <i class="bi bi-person-gear"></i> Editar perfil
-                                        </a>
-                                    </li>
+                                    <li><a class="dropdown-item" asp-controller="Aluno" asp-action="Dashboard"><i class="bi bi-speedometer2"></i> Meu painel</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Candidatura" asp-action="MinhasCandidaturas"><i class="bi bi-file-earmark-person"></i> Minhas candidaturas</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Projeto" asp-action="Criar"><i class="bi bi-folder-plus"></i> Novo projeto</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Aluno" asp-action="EditarPerfil"><i class="bi bi-person-gear"></i> Editar perfil</a></li>
                                 }
                                 else
                                 {
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Empresa" asp-action="Dashboard">
-                                            <i class="bi bi-speedometer2"></i> Meu painel
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Oportunidade" asp-action="Criar">
-                                            <i class="bi bi-briefcase"></i> Nova vaga
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Empresa" asp-action="EditarPerfil">
-                                            <i class="bi bi-building-gear"></i> Editar perfil
-                                        </a>
-                                    </li>
+                                    <li><a class="dropdown-item" asp-controller="Empresa" asp-action="Dashboard"><i class="bi bi-speedometer2"></i> Meu painel</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Oportunidade" asp-action="Criar"><i class="bi bi-briefcase"></i> Nova vaga</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Empresa" asp-action="EditarPerfil"><i class="bi bi-building-gear"></i> Editar perfil</a></li>
                                 }
 
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Notificacao" asp-action="Index">
-                                        <i class="bi bi-bell"></i> Notificações
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="AlterarSenha">
-                                        <i class="bi bi-lock"></i> Alterar senha
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-danger" asp-controller="Account" asp-action="ExcluirConta">
-                                        <i class="bi bi-trash"></i> Excluir conta
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item" asp-controller="Notificacao" asp-action="Index"><i class="bi bi-bell"></i> Notificações</a></li>
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="AlterarSenha"><i class="bi bi-lock"></i> Alterar senha</a></li>
+                                <li><a class="dropdown-item text-danger" asp-controller="Account" asp-action="ExcluirConta"><i class="bi bi-trash"></i> Excluir conta</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout">
-                                        <i class="bi bi-box-arrow-right"></i> Sair
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout"><i class="bi bi-box-arrow-right"></i> Sair</a></li>
                             </ul>
                         </li>
                     }
@@ -274,35 +401,19 @@
                                 Cadastre-se
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="CadastroAluno">
-                                        <i class="bi bi-mortarboard"></i> Sou aluno
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="CadastroEmpresa">
-                                        <i class="bi bi-building"></i> Sou empresa
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="CadastroAluno"><i class="bi bi-mortarboard"></i> Sou aluno</a></li>
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="CadastroEmpresa"><i class="bi bi-building"></i> Sou empresa</a></li>
                             </ul>
                         </li>
                     }
-                    <!-- Rankings (visíveis para todos) -->
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                             <i class="bi bi-trophy"></i> Rankings
                         </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" asp-controller="Ranking" asp-action="Alunos">
-                                    <i class="bi bi-mortarboard"></i> Ranking de alunos
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" asp-controller="Ranking" asp-action="Empresas">
-                                    <i class="bi bi-building"></i> Ranking de empresas
-                                </a>
-                            </li>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" asp-controller="Ranking" asp-action="Alunos"><i class="bi bi-mortarboard"></i> Ranking de alunos</a></li>
+                            <li><a class="dropdown-item" asp-controller="Ranking" asp-action="Empresas"><i class="bi bi-building"></i> Ranking de empresas</a></li>
                         </ul>
                     </li>
 
@@ -324,7 +435,7 @@
         @if (TempData["Sucesso"] != null)
         {
             <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-                @TempData["Sucesso"]
+                <i class="bi bi-check-circle-fill me-2"></i>@TempData["Sucesso"]
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
             </div>
         }
@@ -332,7 +443,7 @@
         @if (TempData["Erro"] != null)
         {
             <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-                @TempData["Erro"]
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Erro"]
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
             </div>
         }
@@ -340,68 +451,40 @@
         @RenderBody()
     </main>
 
-    <!-- Footer Desktop Fixo -->
+    <!-- Footer Desktop -->
     <footer class="desktop-footer">
         <div class="container">
             <div class="row w-100 text-start">
 
                 <div class="col-md-3 mb-3">
-                    <h5 class="fw-bold">SkillBridge</h5>
-                    <p class="mb-0">
-                        Plataforma que conecta talentos acadêmicos e empresas.
+                    <h5>SkillBridge</h5>
+                    <p class="mb-0" style="color:#d6e4ff;">
+                        A ponte entre talentos acadêmicos e as empresas que constroem o futuro.
                     </p>
                 </div>
 
                 <div class="col-md-3 mb-3">
-                    <h5 class="fw-bold">Geral</h5>
+                    <h5>Geral</h5>
                     <ul class="list-unstyled">
-                        <li>
-                            <a asp-controller="Account" asp-action="CadastroAluno">
-                                Cadastre-se
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Ajuda" asp-action="Index">
-                                Central de Ajuda
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Home" asp-action="Sobre">
-                                Sobre
-                            </a>
-                        </li>
+                        <li><a asp-controller="Account" asp-action="CadastroAluno">Cadastre-se</a></li>
+                        <li><a asp-controller="Ajuda" asp-action="Index">Central de Ajuda</a></li>
+                        <li><a asp-controller="Home" asp-action="Sobre">Sobre</a></li>
                     </ul>
                 </div>
 
                 <div class="col-md-3 mb-3">
-                    <h5 class="fw-bold">Navegação</h5>
+                    <h5>Navegação</h5>
                     <ul class="list-unstyled">
-                        <li>
-                            <a asp-controller="Oportunidade" asp-action="Index">
-                                Vagas
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Projeto" asp-action="Index">
-                                Projetos
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Aluno" asp-action="Listar">
-                                Talentos
-                            </a>
-                        </li>
+                        <li><a asp-controller="Oportunidade" asp-action="Index">Vagas</a></li>
+                        <li><a asp-controller="Projeto" asp-action="Index">Projetos</a></li>
+                        <li><a asp-controller="Aluno" asp-action="Listar">Talentos</a></li>
                     </ul>
                 </div>
 
                 <div class="col-md-3 mb-3">
-                    <h5 class="fw-bold">Equipe</h5>
+                    <h5>Equipe</h5>
                     <ul class="list-unstyled">
-                        <li>
-                            <a asp-controller="Home" asp-action="Desenvolvedores">
-                                Desenvolvedores
-                            </a>
-                        </li>
+                        <li><a asp-controller="Home" asp-action="Desenvolvedores">Desenvolvedores</a></li>
                     </ul>
                 </div>
 
@@ -410,12 +493,13 @@
             <hr class="my-3">
 
             <div class="text-center w-100">
-                <p class="mb-0">
-                    SkillBridge &copy; @DateTime.Now.Year - Todos os direitos reservados
+                <p class="mb-0 copyright">
+                    SkillBridge &copy; @DateTime.Now.Year — Todos os direitos reservados.
                 </p>
             </div>
         </div>
     </footer>
+
     <!-- Navegação Fixa no Rodapé Mobile -->
     <nav class="bottom-nav d-lg-none">
         <div class="container-fluid px-0">
@@ -427,27 +511,21 @@
                     <div class="col">
                         <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
                            asp-controller="Home" asp-action="Index">
-                            <i class="bi bi-house-fill"></i>
-                            <span>Início</span>
+                            <i class="bi bi-house-fill"></i><span>Início</span>
                         </a>
                     </div>
-
                     <div class="col">
                         <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Oportunidade" ? "active" : "")"
                            asp-controller="Oportunidade" asp-action="Index">
-                            <i class="bi bi-briefcase-fill"></i>
-                            <span>Vagas</span>
+                            <i class="bi bi-briefcase-fill"></i><span>Vagas</span>
                         </a>
                     </div>
-
                     <div class="col">
                         <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projeto" ? "active" : "")"
                            asp-controller="Projeto" asp-action="Index">
-                            <i class="bi bi-folder-fill"></i>
-                            <span>Projetos</span>
+                            <i class="bi bi-folder-fill"></i><span>Projetos</span>
                         </a>
                     </div>
-
                     <div class="col">
                         <a class="nav-link position-relative @(ViewContext.RouteData.Values["controller"]?.ToString() == "Notificacao" ? "active" : "")"
                            asp-controller="Notificacao" asp-action="Index">
@@ -456,22 +534,19 @@
                             <span>Alertas</span>
                         </a>
                     </div>
-
                     <div class="col">
                         @if (tipoUsuarioNav == "Aluno")
                         {
                             <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Aluno" ? "active" : "")"
                                asp-controller="Aluno" asp-action="Dashboard">
-                                <i class="bi bi-person-fill"></i>
-                                <span>Perfil</span>
+                                <i class="bi bi-person-fill"></i><span>Perfil</span>
                             </a>
                         }
                         else
                         {
                             <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Empresa" ? "active" : "")"
                                asp-controller="Empresa" asp-action="Dashboard">
-                                <i class="bi bi-building-fill"></i>
-                                <span>Perfil</span>
+                                <i class="bi bi-building-fill"></i><span>Perfil</span>
                             </a>
                         }
                     </div>
@@ -481,40 +556,31 @@
                     <div class="col">
                         <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
                            asp-controller="Home" asp-action="Index">
-                            <i class="bi bi-house-fill"></i>
-                            <span>Início</span>
+                            <i class="bi bi-house-fill"></i><span>Início</span>
                         </a>
                     </div>
-
                     <div class="col">
                         <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Oportunidade" ? "active" : "")"
                            asp-controller="Oportunidade" asp-action="Index">
-                            <i class="bi bi-briefcase-fill"></i>
-                            <span>Vagas</span>
+                            <i class="bi bi-briefcase-fill"></i><span>Vagas</span>
                         </a>
                     </div>
-
                     <div class="col">
                         <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projeto" ? "active" : "")"
                            asp-controller="Projeto" asp-action="Index">
-                            <i class="bi bi-folder-fill"></i>
-                            <span>Projetos</span>
+                            <i class="bi bi-folder-fill"></i><span>Projetos</span>
                         </a>
                     </div>
-
                     <div class="col">
                         <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Aluno" ? "active" : "")"
                            asp-controller="Aluno" asp-action="Listar">
-                            <i class="bi bi-people-fill"></i>
-                            <span>Talentos</span>
+                            <i class="bi bi-people-fill"></i><span>Talentos</span>
                         </a>
                     </div>
-
                     <div class="col">
                         <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Account" ? "active" : "")"
                            asp-controller="Account" asp-action="Login">
-                            <i class="bi bi-box-arrow-in-right"></i>
-                            <span>Entrar</span>
+                            <i class="bi bi-box-arrow-in-right"></i><span>Entrar</span>
                         </a>
                     </div>
                 }
@@ -529,31 +595,21 @@
         <script>
             function atualizarNotificacoes() {
                 fetch('/Notificacao/ContarNaoLidas')
-                    .then(response => response.json())
+                    .then(r => r.json())
                     .then(data => {
                         var badgeDesktop = document.getElementById('notificationBadgeDesktop');
                         var badgeMobile = document.getElementById('notificationBadgeMobile');
-
                         if (data.count > 0) {
                             var countText = data.count > 9 ? '9+' : data.count;
-
-                            if (badgeDesktop) {
-                                badgeDesktop.textContent = countText;
-                                badgeDesktop.classList.remove('d-none');
-                            }
-
-                            if (badgeMobile) {
-                                badgeMobile.textContent = countText;
-                                badgeMobile.classList.remove('d-none');
-                            }
+                            if (badgeDesktop) { badgeDesktop.textContent = countText; badgeDesktop.classList.remove('d-none'); }
+                            if (badgeMobile)  { badgeMobile.textContent  = countText; badgeMobile.classList.remove('d-none'); }
                         } else {
                             if (badgeDesktop) badgeDesktop.classList.add('d-none');
-                            if (badgeMobile) badgeMobile.classList.add('d-none');
+                            if (badgeMobile)  badgeMobile.classList.add('d-none');
                         }
                     })
-                    .catch(error => console.log('Erro ao buscar Notificacoes'));
+                    .catch(() => console.log('Erro ao buscar Notificacoes'));
             }
-
             atualizarNotificacoes();
             setInterval(atualizarNotificacoes, 30000);
         </script>
@@ -562,31 +618,17 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <!-- Botão Flutuante IA -->
-    <a href="/ChatBot/Index" class="botao-ia">
-        🤖
-    </a>
+    <a href="/ChatBot/Index" class="botao-ia" title="Assistente IA">🤖</a>
+
     <!-- VLibras -->
     <div vw class="enabled">
         <div vw-access-button class="active"></div>
         <div vw-plugin-wrapper>
             <div class="vw-plugin-top-wrapper"></div>
         </div>
-
     </div>
 
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-
-    <script>
-        new window.VLibras.Widget('https://vlibras.gov.br/app');
-    </script>
-    <!--Menu Acessibilidade
-    <script>
-        (function(d){
-            var s = d.createElement("script");
-            s.setAttribute("data-account", "LTXzckbQ9A");
-            s.setAttribute("src", "https://cdn.userway.org/widget.js");
-            (d.body || d.head).appendChild(s);
-        })(document);
-    </script>-->
+    <script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 </body>
 </html>

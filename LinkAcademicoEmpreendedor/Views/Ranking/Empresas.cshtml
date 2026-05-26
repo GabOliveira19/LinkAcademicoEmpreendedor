@@ -28,7 +28,7 @@
             <div class="col-md-4 order-md-1 order-2">
                 <div class="card text-center h-100 border-secondary">
                     <div class="card-body">
-                        <div class="badge bg-secondary fs-5 mb-2">2o</div>
+                        <div class="badge bg-secondary fs-5 mb-2">2°</div>
                         @if (!string.IsNullOrEmpty(Model[1].LogoEmpresa))
                         {
                             <img src="@Model[1].LogoEmpresa" class="rounded mb-2" width="80" height="80" style="object-fit: cover;">
@@ -62,7 +62,7 @@
             <div class="col-md-4 order-md-2 order-1 mb-3 mb-md-0">
                 <div class="card text-center h-100 border-warning bg-warning bg-opacity-10">
                     <div class="card-body">
-                        <div class="badge bg-warning text-dark fs-4 mb-2"><i class="bi bi-trophy"></i> 1o</div>
+                        <div class="badge bg-warning text-dark fs-4 mb-2"><i class="bi bi-trophy"></i> 1°</div>
                         @if (!string.IsNullOrEmpty(Model[0].LogoEmpresa))
                         {
                             <img src="@Model[0].LogoEmpresa" class="rounded mb-2 border border-warning border-3" width="100" height="100" style="object-fit: cover;">
@@ -96,7 +96,7 @@
             <div class="col-md-4 order-md-3 order-3">
                 <div class="card text-center h-100" style="border-color: #cd7f32;">
                     <div class="card-body">
-                        <div class="badge fs-5 mb-2" style="background-color: #cd7f32;">3o</div>
+                        <div class="badge fs-5 mb-2" style="background-color: #cd7f32;">3°</div>
                         @if (!string.IsNullOrEmpty(Model[2].LogoEmpresa))
                         {
                             <img src="@Model[2].LogoEmpresa" class="rounded mb-2" width="80" height="80" style="object-fit: cover;">
@@ -160,11 +160,11 @@
                                     }
                                     else if (empresa.Posicao == 2)
                                     {
-                                        <span class="badge bg-secondary fs-6">2o</span>
+                                        <span class="badge bg-secondary fs-6">2°</span>
                                     }
                                     else if (empresa.Posicao == 3)
                                     {
-                                        <span class="badge fs-6" style="background-color: #cd7f32;">3o</span>
+                                        <span class="badge fs-6" style="background-color: #cd7f32;">3°</span>
                                     }
                                     else
                                     {
