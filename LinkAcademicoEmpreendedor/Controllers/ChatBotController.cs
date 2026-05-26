@@ -305,8 +305,10 @@ namespace LinkAcademicoEmpreendedor.Controllers
             // =========================
             // EMPRESA
             // =========================
-            else if (mensagem.Contains("empresa") ||
-                     mensagem.Contains("perfil empresa"))
+            else if (mensagem.Contains("perfil empresa") ||
+                     mensagem.Contains("perfil da empresa") ||
+                     mensagem.Contains("minha empresa") ||
+                     mensagem.Contains("dados da empresa"))
             {
                 if (userId == null)
                 {

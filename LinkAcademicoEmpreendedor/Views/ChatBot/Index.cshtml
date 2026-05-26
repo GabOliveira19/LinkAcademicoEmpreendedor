@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Assistente IA";
+    var userAvatarUrl = Context.Session.GetString("UserFoto");
 }
 
 <div class="container py-5">
@@ -56,8 +57,8 @@
                             <ul class="dropdown-menu shadow border-0 rounded-4 p-2 suggest-menu">
                                 <li class="suggest-title px-2 pb-1">Sugestões rápidas</li>
                                 <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Criar Projeto')"><i class="bi bi-folder-plus me-2 text-primary"></i> Criar Projeto</button></li>
-                                <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Ver ranking de alunos')"><i class="bi bi-trophy-fill me-2 text-warning"></i> Ranking de alunos</button></li>
-                                <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Ver ranking de empresas')"><i class="bi bi-building-fill-up me-2 text-info"></i> Ranking de empresas</button></li>
+                                <li><button class="dropdown-item rounded-3" onclick="usarSugestao('ranking de alunos')"><i class="bi bi-trophy-fill me-2 text-warning"></i> Ranking de alunos</button></li>
+                                <li><button class="dropdown-item rounded-3" onclick="usarSugestao('ranking de empresas')"><i class="bi bi-building-fill-up me-2 text-info"></i> Ranking de Empresas</button></li>
                                 <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Como editar meu perfil?')"><i class="bi bi-person-gear me-2 text-secondary"></i> Editar meu perfil</button></li>
                                 <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Quero ver vagas')"><i class="bi bi-briefcase-fill me-2 text-success"></i> Ver vagas</button></li>
                                 <li><button class="dropdown-item rounded-3" onclick="usarSugestao('Ver currículos de alunos')"><i class="bi bi-file-earmark-person-fill me-2 text-primary"></i> Currículos de alunos</button></li>
@@ -214,18 +215,26 @@
         }
     }
 
-    .msg-avatar {
-        width: 36px;
-        height: 36px;
-        flex-shrink: 0;
-        border-radius: 12px;
-        background: var(--brand-soft);
-        color: var(--brand-1);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-    }
+  .msg-avatar {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: var(--brand-soft);
+    color: var(--brand-1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    overflow: hidden;
+}
+
+.msg-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
 
     .msg-bubble {
         background: #fff;
@@ -430,6 +439,9 @@
 </style>
 
 <script>
+
+    const userAvatarUrl = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(userAvatarUrl));
+
     function usarSugestao(texto) {
         document.getElementById('mensagem').value = texto;
         enviarMensagem();
@@ -461,6 +473,17 @@
         })[c]);
     }
 
+        function userAvatarHtml() {
+        if (!userAvatarUrl) {
+            return '<i class="bi bi-person-fill"></i>';
+        }
+
+        return `<img src="${escapeHtml(userAvatarUrl)}"
+                     alt="Foto do perfil"
+                     class="msg-avatar-img"
+                     onerror="this.remove(); this.parentElement.innerHTML='<i class=&quot;bi bi-person-fill&quot;></i>';">`;
+    }
+
     async function enviarMensagem() {
         const mensagemInput = document.getElementById('mensagem');
         const mensagem = mensagemInput.value.trim();
@@ -469,7 +492,7 @@
         // Mensagem do usuário
         appendMessage(`
             <div class="msg msg-user">
-                <div class="msg-avatar"><i class="bi bi-person-fill"></i></div>
+                <div class="msg-avatar">${userAvatarHtml()}</div>
                 <div class="msg-bubble">
                     <div class="msg-name">Você</div>
                     ${escapeHtml(mensagem)}
