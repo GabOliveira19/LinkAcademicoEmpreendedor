@@ -265,23 +265,13 @@ namespace LinkAcademicoEmpreendedor.Controllers
             // =========================
             // TALENTOS
             // =========================
-            else if (mensagem.Contains("talento") ||
-                     mensagem.Contains("talentos") ||
-                     mensagem.Contains("buscar alunos"))
+            else if (mensagem.Contains("buscar talentos") ||
+           mensagem.Contains("talento") ||
+           mensagem.Contains("talentos") ||
+           mensagem.Contains("buscar alunos"))
             {
-                if (userId == null)
-                {
-                    resposta = "Você precisa estar logado.";
-                }
-                else if (tipoUsuario != "Empresa")
-                {
-                    resposta = "Somente empresas podem buscar talentos.";
-                }
-                else
-                {
-                    resposta = "Redirecionando para Buscar Talentos...";
-                    redirecionar = "/Empresa/BuscarTalentos";
-                }
+                resposta = "Redirecionando para Talentos...";
+                redirecionar = "/Aluno/Listar";
             }
             // =========================
             // CURRÍCULOS DE ALUNOS
