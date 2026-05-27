@@ -123,6 +123,8 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 AreaId = model.AreaId // persistir área escolhida
             };
 
+            aluno.RedesSociais = MontarRedesSociais(model.Plataformas, model.Urls);
+
             _context.Alunos.Add(aluno);
             await _context.SaveChangesAsync();
 
@@ -230,6 +232,8 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 DataCadastro = DateTime.Now,
                 Ativo = true
             };
+
+            empresa.RedesSociais = MontarRedesSociais(model.Plataformas, model.Urls);
 
             _context.Empresas.Add(empresa);
             await _context.SaveChangesAsync();
@@ -825,6 +829,46 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
             TempData["Sucesso"] = "Senha alterada com sucesso! Faca login com a nova senha.";
             return RedirectToAction("Login");
+        }
+        private List<RedeSocial> MontarRedesSociais(List<string>? plataformas, List<string>? urls)
+        {
+            var redes = new List<RedeSocial>();
+
+            if (plataformas == null || urls == null)
+                return redes;
+
+            for (int i = 0; i < plataformas.Count && i < urls.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(plataformas[i]) || string.IsNullOrWhiteSpace(urls[i]))
+                    continue;
+
+                redes.Add(new RedeSocial
+                {
+                    Plataforma = plataformas[i],
+                    Url = NormalizarUrlRedeSocial(plataformas[i], urls[i])
+                });
+            }
+
+            return redes;
+        }
+
+        private string NormalizarUrlRedeSocial(string plataforma, string url)
+        {
+            url = url.Trim();
+
+            if (plataforma.Equals("E-mail", StringComparison.OrdinalIgnoreCase))
+                return url.StartsWith("mailto:") ? url : $"mailto:{url}";
+
+            if (plataforma.Equals("WhatsApp", StringComparison.OrdinalIgnoreCase))
+            {
+                var numeros = new string(url.Where(char.IsDigit).ToArray());
+                return url.StartsWith("http") ? url : $"https://wa.me/55{numeros}";
+            }
+
+            if (!url.StartsWith("http://") && !url.StartsWith("https://"))
+                return $"https://{url}";
+
+            return url;
         }
     }
 

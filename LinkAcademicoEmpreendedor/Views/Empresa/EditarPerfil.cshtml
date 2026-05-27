@@ -10,6 +10,7 @@
                 <div class="card-header bg-success text-white">
                     <h4 class="mb-0"><i class="bi bi-pencil-square"></i> Editar Perfil da Empresa</h4>
                 </div>
+
                 <div class="card-body">
                     @if (TempData["Sucesso"] != null)
                     {
@@ -23,11 +24,11 @@
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="Id" />
 
-                        <!-- Logo da Empresa -->
                         <div class="card mb-4">
                             <div class="card-header bg-light">
                                 <i class="bi bi-image"></i> Logo da Empresa
                             </div>
+
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     <div class="col-md-3 text-center">
@@ -65,21 +66,23 @@
                             </div>
                         </div>
 
-                        <!-- Dados da Empresa (Somente Leitura) -->
                         <div class="card mb-4">
                             <div class="card-header bg-light">
                                 <i class="bi bi-lock"></i> Dados da Receita Federal (Somente Leitura)
                             </div>
+
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <label asp-for="Cnpj" class="form-label">CNPJ</label>
                                         <input asp-for="Cnpj" class="form-control" readonly />
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label asp-for="SituacaoCadastral" class="form-label">Situação Cadastral</label>
                                         <input asp-for="SituacaoCadastral" class="form-control" readonly />
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label asp-for="DataAbertura" class="form-label">Data de Abertura</label>
                                         <input type="text" class="form-control" value="@(Model.DataAbertura?.ToString("dd/MM/yyyy") ?? "")" readonly />
@@ -88,11 +91,11 @@
                             </div>
                         </div>
 
-                        <!-- Dados Editaveis -->
                         <div class="card mb-4">
                             <div class="card-header bg-light">
                                 <i class="bi bi-building"></i> Dados da Empresa
                             </div>
+
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
@@ -100,21 +103,25 @@
                                         <input asp-for="RazaoSocial" class="form-control" />
                                         <span asp-validation-for="RazaoSocial" class="text-danger"></span>
                                     </div>
+
                                     <div class="col-md-6 mb-3">
                                         <label asp-for="NomeFantasia" class="form-label">Nome Fantasia</label>
                                         <input asp-for="NomeFantasia" class="form-control" />
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label asp-for="NaturezaJuridica" class="form-label">Natureza Jurídica</label>
                                         <input asp-for="NaturezaJuridica" class="form-control" />
                                     </div>
+
                                     <div class="col-md-6 mb-3">
                                         <label asp-for="AreaAtuacao" class="form-label">Área de Atuação</label>
                                         <input asp-for="AreaAtuacao" class="form-control" />
                                     </div>
                                 </div>
+
                                 <div class="mb-3">
                                     <label asp-for="Descricao" class="form-label">Descrição da Empresa</label>
                                     <textarea asp-for="Descricao" class="form-control" rows="4"></textarea>
@@ -122,31 +129,35 @@
                             </div>
                         </div>
 
-                        <!-- Endereco -->
                         <div class="card mb-4">
                             <div class="card-header bg-light">
                                 <i class="bi bi-geo-alt"></i> Endereço
                             </div>
+
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label asp-for="Endereco" class="form-label">Logradouro</label>
                                         <input asp-for="Endereco" class="form-control" />
                                     </div>
+
                                     <div class="col-md-2 mb-3">
                                         <label asp-for="Numero" class="form-label">Número</label>
                                         <input asp-for="Numero" class="form-control" />
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label asp-for="Bairro" class="form-label">Bairro</label>
                                         <input asp-for="Bairro" class="form-control" />
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-md-5 mb-3">
                                         <label asp-for="Cidade" class="form-label">Cidade</label>
                                         <input asp-for="Cidade" class="form-control" />
                                     </div>
+
                                     <div class="col-md-3 mb-3">
                                         <label asp-for="Estado" class="form-label">Estado</label>
                                         <select asp-for="Estado" class="form-select">
@@ -180,6 +191,7 @@
                                             <option value="TO">TO</option>
                                         </select>
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label asp-for="Cep" class="form-label">CEP</label>
                                         <input asp-for="Cep" class="form-control" id="inputCep" placeholder="00000-000" />
@@ -188,21 +200,23 @@
                             </div>
                         </div>
 
-                        <!-- Contato -->
                         <div class="card mb-4">
                             <div class="card-header bg-light">
                                 <i class="bi bi-telephone"></i> Contato
                             </div>
+
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <label asp-for="Email" class="form-label">E-mail *</label>
                                         <input asp-for="Email" class="form-control" readonly />
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label asp-for="Telefone" class="form-label">Telefone</label>
                                         <input asp-for="Telefone" class="form-control" id="inputTelefone" />
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label asp-for="NomeResponsavel" class="form-label">Nome do Responsável</label>
                                         <input asp-for="NomeResponsavel" class="form-control" />
@@ -211,11 +225,65 @@
                             </div>
                         </div>
 
-                        <!-- Botoes -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <i class="bi bi-share"></i> Redes sociais
+                            </div>
+
+                            <div class="card-body">
+                                <div id="redes-container">
+                                    @if (Model.RedesSociais != null && Model.RedesSociais.Any())
+                                    {
+                                        foreach (var rede in Model.RedesSociais)
+                                        {
+                                            <div class="row mb-2">
+                                                <div class="col-md-4">
+                                                    <select name="plataformas" class="form-select">
+                                                        <option value="Instagram" selected="@(rede.Plataforma == "Instagram")">Instagram</option>
+                                                        <option value="LinkedIn" selected="@(rede.Plataforma == "LinkedIn")">LinkedIn</option>
+                                                        <option value="Facebook" selected="@(rede.Plataforma == "Facebook")">Facebook</option>
+                                                        <option value="E-mail" selected="@(rede.Plataforma == "E-mail")">E-mail</option>
+                                                        <option value="WhatsApp" selected="@(rede.Plataforma == "WhatsApp")">WhatsApp</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-8">
+                                                    <input name="urls" value="@rede.Url" class="form-control" placeholder="Cole o link ou contato aqui" />
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="row mb-2">
+                                            <div class="col-md-4">
+                                                <select name="plataformas" class="form-select">
+                                                    <option value="Instagram">Instagram</option>
+                                                    <option value="LinkedIn">LinkedIn</option>
+                                                    <option value="Facebook">Facebook</option>
+                                                    <option value="E-mail">E-mail</option>
+                                                    <option value="WhatsApp">WhatsApp</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <input name="urls" class="form-control" placeholder="Cole o link ou contato aqui" />
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <button type="button" class="btn btn-outline-success btn-sm mt-2" onclick="addRedeSocial()">
+                                    <i class="bi bi-plus-lg"></i> Adicionar outro link
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-between">
                             <a asp-action="Dashboard" class="btn btn-outline-secondary">
                                 <i class="bi bi-arrow-left"></i> Voltar
                             </a>
+
                             <button type="submit" class="btn btn-success">
                                 <i class="bi bi-check-lg"></i> Salvar Alterações
                             </button>
@@ -226,3 +294,64 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function addRedeSocial() {
+            const container = document.getElementById("redes-container");
+
+            const html = `
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <select name="plataformas" class="form-select">
+                            <option value="Instagram">Instagram</option>
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="E-mail">E-mail</option>
+                            <option value="WhatsApp">WhatsApp</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-8">
+                        <input name="urls" class="form-control" placeholder="Cole o link ou contato aqui" />
+                    </div>
+                </div>`;
+
+            container.insertAdjacentHTML("beforeend", html);
+        }
+
+        const inputTelefone = document.getElementById('inputTelefone');
+        if (inputTelefone) {
+            inputTelefone.addEventListener('input', function (e) {
+                let valor = e.target.value.replace(/\D/g, '');
+                if (valor.length > 11) valor = valor.substring(0, 11);
+
+                if (valor.length > 10) {
+                    valor = valor.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+                } else if (valor.length > 6) {
+                    valor = valor.replace(/^(\d{2})(\d{4})(\d*).*/, '($1) $2-$3');
+                } else if (valor.length > 2) {
+                    valor = valor.replace(/^(\d{2})(\d*).*/, '($1) $2');
+                }
+
+                e.target.value = valor;
+            });
+        }
+
+        const inputCep = document.getElementById('inputCep');
+        if (inputCep) {
+            inputCep.addEventListener('input', function (e) {
+                let valor = e.target.value.replace(/\D/g, '');
+                if (valor.length > 8) valor = valor.substring(0, 8);
+
+                if (valor.length > 5) {
+                    valor = valor.replace(/^(\d{5})(\d*)/, '$1-$2');
+                }
+
+                e.target.value = valor;
+            });
+        }
+    </script>
+}

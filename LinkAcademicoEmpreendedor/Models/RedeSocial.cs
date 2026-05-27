@@ -15,8 +15,10 @@ namespace LinkAcademicoEmpreendedor.Models
         [StringLength(300)]
         public string Url { get; set; } = string.Empty;
 
-        // FK opcional para relacionamento com Aluno (ajuda a mapear a relação)
         public int? AlunoId { get; set; }
         public Aluno? Aluno { get; set; }
+
+        public int? EmpresaId { get; set; }
+        public Empresa? Empresa { get; set; }
     }
 }

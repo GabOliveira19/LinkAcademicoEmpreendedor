@@ -10,6 +10,7 @@
                 <div class="card-header bg-primary text-white text-center">
                     <h4><i class="bi bi-mortarboard"></i> Cadastro de Aluno</h4>
                 </div>
+
                 <div class="card-body">
                     <form asp-action="CadastroAluno" method="post">
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
@@ -32,6 +33,7 @@
                                 <input asp-for="Senha" class="form-control" />
                                 <span asp-validation-for="Senha" class="text-danger"></span>
                             </div>
+
                             <div class="col-md-6 mb-3">
                                 <label asp-for="ConfirmarSenha" class="form-label">Confirmar Senha *</label>
                                 <input asp-for="ConfirmarSenha" class="form-control" />
@@ -49,6 +51,7 @@
                                 <label asp-for="Instituicao" class="form-label">Instituição</label>
                                 <input asp-for="Instituicao" class="form-control" placeholder="Ex: UNIFENAS" />
                             </div>
+
                             <div class="col-md-4 mb-3">
                                 <label asp-for="AnoIngresso" class="form-label">Ano de Ingresso</label>
                                 <input asp-for="AnoIngresso" type="number" class="form-control" min="2000" max="@DateTime.Now.Year" />
@@ -63,11 +66,40 @@
                             <span asp-validation-for="AreaId" class="text-danger"></span>
                         </div>
 
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-share"></i> Redes sociais
+                            </label>
+
+                            <div id="redes-container">
+                                <div class="row mb-2">
+                                    <div class="col-md-4">
+                                        <select name="Plataformas" class="form-select">
+                                            <option value="Instagram">Instagram</option>
+                                            <option value="LinkedIn">LinkedIn</option>
+                                            <option value="Facebook">Facebook</option>
+                                            <option value="E-mail">E-mail</option>
+                                            <option value="WhatsApp">WhatsApp</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <input name="Urls" class="form-control" placeholder="Cole o link ou contato aqui" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addRedeSocial()">
+                                <i class="bi bi-plus-lg"></i> Adicionar outro link
+                            </button>
+                        </div>
+
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="bi bi-person-plus"></i> Cadastrar
                         </button>
                     </form>
                 </div>
+
                 <div class="card-footer text-center">
                     Já tem conta? <a asp-action="Login">Fazer login</a>
                 </div>
@@ -78,4 +110,29 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function addRedeSocial() {
+            const container = document.getElementById("redes-container");
+
+            const html = `
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <select name="Plataformas" class="form-select">
+                            <option value="Instagram">Instagram</option>
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="E-mail">E-mail</option>
+                            <option value="WhatsApp">WhatsApp</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-8">
+                        <input name="Urls" class="form-control" placeholder="Cole o link ou contato aqui" />
+                    </div>
+                </div>`;
+
+            container.insertAdjacentHTML("beforeend", html);
+        }
+    </script>
 }

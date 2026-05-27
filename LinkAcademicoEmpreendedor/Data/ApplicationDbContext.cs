@@ -21,6 +21,7 @@ namespace LinkAcademicoEmpreendedor.Data
         public DbSet<Notificacao> Notificacoes { get; set; }
         public DbSet<Avaliacao> Avaliacoes { get; set; }
         public DbSet<Area> Areas { get; set; }
+        public DbSet<RedeSocial> RedesSociais { get; set; }
 
         public DbSet<FieldDefinition> FieldDefinitions { get; set; }
 
@@ -124,6 +125,18 @@ namespace LinkAcademicoEmpreendedor.Data
                 .HasOne(f => f.Area)
                 .WithMany()
                 .HasForeignKey(f => f.AreaId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RedeSocial>()
+                .HasOne(r => r.Aluno)
+                .WithMany(a => a.RedesSociais)
+                .HasForeignKey(r => r.AlunoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RedeSocial>()
+                .HasOne(r => r.Empresa)
+                .WithMany(e => e.RedesSociais)
+                .HasForeignKey(r => r.EmpresaId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Area>().HasData(

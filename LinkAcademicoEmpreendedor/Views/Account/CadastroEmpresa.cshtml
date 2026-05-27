@@ -197,6 +197,35 @@
                             </div>
                         </div>
 
+                        <div class="card mb-4" id="secaoRedesSociais" style="display: none;">
+                            <div class="card-header bg-primary text-white">
+                                <i class="bi bi-share"></i> Redes sociais
+                            </div>
+                            <div class="card-body">
+                                <div id="redes-container">
+                                    <div class="row mb-2">
+                                        <div class="col-md-4">
+                                            <select name="Plataformas[0]" class="form-select">
+                                                <option>Instagram</option>
+                                                <option>LinkedIn</option>
+                                                <option>Facebook</option>
+                                                <option>E-mail</option>
+                                                <option>WhatsApp</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-8">
+                                            <input name="Urls[0]" class="form-control" placeholder="Cole o link ou contato aqui" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn btn-outline-primary mt-2" onclick="addRedeSocial()">
+                                    + Adicionar outro link
+                                </button>
+                            </div>
+                        </div>
+
                         <!-- Botao de Submit -->
                         <div id="secaoBotaoSubmit" style="display: none;">
                             <div class="d-grid gap-2">
@@ -218,8 +247,36 @@
     </div>
 </div>
 
-@section Scripts {
+   @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
     <script>
+        let redeIndex = 1;
+
+        function addRedeSocial() {
+            const container = document.getElementById("redes-container");
+
+            const html = `
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <select name="Plataformas[${redeIndex}]" class="form-select">
+                            <option value="Instagram">Instagram</option>
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="E-mail">E-mail</option>
+                            <option value="WhatsApp">WhatsApp</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-8">
+                        <input name="Urls[${redeIndex}]" class="form-control" placeholder="Cole o link ou contato aqui" />
+                    </div>
+                </div>`;
+
+            container.insertAdjacentHTML("beforeend", html);
+            redeIndex++;
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const inputCnpj = document.getElementById('inputCnpj');
             const btnConsultar = document.getElementById('btnConsultarCnpj');
@@ -229,10 +286,10 @@
             const cnpjValidado = document.getElementById('cnpjValidado');
             const secaoDadosEmpresa = document.getElementById('secaoDadosEmpresa');
             const secaoDadosComplementares = document.getElementById('secaoDadosComplementares');
+            const secaoRedesSociais = document.getElementById('secaoRedesSociais');
             const secaoBotaoSubmit = document.getElementById('secaoBotaoSubmit');
             const btnProcurarOutro = document.getElementById('btnProcurarOutro');
 
-            // Mascara de CNPJ
             inputCnpj.addEventListener('input', function (e) {
                 let valor = e.target.value.replace(/\D/g, '');
                 if (valor.length > 14) valor = valor.substring(0, 14);
@@ -250,7 +307,6 @@
                 e.target.value = valor;
             });
 
-            // Mascara de Telefone
             const inputTelefone = document.getElementById('inputTelefone');
             if (inputTelefone) {
                 inputTelefone.addEventListener('input', function (e) {
@@ -269,39 +325,46 @@
                 });
             }
 
-            // Mascara de CEP
             const inputCep = document.getElementById('inputCep');
             if (inputCep) {
                 inputCep.addEventListener('input', function (e) {
                     let valor = e.target.value.replace(/\D/g, '');
                     if (valor.length > 8) valor = valor.substring(0, 8);
+
                     if (valor.length > 5) {
                         valor = valor.replace(/^(\d{5})(\d*)/, '$1-$2');
                     }
+
                     e.target.value = valor;
                 });
             }
 
-            // Funcao para mostrar alerta
             function mostrarAlerta(mensagem, tipo) {
                 alertStatus.className = 'alert alert-' + tipo;
                 alertStatus.innerHTML = mensagem;
                 alertStatus.classList.remove('d-none');
             }
 
-            // Funcao para esconder alerta
             function esconderAlerta() {
                 alertStatus.classList.add('d-none');
             }
 
-            // Funcao para limpar campos da empresa
             function limparCamposEmpresa() {
-                var campos = ['inputRazaoSocial', 'inputNomeFantasia', 'inputSituacaoCadastral',
-                    'inputDataAbertura', 'inputNaturezaJuridica', 'inputEndereco', 'inputNumero',
-                    'inputBairro', 'inputCidade', 'inputCep'];
+                const campos = [
+                    'inputRazaoSocial',
+                    'inputNomeFantasia',
+                    'inputSituacaoCadastral',
+                    'inputDataAbertura',
+                    'inputNaturezaJuridica',
+                    'inputEndereco',
+                    'inputNumero',
+                    'inputBairro',
+                    'inputCidade',
+                    'inputCep'
+                ];
 
-                campos.forEach(function(id) {
-                    var campo = document.getElementById(id);
+                campos.forEach(function (id) {
+                    const campo = document.getElementById(id);
                     if (campo) {
                         campo.value = '';
                         campo.removeAttribute('readonly');
@@ -309,29 +372,40 @@
                     }
                 });
 
-                var selectEstado = document.getElementById('inputEstado');
+                const selectEstado = document.getElementById('inputEstado');
                 if (selectEstado) {
                     selectEstado.value = '';
                     selectEstado.removeAttribute('disabled');
                 }
             }
 
-            // Funcao para mostrar formulario
             function mostrarFormulario(bloqueado) {
                 secaoDadosEmpresa.style.display = 'block';
                 secaoDadosComplementares.style.display = 'block';
+                secaoRedesSociais.style.display = 'block';
                 secaoBotaoSubmit.style.display = 'block';
                 cnpjValidado.value = 'true';
 
-                var camposEmpresa = ['inputRazaoSocial', 'inputNomeFantasia', 'inputSituacaoCadastral',
-                    'inputDataAbertura', 'inputNaturezaJuridica', 'inputEndereco', 'inputNumero',
-                    'inputBairro', 'inputCidade', 'inputEstado', 'inputCep'];
+                const camposEmpresa = [
+                    'inputRazaoSocial',
+                    'inputNomeFantasia',
+                    'inputSituacaoCadastral',
+                    'inputDataAbertura',
+                    'inputNaturezaJuridica',
+                    'inputEndereco',
+                    'inputNumero',
+                    'inputBairro',
+                    'inputCidade',
+                    'inputEstado',
+                    'inputCep'
+                ];
 
-                camposEmpresa.forEach(function(id) {
-                    var campo = document.getElementById(id);
+                camposEmpresa.forEach(function (id) {
+                    const campo = document.getElementById(id);
                     if (campo) {
                         if (bloqueado) {
                             campo.setAttribute('readonly', true);
+
                             if (campo.tagName === 'SELECT') {
                                 campo.setAttribute('disabled', true);
                             }
@@ -343,38 +417,29 @@
                 });
             }
 
-            // Funcao para resetar formulario
             function resetarFormulario() {
-                // Limpa o CNPJ
                 inputCnpj.value = '';
                 inputCnpj.removeAttribute('readonly');
 
-                // Limpa campos da empresa
                 limparCamposEmpresa();
 
-                // Esconde as secoes
                 secaoDadosEmpresa.style.display = 'none';
                 secaoDadosComplementares.style.display = 'none';
+                secaoRedesSociais.style.display = 'none';
                 secaoBotaoSubmit.style.display = 'none';
 
-                // Mostra os botoes novamente
                 btnConsultar.style.display = 'block';
                 btnManual.style.display = 'block';
 
-                // Reseta a validacao
                 cnpjValidado.value = 'false';
 
-                // Esconde alertas
                 esconderAlerta();
-
-                // Foca no campo CNPJ
                 inputCnpj.focus();
             }
 
-            // Cadastro Manual
             btnManual.addEventListener('click', function () {
-                var cnpj = inputCnpj.value;
-                var cnpjLimpo = cnpj.replace(/\D/g, '');
+                const cnpj = inputCnpj.value;
+                const cnpjLimpo = cnpj.replace(/\D/g, '');
 
                 if (cnpjLimpo.length !== 14) {
                     mostrarAlerta('<i class="bi bi-exclamation-circle"></i> Informe um CNPJ valido com 14 digitos.', 'warning');
@@ -386,20 +451,18 @@
                 mostrarAlerta('<i class="bi bi-info-circle"></i> Modo manual ativado. Preencha os dados da empresa.', 'info');
             });
 
-            // Procurar outro CNPJ
             if (btnProcurarOutro) {
                 btnProcurarOutro.addEventListener('click', function () {
                     resetarFormulario();
                 });
             }
 
-            // Consultar CNPJ
             btnConsultar.addEventListener('click', async function () {
-                var cnpjComMascara = inputCnpj.value;
-                var cnpjLimpo = cnpjComMascara.replace(/\D/g, '');
+                const cnpjComMascara = inputCnpj.value;
+                const cnpjLimpo = cnpjComMascara.replace(/\D/g, '');
 
                 if (cnpjLimpo.length !== 14) {
-                    mostrarAlerta('<i class="bi bi-exclamation-circle"></i> Informe um CNPJ válido com 14 digitos.', 'warning');
+                    mostrarAlerta('<i class="bi bi-exclamation-circle"></i> Informe um CNPJ valido com 14 digitos.', 'warning');
                     return;
                 }
 
@@ -409,9 +472,9 @@
                 btnManual.disabled = true;
 
                 try {
-                    var url = '/Account/ConsultarCnpj?cnpj=' + cnpjLimpo;
-                    var response = await fetch(url);
-                    var resultado = await response.json();
+                    const url = '/Account/ConsultarCnpj?cnpj=' + cnpjLimpo;
+                    const response = await fetch(url);
+                    const resultado = await response.json();
 
                     if (resultado.sucesso) {
                         inputCnpj.value = resultado.dados.cnpj;
@@ -445,7 +508,6 @@
                 }
             });
 
-            // Validar formulario antes de enviar
             document.getElementById('formCadastro').addEventListener('submit', function (e) {
                 if (cnpjValidado.value !== 'true') {
                     e.preventDefault();
@@ -454,5 +516,6 @@
             });
         });
     </script>
+
 }
 }

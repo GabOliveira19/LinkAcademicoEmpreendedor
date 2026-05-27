@@ -91,6 +91,9 @@ namespace LinkAcademicoEmpreendedor.ViewModels
         [Display(Name = "Nome do Responsavel")]
         public string? NomeResponsavel { get; set; }
 
+        public List<string>? Plataformas { get; set; }
+        public List<string>? Urls { get; set; }
+
         // Flag para indicar se os dados do CNPJ foram validados
         public bool CnpjValidado { get; set; } = false;
     }

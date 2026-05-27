@@ -33,5 +33,7 @@ namespace LinkAcademicoEmpreendedor.ViewModels
         // Nova propriedade obrigatória: AreaId
         [Required(ErrorMessage = "Selecione a área/campo principal")]
         public int AreaId { get; set; }
+        public List<string>? Plataformas { get; set; }
+        public List<string>? Urls { get; set; }
     }
 }

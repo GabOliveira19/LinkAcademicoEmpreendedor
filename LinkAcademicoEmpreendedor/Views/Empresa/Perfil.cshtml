@@ -35,6 +35,34 @@
 
                     <hr>
 
+                    @if (Model.RedesSociais != null && Model.RedesSociais.Any())
+                    {
+                        <div class="mt-3 mb-3">
+                            @foreach (var rede in Model.RedesSociais)
+                            {
+                                var plataforma = rede.Plataforma?.ToLower() ?? "";
+                                var icon = plataforma switch
+                                {
+                                    "instagram" => "bi-instagram",
+                                    "linkedin" => "bi-linkedin",
+                                    "facebook" => "bi-facebook",
+                                    "e-mail" => "bi-envelope-fill",
+                                    "whatsapp" => "bi-whatsapp",
+                                    _ => "bi-link-45deg"
+                                };
+
+                                <a href="@rede.Url"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="btn btn-outline-success btn-sm rounded-circle me-1 mb-1"
+                                   title="@rede.Plataforma"
+                                   style="width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center;">
+                                    <i class="bi @icon"></i>
+                                </a>
+                            }
+                        </div>
+                    }
+
                     @if (!string.IsNullOrEmpty(Model.Telefone))
                     {
                         <p class="mt-3"><i class="bi bi-telephone"></i> @Model.Telefone</p>

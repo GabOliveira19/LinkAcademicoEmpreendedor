@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LinkAcademicoEmpreendedor.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace LinkAcademicoEmpreendedor.ViewModels
 {
@@ -78,5 +79,8 @@ namespace LinkAcademicoEmpreendedor.ViewModels
         [StringLength(100)]
         [Display(Name = "Nome do Responsavel")]
         public string? NomeResponsavel { get; set; }
+
+        public List<RedeSocial> RedesSociais { get; set; } = new List<RedeSocial>();
+
     }
 }

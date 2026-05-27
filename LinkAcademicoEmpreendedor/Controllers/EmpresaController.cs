@@ -17,7 +17,6 @@ namespace LinkAcademicoEmpreendedor.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        // Dashboard da Empresa
         public async Task<IActionResult> Dashboard()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -51,19 +50,19 @@ namespace LinkAcademicoEmpreendedor.Controllers
             var viewModel = new DashboardEmpresaViewModel
             {
                 Empresa = empresa,
-                MinhasOportunidades = empresa.Oportunidades.ToList(),
+                MinhasOportunidades = empresa.Oportunidades?.ToList() ?? new List<Oportunidade>(),
                 AlunosRecentes = alunosRecentes,
                 ProjetosDestaque = projetosDestaque,
-                TotalCandidaturas = empresa.Oportunidades.Sum(o => o.Candidaturas?.Count ?? 0)
+                TotalCandidaturas = empresa.Oportunidades?.Sum(o => o.Candidaturas?.Count ?? 0) ?? 0
             };
 
             return View(viewModel);
         }
 
-        // Perfil da Empresa (publico)
         public async Task<IActionResult> Perfil(int id)
         {
             var empresa = await _context.Empresas
+                .Include(e => e.RedesSociais)
                 .Include(e => e.Oportunidades.Where(o => o.Ativa))
                 .FirstOrDefaultAsync(e => e.Id == id);
 
@@ -73,14 +72,16 @@ namespace LinkAcademicoEmpreendedor.Controllers
             return View(empresa);
         }
 
-        // Editar Perfil
         public async Task<IActionResult> EditarPerfil()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
                 return RedirectToAction("Login", "Account");
 
-            var empresa = await _context.Empresas.FindAsync(userId);
+            var empresa = await _context.Empresas
+                .Include(e => e.RedesSociais)
+                .FirstOrDefaultAsync(e => e.Id == userId);
+
             if (empresa == null)
                 return NotFound();
 
@@ -104,7 +105,8 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 Descricao = empresa.Descricao,
                 AreaAtuacao = empresa.AreaAtuacao,
                 LogoEmpresa = empresa.LogoEmpresa,
-                NomeResponsavel = empresa.NomeResponsavel
+                NomeResponsavel = empresa.NomeResponsavel,
+                RedesSociais = empresa.RedesSociais
             };
 
             return View(viewModel);
@@ -112,29 +114,40 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditarPerfil(EditarPerfilEmpresaViewModel model, IFormFile? logoEmpresaFile)
+        public async Task<IActionResult> EditarPerfil(
+            EditarPerfilEmpresaViewModel model,
+            IFormFile? logoEmpresaFile,
+            List<string>? plataformas,
+            List<string>? urls)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null || userId != model.Id)
                 return RedirectToAction("Login", "Account");
 
-            var empresa = await _context.Empresas.FindAsync(userId);
+            var empresa = await _context.Empresas
+                .Include(e => e.RedesSociais)
+                .FirstOrDefaultAsync(e => e.Id == userId);
+
             if (empresa == null)
                 return NotFound();
 
             ModelState.Remove("logoEmpresaFile");
+            ModelState.Remove("plataformas");
+            ModelState.Remove("urls");
+            ModelState.Remove("RedesSociais");
 
             if (!ModelState.IsValid)
+            {
+                model.RedesSociais = empresa.RedesSociais;
                 return View(model);
+            }
 
-            // Upload do logo
             if (logoEmpresaFile != null && logoEmpresaFile.Length > 0)
             {
                 var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "empresas");
                 if (!Directory.Exists(uploadsFolder))
                     Directory.CreateDirectory(uploadsFolder);
 
-                // Deletar logo antigo se existir
                 if (!string.IsNullOrEmpty(empresa.LogoEmpresa))
                 {
                     var oldPath = Path.Combine(_webHostEnvironment.WebRootPath, empresa.LogoEmpresa.TrimStart('/'));
@@ -154,7 +167,6 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 HttpContext.Session.SetString("UserFoto", empresa.LogoEmpresa);
             }
 
-            // Atualiza todos os campos
             empresa.RazaoSocial = model.RazaoSocial;
             empresa.NomeFantasia = model.NomeFantasia;
             empresa.NaturezaJuridica = model.NaturezaJuridica;
@@ -169,6 +181,24 @@ namespace LinkAcademicoEmpreendedor.Controllers
             empresa.AreaAtuacao = model.AreaAtuacao;
             empresa.NomeResponsavel = model.NomeResponsavel;
 
+            _context.RedesSociais.RemoveRange(empresa.RedesSociais);
+
+            if (plataformas != null && urls != null)
+            {
+                for (int i = 0; i < plataformas.Count && i < urls.Count; i++)
+                {
+                    if (string.IsNullOrWhiteSpace(plataformas[i]) || string.IsNullOrWhiteSpace(urls[i]))
+                        continue;
+
+                    _context.RedesSociais.Add(new RedeSocial
+                    {
+                        Plataforma = plataformas[i],
+                        Url = NormalizarUrlRedeSocial(plataformas[i], urls[i]),
+                        EmpresaId = empresa.Id
+                    });
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             HttpContext.Session.SetString("UserName", empresa.RazaoSocial);
@@ -176,7 +206,6 @@ namespace LinkAcademicoEmpreendedor.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        // Remover logo
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoverLogo()
@@ -204,7 +233,6 @@ namespace LinkAcademicoEmpreendedor.Controllers
             return RedirectToAction("EditarPerfil");
         }
 
-        // Buscar Talentos
         public async Task<IActionResult> BuscarTalentos(string busca, string habilidade, string curso)
         {
             var query = _context.Alunos
@@ -234,7 +262,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
             }
 
             var alunos = query
-                .AsEnumerable() // força ordenação em memória
+                .AsEnumerable()
                 .OrderByDescending(a => a.Projetos.Sum(p => p.Curtidas.Count))
                 .ToList();
 
@@ -243,6 +271,32 @@ namespace LinkAcademicoEmpreendedor.Controllers
             ViewBag.Curso = curso;
 
             return View(alunos);
+        }
+
+        private string NormalizarUrlRedeSocial(string plataforma, string url)
+        {
+            url = url.Trim();
+
+            if (plataforma.Equals("E-mail", StringComparison.OrdinalIgnoreCase))
+                return url.StartsWith("mailto:") ? url : $"mailto:{url}";
+
+            if (plataforma.Equals("WhatsApp", StringComparison.OrdinalIgnoreCase))
+            {
+                if (url.StartsWith("http://") || url.StartsWith("https://"))
+                    return url;
+
+                var numeros = new string(url.Where(char.IsDigit).ToArray());
+
+                if (!numeros.StartsWith("55"))
+                    numeros = "55" + numeros;
+
+                return $"https://wa.me/{numeros}";
+            }
+
+            if (!url.StartsWith("http://") && !url.StartsWith("https://"))
+                return $"https://{url}";
+
+            return url;
         }
     }
 }

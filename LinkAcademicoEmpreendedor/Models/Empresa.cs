@@ -97,5 +97,7 @@ namespace LinkAcademicoEmpreendedor.Models
         // Novas coleções para preservar e navegar pelas interações
         public virtual ICollection<Curtida>? Curtidas { get; set; } = new List<Curtida>();
         public virtual ICollection<Comentario>? Comentarios { get; set; } = new List<Comentario>();
+
+        public List<RedeSocial> RedesSociais { get; set; } = new List<RedeSocial>();
     }
 }
