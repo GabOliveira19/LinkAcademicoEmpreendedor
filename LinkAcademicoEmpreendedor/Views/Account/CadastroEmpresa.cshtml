@@ -3,14 +3,17 @@
     ViewData["Title"] = "Cadastro de Empresa";
 }
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card shadow">
-                <div class="card-header bg-success text-white text-center">
-                    <h4 class="mb-0"><i class="bi bi-building"></i> Cadastro de Empresa</h4>
+<div class="signup-animation-page signup-empresa">
+    <div class="signup-box signup-box-empresa">
+        <div class="signup-content">
+            <div class="signup-header">
+                <div class="signup-icon">
+                    <i class="bi bi-building-fill"></i>
                 </div>
-                <div class="card-body">
+                <h2>Cadastro de Empresa</h2>
+                <p>Cadastre sua empresa para publicar vagas, buscar talentos e acompanhar candidaturas.</p>
+            </div>
+           
                     <!-- Alerta de Status -->
                     <div id="alertStatus" class="alert d-none"></div>
 
@@ -62,7 +65,7 @@
                         <!-- Secao Dados da Empresa -->
                         <div class="card mb-4" id="secaoDadosEmpresa" style="display: none;">
                             <div class="card-header bg-secondary text-white">
-                                <i class="bi bi-building"></i> Passo 2: Dados da Empresa
+                                <i class="bi bi-building-fill"></i> Passo 2: Dados da Empresa
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -241,13 +244,207 @@
                             </p>
                         </div>
                     </form>
-                </div>
+
+            <div class="signup-footer">
+                Já tem cadastro? <a asp-action="Login">Faça login</a>
             </div>
         </div>
     </div>
 </div>
 
-   @section Scripts {
+<style>
+    .signup-animation-page {
+        min-height: calc(100vh - var(--top-navbar-height, 72px));
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 1rem;
+        background: #f3f6fb;
+    }
+
+    .signup-box {
+        position: relative;
+        width: min(100%, 1040px);
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, .18);
+        animation: signupEntrance .6s ease both, signupCardFloat 5s ease-in-out .7s infinite;
+    }
+
+    .signup-content {
+        position: relative;
+        z-index: 1;
+        border-radius: 12px;
+        padding: 0 2rem 2rem;
+        background: #ffffff;
+        color: #2b2f36;
+    }
+
+    .signup-header {
+        text-align: center;
+        margin: 0 -2rem 1.5rem;
+        padding: 1rem 1.5rem;
+        background: #0d6efd;
+        border-radius: 12px 12px 0 0;
+        color: #ffffff;
+    }
+
+    .signup-icon {
+        width: 76px;
+        height: 76px;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #198754, #1976d2);
+        color: #fff;
+        font-size: 2rem;
+        box-shadow: 0 0 0 4px rgba(251, 191, 36, .18), 0 12px 26px rgba(0, 0, 0, .28);
+        animation: signupFloat 3s ease-in-out infinite;
+    }
+
+    .signup-header h2 {
+        margin: 0;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: 0;
+    }
+
+    .signup-header p {
+        margin: .4rem auto 0;
+        color: rgba(255,255,255,.85);
+        max-width: 620px;
+    }
+
+    .signup-animation-page .card {
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        color: #2b2f36;
+    }
+
+    .signup-animation-page .card-header {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .signup-animation-page .form-label,
+    .signup-animation-page .form-text,
+    .signup-animation-page .text-muted {
+        color: #2b2f36 !important;
+    }
+
+    .signup-animation-page .form-control,
+    .signup-animation-page .form-select {
+        min-height: 46px;
+        border-radius: 10px;
+        border-color: #d9e0ea;
+        background-color: #ffffff;
+        color: #2b2f36;
+    }
+
+        .signup-animation-page .form-control::placeholder {
+            color: #6c757d;
+        }
+
+        .signup-animation-page .form-control:focus,
+        .signup-animation-page .form-select:focus {
+            border-color: #0d6efd;
+            background-color: #ffffff;
+            color: #2b2f36;
+            box-shadow: 0 0 0 .2rem rgba(13,110,253,.14);
+        }
+
+    .signup-animation-page .form-select option {
+        color: #0f1f3a;
+        background: #fff;
+    }
+
+    .signup-animation-page .btn-success,
+    .signup-animation-page .btn-primary {
+        border: none;
+        border-radius: 10px;
+        font-weight: 800;
+        background: #0d6efd;
+        box-shadow: 0 10px 22px rgba(13,110,253,.24);
+    }
+
+    .signup-animation-page .btn-outline-primary,
+    .signup-animation-page .btn-outline-secondary {
+        border-color: #0d6efd;
+        color: #0d6efd;
+    }
+
+        .signup-animation-page .btn-outline-primary:hover,
+        .signup-animation-page .btn-outline-secondary:hover {
+            background: #0d6efd;
+            color: #ffffff;
+        }
+
+    .signup-footer {
+        margin-top: 1.25rem;
+        text-align: center;
+        color: #2b2f36;
+        border-top: 1px solid #dee2e6;
+        padding-top: 1rem;
+    }
+
+        .signup-footer a {
+            color: #0d6efd;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+            .signup-footer a:hover {
+                color: #075fc3;
+                text-decoration: underline;
+            }
+
+    @@keyframes signupEntrance {
+        from {
+            opacity: 0;
+            transform: translateY(18px) scale(.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @@keyframes signupFloat {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-7px);
+        }
+    }
+
+    @@keyframes signupCardFloat {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .signup-animation-page {
+            align-items: flex-start;
+            padding: 1rem;
+        }
+
+        .signup-content {
+            padding: 1.25rem;
+        }
+    }
+</style>
+
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
 
     <script>
@@ -517,5 +714,4 @@
         });
     </script>
 
-}
 }

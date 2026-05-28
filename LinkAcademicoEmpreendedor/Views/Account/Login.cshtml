@@ -1,81 +1,334 @@
-﻿@{
-    ViewData["Title"] = "Login";
+@{
+    ViewData["Title"] = "Entrar";
 }
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white text-center">
-                    <h4 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Entrar</h4>
+<div class="login-animation-page">
+    <div class="login-box">
+        <div class="login-content">
+            <h2>Entrar</h2>
+
+            <div class="login-logo-area">
+                <img src="~/images/skillbridge-logo-sb.png"
+                     asp-append-version="true"
+                     alt="SkillBridge"
+                     class="login-logo" />
+            </div>
+            
+            <p class="login-subtitle">Acesse sua conta SkillBridge</p>
+
+            @if (ViewBag.Erro != null)
+            {
+                <div class="alert alert-danger py-2 mb-3">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>@ViewBag.Erro
                 </div>
-                <div class="card-body">
-                    @if (ViewBag.Erro != null)
-                    {
-                        <div class="alert alert-danger">@ViewBag.Erro</div>
-                    }
+            }
 
-                    <form asp-action="Login" asp-controller="Account" method="post">
-                        @Html.AntiForgeryToken()
+            <form asp-action="Login" asp-controller="Account" method="post">
+                @Html.AntiForgeryToken()
 
-                        <div class="mb-3">
-                            <label class="form-label">Tipo de Conta</label>
-                            <div class="d-flex gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="tipoUsuario"
-                                           id="tipoAluno" value="Aluno" checked>
-                                    <label class="form-check-label" for="tipoAluno">
-                                        <i class="bi bi-mortarboard"></i> Aluno
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="tipoUsuario"
-                                           id="tipoEmpresa" value="Empresa">
-                                    <label class="form-check-label" for="tipoEmpresa">
-                                        <i class="bi bi-building-fill"></i> Empresa
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                <div class="account-tabs mb-3">
+                    <p class="account-title">Tipo de Conta</p>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="tipoUsuario" id="tipoAluno" value="Aluno" checked>
+                        <label class="form-check-label" for="tipoAluno">
+                            <i class="bi bi-mortarboard"></i> Aluno
+                        </label>
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email"
-                                   placeholder="seu.email@exemplo.com" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="senha" class="form-label">Senha</label>
-                            <input type="password" class="form-control" id="senha" name="senha"
-                                   placeholder="Sua senha" required />
-                        </div>
-
-                        <div class="mb-3 text-end">
-                            <a asp-action="EsqueceuSenha" class="text-decoration-none small">
-                                Esqueceu a senha?
-                            </a>
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-box-arrow-in-right"></i> Entrar
-                            </button>
-                        </div>
-                    </form>
-
-                    <hr>
-
-                    <div class="text-center">
-                        <p class="mb-2">Ainda não tem conta?</p>
-                        <a asp-action="CadastroAluno" class="btn btn-outline-primary btn-sm me-2">
-                            <i class="bi bi-mortarboard"></i> Cadastrar como Aluno
-                        </a>
-                        <a asp-action="CadastroEmpresa" class="btn btn-outline-success btn-sm">
-                            <i class="bi bi-building"></i> Cadastrar como Empresa
-                        </a>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="tipoUsuario" id="tipoEmpresa" value="Empresa">
+                        <label class="form-check-label" for="tipoEmpresa">
+                            <i class="bi bi-building-fill"></i> Empresa
+                        </label>
                     </div>
                 </div>
-            </div>
+
+                <div class="input-box">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email"
+                           id="email"
+                           name="email"
+                           class="form-control"
+                           placeholder="seu.email@exemplo.com"
+                           required
+                           autocomplete="email" />
+                </div>
+
+                <div class="input-box">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input type="password"
+                           id="senha"
+                           name="senha"
+                           class="form-control"
+                           placeholder="Sua senha"
+                           required
+                           autocomplete="current-password" />
+                </div>
+
+                <div class="login-links">
+                    <a asp-action="EsqueceuSenha">Esqueceu a senha?</a>
+                </div>
+
+                <button type="submit" class="login-button">
+                    <i class="bi bi-box-arrow-in-right"></i> Entrar
+                </button>
+            </form>
+
+            <div class="register-links">
+                <span>Ainda não tem conta?</span>
+                <div>
+                    <a asp-action="CadastroAluno"><i class="bi bi-mortarboard"></i> Cadastrar como Aluno</a>
+                    <a asp-action="CadastroEmpresa"><i class="bi bi-building-fill"></i> Cadastrar como Empresa</a>
+                </div>
+                </div>
         </div>
     </div>
 </div>
+
+<style>
+    .login-animation-page {
+        min-height: calc(100vh - var(--top-navbar-height, 72px));
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 1rem;
+        background: #f3f6fb;
+    }
+
+    .login-box {
+        position: relative;
+        width: min(100%, 500px);
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, .18);
+        animation: loginEntrance .6s ease both, loginSoftFloat 5s ease-in-out .7s infinite;
+    }
+
+    .login-content {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        border-radius: 12px;
+        padding: 0 1.4rem 1.4rem;
+        background: #ffffff;
+        color: #2b2f36;
+    }
+
+    .login-logo-area {
+        width: auto;
+        height: 104px;
+        border-radius: 0;
+        margin: 0 -1.4rem 1.25rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: visible;
+        background: #ffffff;
+        box-shadow: none;
+    }
+
+    .login-logo {
+        width: 88px;
+        height: 88px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #ffffff;
+        box-shadow: 0 12px 28px rgba(13, 110, 253, .24);
+        animation: loginLogoFloat 3s ease-in-out infinite;
+    }
+
+    .login-content h2 {
+        margin: 0 -1.4rem 1rem;
+        text-align: center;
+        font-weight: 800;
+        letter-spacing: 0;
+        color: #ffffff;
+        background: #0d6efd;
+        border-radius: 12px 12px 0 0;
+        padding: .85rem 1rem;
+    }
+
+    .login-content h2::before {
+        content: "\21AA";
+        margin-right: .5rem;
+    }
+
+    .login-subtitle {
+        display: none;
+    }
+
+    .account-tabs {
+        margin-top: .5rem;
+    }
+
+    .account-title {
+        margin-bottom: .45rem;
+        color: #2b2f36;
+        font-size: 1.05rem;
+        font-weight: 500;
+    }
+
+        .account-tabs label {
+            cursor: pointer;
+            color: #2b2f36;
+            font-weight: 500;
+            transition: .25s ease;
+        }
+
+            .account-tabs label i {
+                margin-right: .35rem;
+            }
+
+        .account-tabs .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+    .input-box {
+        position: relative;
+        width: 100%;
+        margin: 1.15rem 0;
+    }
+
+        .input-box input {
+            width: 100%;
+            min-height: 50px;
+            border: 1px solid #d9e0ea;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #2b2f36;
+            transition: .25s ease;
+        }
+
+            .input-box input:focus,
+            .input-box input:valid {
+                border-color: #0d6efd;
+                box-shadow: 0 0 0 .2rem rgba(13,110,253,.14);
+                background: #ffffff;
+            }
+
+    .input-box .form-label {
+        color: #2b2f36;
+        font-weight: 500;
+        margin-bottom: .4rem;
+    }
+
+    .input-box input::placeholder {
+        color: #6c757d;
+        }
+
+    .login-links {
+        text-align: right;
+        margin: -.25rem 0 1rem;
+    }
+
+        .login-links a,
+        .register-links a {
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .login-links a:hover,
+            .register-links a:hover {
+                color: #075fc3;
+                text-decoration: underline;
+            }
+
+    .login-button {
+        width: 100%;
+        min-height: 50px;
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        font-weight: 800;
+        background: #0d6efd;
+        box-shadow: 0 10px 22px rgba(13,110,253,.24);
+        transition: .25s ease;
+    }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 36px rgba(25, 118, 210, .34);
+        }
+
+    .register-links {
+        margin-top: 1.25rem;
+        text-align: center;
+        color: #2b2f36;
+        border-top: 1px solid #dee2e6;
+        padding-top: 1rem;
+    }
+
+        .register-links div {
+            display: flex;
+            justify-content: center;
+            gap: .6rem;
+            margin-top: .45rem;
+            flex-wrap: wrap;
+        }
+
+        .register-links a {
+            border: 1px solid #0d6efd;
+            border-radius: 8px;
+            padding: .45rem .7rem;
+        }
+
+        .register-links a:last-child {
+            border-color: #198754;
+            color: #198754;
+        }
+
+    @@keyframes loginEntrance {
+        from {
+            opacity: 0;
+            transform: translateY(18px) scale(.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @@keyframes loginLogoFloat {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-7px);
+        }
+    }
+
+    @@keyframes loginSoftFloat {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .login-animation-page {
+            align-items: flex-start;
+            padding: 1rem;
+        }
+
+        .login-box {
+            min-height: auto;
+        }
+
+        .login-content {
+            min-height: auto;
+            padding: 1.35rem;
+        }
+
+        .account-tabs {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
