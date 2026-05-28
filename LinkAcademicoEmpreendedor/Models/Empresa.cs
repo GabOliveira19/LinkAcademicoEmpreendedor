@@ -6,12 +6,12 @@ namespace LinkAcademicoEmpreendedor.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "O CNPJ e obrigatorio")]
+        [Required(ErrorMessage = "O CNPJ é obrigatório")]
         [StringLength(18)]
         [Display(Name = "CNPJ")]
         public string Cnpj { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "A Razao Social e obrigatoria")]
+        [Required(ErrorMessage = "A Razao Social é obrigatoria")]
         [StringLength(200)]
         [Display(Name = "Razao Social")]
         public string RazaoSocial { get; set; } = string.Empty;
@@ -55,13 +55,13 @@ namespace LinkAcademicoEmpreendedor.Models
         [Display(Name = "CEP")]
         public string? Cep { get; set; }
 
-        [Required(ErrorMessage = "O e-mail e obrigatorio")]
-        [EmailAddress(ErrorMessage = "E-mail invalido")]
+        [Required(ErrorMessage = "O e-mail é obrigatório")]
+        [EmailAddress(ErrorMessage = "E-mail inválido")]
         [StringLength(100)]
         [Display(Name = "E-mail")]
         public string Email { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "A senha e obrigatoria")]
+        [Required(ErrorMessage = "A senha é obrigatória")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "A senha deve ter no minimo 6 caracteres")]
         [DataType(DataType.Password)]
         [Display(Name = "Senha")]

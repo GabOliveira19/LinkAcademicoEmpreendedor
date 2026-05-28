@@ -124,7 +124,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
             if (await _context.Alunos.AnyAsync(a => a.Email == model.Email))
             {
-                ModelState.AddModelError("Email", "Este email ja esta cadastrado.");
+                ModelState.AddModelError("Email", "Este email já está cadastrado.");
                 return View(model);
             }
 
@@ -167,7 +167,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
         {
             if (!model.CnpjValidado)
             {
-                ModelState.AddModelError("Cnpj", "Voce deve consultar o CNPJ ou usar o cadastro manual antes de cadastrar.");
+                ModelState.AddModelError("Cnpj", "Você deve consultar o CNPJ ou usar o cadastro manual antes de cadastrar.");
                 return View(model);
             }
 
@@ -193,14 +193,14 @@ namespace LinkAcademicoEmpreendedor.Controllers
             string cnpjLimpo = new string(model.Cnpj.Where(char.IsDigit).ToArray());
             if (await _context.Empresas.AnyAsync(e => e.Cnpj.Replace(".", "").Replace("/", "").Replace("-", "") == cnpjLimpo))
             {
-                ModelState.AddModelError("Cnpj", "Este CNPJ ja esta cadastrado.");
+                ModelState.AddModelError("Cnpj", "Este CNPJ já está cadastrado.");
                 return View(model);
             }
 
             // Verifica se email ja existe
             if (await _context.Empresas.AnyAsync(e => e.Email == model.Email))
             {
-                ModelState.AddModelError("Email", "Este e-mail ja esta cadastrado.");
+                ModelState.AddModelError("Email", "Este e-mail já está cadastrado.");
                 return View(model);
             }
 
@@ -277,7 +277,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 return Json(new { sucesso = false, mensagem = $"CNPJ invalido. Recebido: {cnpjLimpo}" });
 
             if (await _context.Empresas.AnyAsync(e => e.Cnpj.Replace(".", "").Replace("/", "").Replace("-", "") == cnpjLimpo))
-                return Json(new { sucesso = false, mensagem = "Este CNPJ ja esta cadastrado no sistema." });
+                return Json(new { sucesso = false, mensagem = "Este CNPJ já está cadastrado no sistema." });
 
             var dados = await ConsultarCnpjApiAsync(cnpjLimpo);
 

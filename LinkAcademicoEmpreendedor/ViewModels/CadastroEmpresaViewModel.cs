@@ -4,7 +4,7 @@ namespace LinkAcademicoEmpreendedor.ViewModels
 {
     public class CadastroEmpresaViewModel
     {
-        [Required(ErrorMessage = "O CNPJ e obrigatorio")]
+        [Required(ErrorMessage = "O CNPJ é obrigatorio")]
         [StringLength(18)]
         [Display(Name = "CNPJ")]
         public string Cnpj { get; set; } = string.Empty;
