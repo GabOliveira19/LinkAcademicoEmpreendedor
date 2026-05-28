@@ -50,7 +50,24 @@
                             <span class="badge bg-success">@oportunidade.Tipo</span>
                             <span class="badge bg-info">@oportunidade.Modalidade</span>
                         </div>
-                        <h5 class="card-title">@oportunidade.Titulo</h5>
+                        <h5>
+                            @oportunidade.Titulo
+
+                            @{
+                                var niveisPremium = ViewBag.NiveisPremiumPorEmpresa as Dictionary<int, int>;
+                                var nivelPremium = niveisPremium != null && niveisPremium.ContainsKey(oportunidade.EmpresaId)
+                                ? niveisPremium[oportunidade.EmpresaId]
+                                : 0;
+                            }
+
+                            @if (nivelPremium > 0)
+                            {
+                                <span class="badge bg-warning text-dark ms-1">
+                                    <i class="bi bi-gem"></i>
+                                    @(nivelPremium == 3 ? "Advanced Plus" : nivelPremium == 2 ? "Advanced" : "Core")
+                                </span>
+                            }
+                        </h5>
                         <p class="text-muted mb-2">
                             <i class="bi bi-building"></i> @oportunidade.Empresa?.RazaoSocial
                         </p>

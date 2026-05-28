@@ -1,0 +1,54 @@
+﻿@model List<LinkAcademicoEmpreendedor.Models.PlanoPremium>
+@{
+    ViewData["Title"] = "Planos Premium";
+}
+
+<div class="container py-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="bi bi-gem"></i> Planos Premium</h4>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-bordered align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>Recurso</th>
+                        @foreach (var plano in Model)
+                        {
+                            <th>
+                                <h5>@plano.Nome</h5>
+                                <form asp-action="Assinar" method="post">
+                                    <input type="hidden" name="planoId" value="@plano.Id" />
+                                    <button class="btn btn-primary btn-sm w-100">Assinar</button>
+                                </form>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Valor mensal</strong></td>
+                        @foreach (var plano in Model)
+                        {
+                            <td>R$ @plano.ValorMensal.ToString("N2")</td>
+                        }
+                    </tr>
+                    <tr>
+                        <td><strong>Benefícios</strong></td>
+                        @foreach (var plano in Model)
+                        {
+                            <td>@plano.Beneficios</td>
+                        }
+                    </tr>
+                    <tr>
+                        <td><strong>Pagamento Pix demonstrativo</strong></td>
+                        @foreach (var plano in Model)
+                        {
+                            <td><i class="bi bi-check-lg text-success fs-4"></i></td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

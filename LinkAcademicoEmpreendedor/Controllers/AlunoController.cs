@@ -189,7 +189,10 @@ namespace LinkAcademicoEmpreendedor.Controllers
             aluno.Nome = model.Nome;
             aluno.Curso = model.Curso;
             aluno.Instituicao = model.Instituicao;
-            aluno.AnoIngresso = model.AnoIngresso;
+            aluno.EhEgresso = model.EhEgresso;
+            aluno.AnoIngresso = model.EhEgresso ? null : model.AnoIngresso;
+            aluno.AnoConclusao = model.EhEgresso ? model.AnoConclusao : null;
+            aluno.Matricula = model.EhEgresso ? null : model.Matricula;
             aluno.Sobre = model.Sobre;
             aluno.Habilidades = model.Habilidades;
             aluno.LinkedIn = model.LinkedIn;

@@ -38,15 +38,19 @@ namespace LinkAcademicoEmpreendedor.Services
                 .ToDictionaryAsync(x => x.AlunoId, x => x.Total);
 
             var comentariosRecebidosPorAluno = await _context.Comentarios
-                .Include(c => c.Projeto)
-                .Where(c => c.Projeto != null && c.Projeto.AlunoId != null)
-                .GroupBy(c => c.Projeto!.AlunoId)
-                .Select(g => new
-                {
-                    AlunoId = g.Key,
-                    Total = g.Count()
-                })
-                .ToDictionaryAsync(x => x.AlunoId, x => x.Total);
+    .Include(c => c.Projeto)
+    .Where(c =>
+        c.Projeto != null &&
+        c.Projeto.AlunoId != null &&
+        c.AlunoId != null &&
+        c.AlunoId != c.Projeto.AlunoId)
+    .GroupBy(c => c.Projeto!.AlunoId)
+    .Select(g => new
+    {
+        AlunoId = g.Key,
+        Total = g.Select(c => c.AlunoId).Distinct().Count()
+    })
+    .ToDictionaryAsync(x => x.AlunoId, x => x.Total);
 
             var curtidasRecebidasPorAluno = await _context.Curtidas
                 .Include(c => c.Projeto)

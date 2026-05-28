@@ -27,6 +27,18 @@ namespace LinkAcademicoEmpreendedor.Models
 
         public int? AnoIngresso { get; set; }
 
+        public int? AnoConclusao { get; set; }
+
+        public bool EhEgresso { get; set; }
+
+        [StringLength(80)]
+        public string? Matricula { get; set; }
+
+        [StringLength(500)]
+        public string? ComprovanteAcademico { get; set; }
+
+        public bool MatriculaValidada { get; set; }
+
         [StringLength(200)]
         public string? Instituicao { get; set; }
 

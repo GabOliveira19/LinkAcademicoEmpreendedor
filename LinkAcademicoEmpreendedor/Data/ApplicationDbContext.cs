@@ -22,6 +22,8 @@ namespace LinkAcademicoEmpreendedor.Data
         public DbSet<Avaliacao> Avaliacoes { get; set; }
         public DbSet<Area> Areas { get; set; }
         public DbSet<RedeSocial> RedesSociais { get; set; }
+        public DbSet<PlanoPremium> PlanosPremium { get; set; }
+        public DbSet<AssinaturaPremium> AssinaturasPremium { get; set; }
 
         public DbSet<FieldDefinition> FieldDefinitions { get; set; }
 
@@ -138,6 +140,46 @@ namespace LinkAcademicoEmpreendedor.Data
                 .WithMany(e => e.RedesSociais)
                 .HasForeignKey(r => r.EmpresaId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<AssinaturaPremium>()
+    .HasOne(a => a.Empresa)
+    .WithMany(e => e.AssinaturasPremium)
+    .HasForeignKey(a => a.EmpresaId)
+    .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<AssinaturaPremium>()
+                .HasOne(a => a.PlanoPremium)
+                .WithMany()
+                .HasForeignKey(a => a.PlanoPremiumId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<PlanoPremium>().HasData(
+       new PlanoPremium
+       {
+           Id = 1,
+           Nome = "Core",
+           ValorMensal = 59.90m,
+           Ordem = 1,
+           Beneficios = "Selo premium no perfil; vagas priorizadas na lista de oportunidades; mais visibilidade para empresas"
+       },
+       new PlanoPremium
+       {
+           Id = 2,
+           Nome = "Advanced",
+           ValorMensal = 119.90m,
+           Ordem = 2,
+           Beneficios = "Tudo do Core; filtros avançados na busca de talentos; acesso ampliado a talentos recentes"
+       },
+       new PlanoPremium
+       {
+           Id = 3,
+           Nome = "Advanced Plus",
+           ValorMensal = 149.90m,
+           Ordem = 3,
+           Beneficios = "Tudo do Advanced; destaque máximo; mais projetos em destaque; visão ampliada de talentos"
+       }
+   );
+
 
             modelBuilder.Entity<Area>().HasData(
                 new Area { Id = 1, Nome = "Interdisciplinar", Descricao = "Área padrão / multiáreas" },

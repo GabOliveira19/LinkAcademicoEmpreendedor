@@ -19,5 +19,7 @@ namespace LinkAcademicoEmpreendedor.ViewModels
         public List<Aluno> AlunosRecentes { get; set; } = new List<Aluno>();
         public List<Projeto> ProjetosDestaque { get; set; } = new List<Projeto>();
         public int TotalCandidaturas { get; set; }
+        public AssinaturaPremium? AssinaturaPremium { get; set; }
+        public bool PodeRenovarPremium { get; set; }
     }
 }

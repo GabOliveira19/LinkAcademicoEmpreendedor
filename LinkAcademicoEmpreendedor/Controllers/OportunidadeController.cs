@@ -41,9 +41,28 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 query = query.Where(o => o.Modalidade == modalidade);
             }
 
-            var oportunidades = await query
-                .OrderByDescending(o => o.DataPublicacao)
+            var oportunidades = await query.ToListAsync();
+
+            var empresasPremium = await _context.AssinaturasPremium
+                .Include(a => a.PlanoPremium)
+                .Where(a => a.Status == "Ativa" && a.Fim >= DateTime.Now)
                 .ToListAsync();
+
+            var niveisPremiumPorEmpresa = empresasPremium
+                .GroupBy(a => a.EmpresaId)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Max(a => a.PlanoPremium != null ? a.PlanoPremium.Ordem : 0)
+                );
+
+            oportunidades = oportunidades
+                .OrderByDescending(o => niveisPremiumPorEmpresa.ContainsKey(o.EmpresaId)
+                    ? niveisPremiumPorEmpresa[o.EmpresaId]
+                    : 0)
+                .ThenByDescending(o => o.DataPublicacao)
+                .ToList();
+
+            ViewBag.NiveisPremiumPorEmpresa = niveisPremiumPorEmpresa;
 
             ViewBag.Busca = busca;
             ViewBag.Tipo = tipo;

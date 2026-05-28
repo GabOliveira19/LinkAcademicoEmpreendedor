@@ -73,16 +73,32 @@
                             <span asp-validation-for="AreaId" class="text-danger"></span>
                         </div>
 
+                        <div class="form-check form-switch mb-3">
+                            <input asp-for="EhEgresso" class="form-check-input" id="ehEgresso" />
+                            <label asp-for="EhEgresso" class="form-check-label">Sou aluno egresso</label>
+                        </div>
+
+
                         <div class="row">
                             <div class="col-md-8 mb-3">
                                 <label asp-for="Curso" class="form-label">Curso</label>
                                 <input asp-for="Curso" class="form-control" />
                             </div>
 
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-4 mb-3 campo-cursando">
                                 <label asp-for="AnoIngresso" class="form-label">Ano de Ingresso</label>
                                 <input asp-for="AnoIngresso" type="number" class="form-control" />
                             </div>
+
+                            <div class="col-md-4 mb-3 campo-egresso d-none">
+                                <label asp-for="AnoConclusao" class="form-label">Ano de Conclusão</label>
+                                <input asp-for="AnoConclusao" type="number" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3 campo-cursando">
+                            <label asp-for="Matricula" class="form-label">Matrícula do estudante</label>
+                            <input asp-for="Matricula" class="form-control" />
                         </div>
 
                         <div class="mb-3">
@@ -300,5 +316,18 @@
 
             container.insertAdjacentHTML("beforeend", html);
         }
+
+                function atualizarCamposEgresso() {
+            const ehEgresso = document.getElementById("ehEgresso").checked;
+            document.querySelectorAll(".campo-cursando").forEach(c => c.classList.toggle("d-none", ehEgresso));
+            document.querySelectorAll(".campo-egresso").forEach(c => c.classList.toggle("d-none", !ehEgresso));
+            document.getElementById("labelInstituicao").textContent = ehEgresso
+                ? "Instituição onde estudou"
+                : "Instituição onde estuda";
+        }
+
+        document.getElementById("ehEgresso").addEventListener("change", atualizarCamposEgresso);
+        atualizarCamposEgresso();
+
     </script>
 }

@@ -99,5 +99,6 @@ namespace LinkAcademicoEmpreendedor.Models
         public virtual ICollection<Comentario>? Comentarios { get; set; } = new List<Comentario>();
 
         public List<RedeSocial> RedesSociais { get; set; } = new List<RedeSocial>();
+        public virtual ICollection<AssinaturaPremium> AssinaturasPremium { get; set; } = new List<AssinaturaPremium>();
     }
 }

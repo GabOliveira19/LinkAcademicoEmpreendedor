@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LinkAcademicoEmpreendedor.Data;
 using LinkAcademicoEmpreendedor.Models;
@@ -33,18 +33,31 @@ namespace LinkAcademicoEmpreendedor.Controllers
             if (empresa == null)
                 return RedirectToAction("Login", "Account");
 
+            var assinaturaPremium = await ObterAssinaturaPremiumAtivaAsync(userId.Value);
+            var nivelPremium = ObterNivelPremium(assinaturaPremium);
+
+            var limiteTalentosRecentes = nivelPremium switch
+            {
+                3 => 20,
+                2 => 12,
+                1 => 8,
+                _ => 5
+            };
+
             var alunosRecentes = await _context.Alunos
                 .Include(a => a.Projetos)
                 .OrderByDescending(a => a.DataCadastro)
-                .Take(5)
+                .Take(limiteTalentosRecentes)
                 .ToListAsync();
+
+            var limiteProjetosDestaque = nivelPremium == 3 ? 12 : 6;
 
             var projetosDestaque = await _context.Projetos
                 .Include(p => p.Aluno)
                 .Include(p => p.Curtidas)
                 .Where(p => p.Ativo)
                 .OrderByDescending(p => p.Curtidas.Count)
-                .Take(6)
+                .Take(limiteProjetosDestaque)
                 .ToListAsync();
 
             var viewModel = new DashboardEmpresaViewModel
@@ -53,7 +66,9 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 MinhasOportunidades = empresa.Oportunidades?.ToList() ?? new List<Oportunidade>(),
                 AlunosRecentes = alunosRecentes,
                 ProjetosDestaque = projetosDestaque,
-                TotalCandidaturas = empresa.Oportunidades?.Sum(o => o.Candidaturas?.Count ?? 0) ?? 0
+                TotalCandidaturas = empresa.Oportunidades?.Sum(o => o.Candidaturas?.Count ?? 0) ?? 0,
+                AssinaturaPremium = assinaturaPremium,
+                PodeRenovarPremium = assinaturaPremium != null && assinaturaPremium.Fim <= DateTime.Now.AddDays(7)
             };
 
             return View(viewModel);
@@ -68,6 +83,8 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
             if (empresa == null)
                 return NotFound();
+
+            ViewBag.AssinaturaPremium = await ObterAssinaturaPremiumAtivaAsync(id);
 
             return View(empresa);
         }
@@ -235,6 +252,16 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
         public async Task<IActionResult> BuscarTalentos(string busca, string habilidade, string curso)
         {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
+
+            if (userId == null || tipoUsuario != "Empresa")
+                return RedirectToAction("Login", "Account");
+
+            var assinaturaPremium = await ObterAssinaturaPremiumAtivaAsync(userId.Value);
+            var nivelPremium = ObterNivelPremium(assinaturaPremium);
+            var possuiFiltrosAvancados = nivelPremium >= 2;
+
             var query = _context.Alunos
                 .Include(a => a.Projetos)
                     .ThenInclude(p => p.Curtidas)
@@ -247,28 +274,40 @@ namespace LinkAcademicoEmpreendedor.Controllers
                     (a.Instituicao != null && a.Instituicao.Contains(busca)));
             }
 
-            if (!string.IsNullOrEmpty(habilidade))
+            if (possuiFiltrosAvancados && !string.IsNullOrEmpty(habilidade))
             {
                 query = query.Where(a =>
                     a.Habilidades != null &&
                     a.Habilidades.Contains(habilidade));
             }
 
-            if (!string.IsNullOrEmpty(curso))
+            if (possuiFiltrosAvancados && !string.IsNullOrEmpty(curso))
             {
                 query = query.Where(a =>
                     a.Curso != null &&
                     a.Curso.Contains(curso));
             }
 
+            var limiteResultados = nivelPremium switch
+            {
+                3 => 100,
+                2 => 50,
+                1 => 20,
+                _ => 10
+            };
+
             var alunos = query
                 .AsEnumerable()
                 .OrderByDescending(a => a.Projetos.Sum(p => p.Curtidas.Count))
+                .Take(limiteResultados)
                 .ToList();
 
             ViewBag.Busca = busca;
             ViewBag.Habilidade = habilidade;
             ViewBag.Curso = curso;
+            ViewBag.AssinaturaPremium = assinaturaPremium;
+            ViewBag.PossuiFiltrosAvancados = possuiFiltrosAvancados;
+            ViewBag.LimiteResultados = limiteResultados;
 
             return View(alunos);
         }
@@ -297,6 +336,27 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 return $"https://{url}";
 
             return url;
+        }
+
+        private async Task<AssinaturaPremium?> ObterAssinaturaPremiumAtivaAsync(int empresaId)
+        {
+            return await _context.AssinaturasPremium
+                .Include(a => a.PlanoPremium)
+                .Where(a => a.EmpresaId == empresaId && a.Status == "Ativa" && a.Fim >= DateTime.Now)
+                .OrderByDescending(a => a.PlanoPremium!.Ordem)
+                .ThenByDescending(a => a.Fim)
+                .FirstOrDefaultAsync();
+        }
+
+        private static int ObterNivelPremium(AssinaturaPremium? assinatura)
+        {
+            return assinatura?.PlanoPremium?.Nome switch
+            {
+                "Core" => 1,
+                "Advanced" => 2,
+                "Advanced Plus" => 3,
+                _ => 0
+            };
         }
     }
 }

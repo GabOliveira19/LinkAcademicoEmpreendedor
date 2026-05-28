@@ -336,6 +336,30 @@ namespace LinkAcademicoEmpreendedor.Controllers
             }
 
             // =========================
+            // SEJA PREMIUM
+            // =========================
+            else if (mensagem.Contains("premium") ||
+                     mensagem.Contains("seja premium") ||
+                     mensagem.Contains("plano premium") ||
+                     mensagem.Contains("planos premium") ||
+                     mensagem.Contains("assinatura"))
+            {
+                if (userId == null)
+                {
+                    resposta = "O Seja Premium é exclusivo para empresas. Faça login como empresa para visualizar os planos Core, Advanced e Advanced Plus.";
+                }
+                else if (tipoUsuario != "Empresa")
+                {
+                    resposta = "O Seja Premium está disponível para empresas. Ele oferece selo premium, mais visibilidade nas vagas, busca ampliada de talentos e filtros avançados conforme o plano.";
+                }
+                else
+                {
+                    resposta = "Redirecionando para os planos Premium da empresa. Você poderá escolher entre Core, Advanced e Advanced Plus.";
+                    redirecionar = "/Premium/Planos";
+                }
+            }
+
+            // =========================
             // EXCLUIR CONTA
             // =========================
             else if (mensagem.Contains("excluir conta") ||

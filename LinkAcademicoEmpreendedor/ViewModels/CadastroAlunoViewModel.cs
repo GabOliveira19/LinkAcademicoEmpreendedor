@@ -29,6 +29,12 @@ namespace LinkAcademicoEmpreendedor.ViewModels
         public string? Instituicao { get; set; }
 
         public int? AnoIngresso { get; set; }
+        public int? AnoConclusao { get; set; }
+
+        public bool EhEgresso { get; set; }
+
+        [StringLength(80)]
+        public string? Matricula { get; set; }
 
         // Nova propriedade obrigatória: AreaId
         [Required(ErrorMessage = "Selecione a área/campo principal")]

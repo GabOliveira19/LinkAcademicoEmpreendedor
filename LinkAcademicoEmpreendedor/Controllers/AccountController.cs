@@ -104,6 +104,24 @@ namespace LinkAcademicoEmpreendedor.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            if (!model.EhEgresso)
+            {
+                if (string.IsNullOrWhiteSpace(model.Matricula))
+                    ModelState.AddModelError("Matricula", "Informe sua matrícula.");
+
+                if (model.AnoIngresso == null)
+                    ModelState.AddModelError("AnoIngresso", "Informe o ano de ingresso.");
+            }
+            else
+            {
+                if (model.AnoConclusao == null)
+                    ModelState.AddModelError("AnoConclusao", "Informe o ano de conclusão.");
+            }
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+
             if (await _context.Alunos.AnyAsync(a => a.Email == model.Email))
             {
                 ModelState.AddModelError("Email", "Este email ja esta cadastrado.");
@@ -118,9 +136,13 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 Senha = SenhaService.CriptografarSenha(model.Senha),
                 Curso = model.Curso,
                 Instituicao = model.Instituicao,
-                AnoIngresso = model.AnoIngresso,
+                AnoIngresso = model.EhEgresso ? null : model.AnoIngresso,
+                AnoConclusao = model.EhEgresso ? model.AnoConclusao : null,
+                EhEgresso = model.EhEgresso,
+                Matricula = model.EhEgresso ? null : model.Matricula,
+                MatriculaValidada = false,
                 DataCadastro = DateTime.Now,
-                AreaId = model.AreaId // persistir área escolhida
+                AreaId = model.AreaId
             };
 
             aluno.RedesSociais = MontarRedesSociais(model.Plataformas, model.Urls);
