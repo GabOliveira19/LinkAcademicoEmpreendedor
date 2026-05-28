@@ -447,7 +447,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
             {
                 "Tecnologia" => new()
                 {
-                    { "Repositorio", "Link do GitHub" },
+                    { "Repositório", "Link do GitHub" },
                     { "Deploy", "Link do Sistema Online" },
                     { "Stack", "Tecnologias Utilizadas" }
                 },

@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\images\avatar.png" />
+    <Content Remove="wwwroot\images\skillbridge-logo-new.png" />
+    <Content Remove="wwwroot\images\skillbridge-logo.jpeg" />
+    <Content Remove="wwwroot\images\skillbridge-logo.jpeg.jpeg" />
+    <Content Remove="wwwroot\images\skillbridge-logo.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -76,7 +76,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 }
             }
 
-            ViewBag.Erro = "Email ou senha invalidos.";
+            ViewBag.Erro = "Email ou senha inválidos.";
             return View();
         }
 

@@ -12,7 +12,7 @@ namespace LinkAcademicoEmpreendedor.Models
         [StringLength(150)]
         public string Titulo { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "A Descricao é obrigatória")]
+        [Required(ErrorMessage = "A Descrição é obrigatória")]
         [StringLength(2000)]
         public string Descricao { get; set; } = string.Empty;
 

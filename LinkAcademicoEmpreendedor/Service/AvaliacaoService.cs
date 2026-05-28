@@ -154,8 +154,8 @@ namespace LinkAcademicoEmpreendedor.Services
             {
                 DestinatarioId = avaliadoId,
                 TipoDestinatario = tipoAvaliado,
-                Titulo = "Nova Avaliacao Recebida",
-                Mensagem = $"{nomeAvaliador} avaliou voce com {nota} estrela(s).",
+                Titulo = "Nova Avaliação Recebida",
+                Mensagem = $"{nomeAvaliador} avaliou você com {nota} estrela(s).",
                 Link = "/Avaliacao/MinhasAvaliacoes",
                 Lida = false,
                 DataCriacao = DateTime.Now

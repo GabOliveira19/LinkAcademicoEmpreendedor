@@ -61,8 +61,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
         "Matheus Moura Leite",
         "Gabriel Siqueira Assis",
         "João Gabriel Martins Pereira",
-        "João Marcos Corrêa Silveira",
-        "Fábio Lopes"
+        "João Marcos Corrêa Silveira"
     };
 
             var desenvolvedores = await _context.Alunos

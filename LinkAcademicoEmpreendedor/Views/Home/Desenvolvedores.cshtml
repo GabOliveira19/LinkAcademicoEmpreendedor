@@ -33,9 +33,9 @@
 
     .dev-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 28px;
-        max-width: 1200px;
+        max-width: 1050px;
         margin: 0 auto;
         padding: 80px 20px 60px;
     }
@@ -132,9 +132,19 @@
             opacity: 0.7;
         }
 
+    @@media (max-width: 900px) {
+        .dev-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
     @@media (max-width: 480px) {
         .dev-card-img-wrapper {
             height: 220px;
+        }
+
+        .dev-grid {
+            grid-template-columns: 1fr;
         }
 
         .dev-grid {

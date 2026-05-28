@@ -21,7 +21,7 @@
 
                         <!-- TÍTULO -->
                         <div class="mb-3">
-                            <label asp-for="Titulo" class="form-label fw-bold"></label>
+                            <label asp-for="Titulo" class="form-label fw-bold">Título</label>
                             <input asp-for="Titulo" class="form-control" placeholder="Digite o título do projeto" />
                             <span asp-validation-for="Titulo" class="text-danger"></span>
                         </div>
@@ -31,11 +31,11 @@
                             <input type="file" name="pdfFile" class="form-control" accept=".pdf" />
                         </div>
 
-                        <!-- Descricao -->
+                        <!-- Descrição -->
                         <div class="mb-3">
-                            <label asp-for="Descricao" class="form-label fw-bold"></label>
+                            <label asp-for="Descricao" class="form-label fw-bold">Descrição</label>
                             <div id="editor" style="height:200px;"></div>
-                            <input type="hidden" asp-for="Descricao" id="Descrição" />
+                            <input type="hidden" asp-for="Descricao" id="Descricao" />
                             <span asp-validation-for="Descricao" class="text-danger"></span>
                         </div>
 
