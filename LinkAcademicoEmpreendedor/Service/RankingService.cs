@@ -14,9 +14,18 @@ namespace LinkAcademicoEmpreendedor.Services
         }
 
         // Ranking de Alunos
-        public async Task<List<RankingAlunoViewModel>> ObterRankingAlunosAsync(int top = 50)
+        public async Task<List<RankingAlunoViewModel>> ObterRankingAlunosAsync(int top = 50, bool somenteNaoContratados = false)
         {
-            var alunos = await _context.Alunos
+            var alunosQuery = _context.Alunos.AsQueryable();
+
+            if (somenteNaoContratados)
+            {
+                alunosQuery = alunosQuery.Where(a => !_context.Candidaturas.Any(c =>
+                    c.AlunoId == a.Id &&
+                    (c.Status == "Aprovada" || c.Status == "Aceita")));
+            }
+
+            var alunos = await alunosQuery
                 .Select(a => new
                 {
                     a.Id,
