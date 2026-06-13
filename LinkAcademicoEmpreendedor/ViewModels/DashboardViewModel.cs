@@ -10,6 +10,7 @@ namespace LinkAcademicoEmpreendedor.ViewModels
         public List<Candidatura> MinhasCandidaturas { get; set; } = new List<Candidatura>();
         public int TotalCurtidas { get; set; }
         public int TotalComentarios { get; set; }
+        public int SaldoTokens { get; set; }
     }
 
     public class DashboardEmpresaViewModel

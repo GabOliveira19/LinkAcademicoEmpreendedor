@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "Pagamento Aprovado";
+}
+
+<div class="container py-5 text-center">
+    <div class="card shadow border-success mx-auto" style="max-width: 500px;">
+        <div class="card-body py-5">
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+            <h2 class="mt-4">Pagamento Aprovado!</h2>
+            <p class="lead text-muted">A sua assinatura Premium foi confirmada com sucesso.</p>
+            <p>Os benefícios do seu plano serão ativados em breve no seu perfil. Obrigado por confiar no Link Acadêmico Empreendedor!</p>
+            
+            <div class="mt-4">
+                <a asp-controller="Empresa" asp-action="Dashboard" class="btn btn-success btn-lg">
+                    <i class="bi bi-building"></i> Voltar ao Dashboard
+                </a>
+            </div>
+            
+            <p class="text-muted small mt-4">ID da Assinatura: @ViewBag.AssinaturaId</p>
+        </div>
+    </div>
+</div>

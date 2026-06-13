@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Falha no Pagamento";
+}
+
+<div class="container py-5 text-center">
+    <div class="card shadow border-danger mx-auto" style="max-width: 500px;">
+        <div class="card-body py-5">
+            <i class="bi bi-x-circle-fill text-danger" style="font-size: 5rem;"></i>
+            <h2 class="mt-4">Falha no Pagamento</h2>
+            <p class="lead text-muted">Não foi possível processar a compra de SkillCoins.</p>
+            <p>Ocorreu um erro ou o pagamento foi recusado. Por favor, tente novamente usando outro método de pagamento.</p>
+            
+            <div class="mt-4 d-grid gap-2 col-8 mx-auto">
+                <a asp-action="PacoteToken" class="btn btn-primary btn-lg">
+                    <i class="bi bi-arrow-repeat"></i> Tentar Novamente
+                </a>
+                <a asp-controller="Aluno" asp-action="Dashboard" class="btn btn-outline-secondary">
+                    Voltar ao Dashboard
+                </a>
+            </div>
+            
+            <p class="text-muted small mt-4">ID do Pedido: @ViewBag.CompraTokenId</p>
+        </div>
+    </div>
+</div>
+

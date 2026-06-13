@@ -76,6 +76,7 @@ namespace LinkAcademicoEmpreendedor.Models
         public virtual ICollection<Curtida> Curtidas { get; set; } = new List<Curtida>();
         public virtual ICollection<Comentario> Comentarios { get; set; } = new List<Comentario>();
         public virtual ICollection<Candidatura> Candidaturas { get; set; } = new List<Candidatura>();
+        public virtual ICollection<CompraToken> ComprasToken { get; set; } = new List<CompraToken>();
 
         public string? Curriculo { get; set; }
 

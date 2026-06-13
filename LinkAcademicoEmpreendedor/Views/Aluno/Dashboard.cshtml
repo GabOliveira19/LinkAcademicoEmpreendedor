@@ -1,4 +1,4 @@
-﻿@model LinkAcademicoEmpreendedor.ViewModels.DashboardAlunoViewModel
+@model LinkAcademicoEmpreendedor.ViewModels.DashboardAlunoViewModel
 @{
     ViewData["Title"] = "Dashboard do Aluno";
 }
@@ -27,6 +27,27 @@
                 <div class="col">
                     <h4 class="mb-1">@Model.Aluno?.Nome</h4>
                     <p class="text-muted mb-0">@Model.Aluno?.Curso - @Model.Aluno?.Instituicao</p>
+                </div>
+
+                <div class="col-auto text-end">
+                    @if (Model.Aluno?.EhEgresso == true)
+                    {
+                        <div class="bg-light border rounded px-3 py-2 shadow-sm">
+                            <div class="small text-muted">Saldo de SkillCoins</div>
+                            <div class="fw-semibold">
+                                <i class="bi bi-coin"></i> @Model.SaldoTokens
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="bg-light border rounded px-3 py-2 shadow-sm">
+                            <div class="small text-muted">Candidaturas</div>
+                            <div class="fw-semibold text-success">
+                                <i class="bi bi-check-circle"></i> Acesso gratuito
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 <div class="col-auto">
@@ -173,7 +194,7 @@
                         <strong>@op.Titulo</strong>
                         <span class="badge bg-primary ms-2">@op.Tipo</span>
                         <br>
-                        <small class="text-muted">@op.Empresa?.RazaoSocial</small>
+                        <small class="text-muted">@op.Empresa?.RazaoSocial @await Component.InvokeAsync("SeloPremium", new { empresaId = op.EmpresaId })</small>
                     </div>
                 </div>
             }

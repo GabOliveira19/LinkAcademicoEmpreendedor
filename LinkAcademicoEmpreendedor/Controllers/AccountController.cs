@@ -57,6 +57,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
                     HttpContext.Session.SetString("UserName", aluno.Nome);
                     HttpContext.Session.SetString("TipoUsuario", "Aluno");
                     HttpContext.Session.SetString("UserFoto", aluno.FotoPerfil ?? "");
+                    HttpContext.Session.SetString("AlunoEgresso", aluno.EhEgresso ? "true" : "false");
                     return RedirectToAction("Dashboard", "Aluno");
                 }
             }
@@ -72,6 +73,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
                     HttpContext.Session.SetString("UserName", empresa.RazaoSocial);
                     HttpContext.Session.SetString("TipoUsuario", "Empresa");
                     HttpContext.Session.SetString("UserFoto", empresa.LogoEmpresa ?? "");
+                    HttpContext.Session.SetString("AlunoEgresso", "false");
                     return RedirectToAction("Dashboard", "Empresa");
                 }
             }
@@ -149,6 +151,32 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
             _context.Alunos.Add(aluno);
             await _context.SaveChangesAsync();
+
+            if (aluno.EhEgresso)
+            {
+                var carteiraExiste = await _context.CarteirasToken.AnyAsync(c => c.AlunoId == aluno.Id);
+
+                if (!carteiraExiste)
+                {
+                    var carteira = new CarteiraToken
+                    {
+                        AlunoId = aluno.Id,
+                        Saldo = 300
+                    };
+
+                    var movimentacao = new MovimentacaoToken
+                    {
+                        AlunoId = aluno.Id,
+                        Quantidade = 300,
+                        Tipo = "Bonus Cadastro",
+                        Data = DateTime.Now
+                    };
+                                    
+                    _context.CarteirasToken.Add(carteira);
+                    _context.MovimentacoesToken.Add(movimentacao);
+                    await _context.SaveChangesAsync();
+                }
+            }
 
             TempData["Sucesso"] = "Cadastro realizado com sucesso! Faca login.";
             return RedirectToAction("Login");

@@ -2,16 +2,19 @@
 using Microsoft.EntityFrameworkCore;
 using LinkAcademicoEmpreendedor.Data;
 using LinkAcademicoEmpreendedor.Models;
+using LinkAcademicoEmpreendedor.Services;
 
 namespace LinkAcademicoEmpreendedor.Controllers
 {
     public class CandidaturaController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly TokenService _tokenService;
 
-        public CandidaturaController(ApplicationDbContext context)
+        public CandidaturaController(ApplicationDbContext context, TokenService tokenService)
         {
             _context = context;
+            _tokenService = tokenService;
         }
 
         // Candidatar-se a uma vaga (Aluno)
@@ -28,7 +31,6 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 return RedirectToAction("Detalhes", "Oportunidade", new { id = oportunidadeId });
             }
 
-            // Verificar se ja se candidatou
             var candidaturaExistente = await _context.Candidaturas
                 .FirstOrDefaultAsync(c => c.AlunoId == userId && c.OportunidadeId == oportunidadeId);
 
@@ -38,7 +40,6 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 return RedirectToAction("Detalhes", "Oportunidade", new { id = oportunidadeId });
             }
 
-            // Verificar se a oportunidade existe e esta ativa
             var oportunidade = await _context.Oportunidades
                 .Include(o => o.Empresa)
                 .FirstOrDefaultAsync(o => o.Id == oportunidadeId && o.Ativa);
@@ -51,39 +52,77 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
             var aluno = await _context.Alunos.FindAsync(userId);
 
-            // Criar candidatura
-            var candidatura = new Candidatura
+            if (aluno == null)
             {
-                AlunoId = userId.Value,
-                OportunidadeId = oportunidadeId,
-                MensagemApresentacao = mensagem?.Trim(),
-                DataCandidatura = DateTime.Now,
-                Status = "Pendente"
-            };
+                TempData["Erro"] = "Aluno nao encontrado.";
+                return RedirectToAction("Detalhes", "Oportunidade", new { id = oportunidadeId });
+            }
 
-            _context.Candidaturas.Add(candidatura);
+            var custoTokens = (int)oportunidade.CustoCandidatura;
 
-            // Criar Notificacao para a empresa
-            var Notificacao = new Notificacao
+            if (aluno.EhEgresso && custoTokens > 0)
             {
-                Titulo = "Nova Candidatura Recebida",
-                Mensagem = $"{aluno?.Nome} se candidatou para a vaga: {oportunidade.Titulo}",
-                Link = $"/Candidatura/Detalhes/{candidatura.Id}",
-                TipoDestinatario = "Empresa",
-                DestinatarioId = oportunidade.EmpresaId,
-                DataCriacao = DateTime.Now,
-                Lida = false
-            };
+                var saldo = await _tokenService.ConsultarSaldo(aluno.Id);
+                if (saldo < custoTokens)
+                {
+                    TempData["Erro"] = "Saldo insuficiente para se candidatar a esta vaga. Recarregue seus tokens.";
+                    return RedirectToAction("Detalhes", "Oportunidade", new { id = oportunidadeId });
+                }
+            }
 
-            _context.Notificacoes.Add(Notificacao);
-            await _context.SaveChangesAsync();
+            var strategy = _context.Database.CreateExecutionStrategy();
 
-            // Atualizar o link da Notificacao com o ID correto
-            Notificacao.Link = $"/Candidatura/Detalhes/{candidatura.Id}";
-            await _context.SaveChangesAsync();
+            return await strategy.ExecuteAsync(async () =>
+            {
+                await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            TempData["Sucesso"] = "Candidatura enviada com sucesso! A empresa sera notificada.";
-            return RedirectToAction("Detalhes", "Oportunidade", new { id = oportunidadeId });
+                try
+                {
+                    var candidatura = new Candidatura
+                    {
+                        AlunoId = userId.Value,
+                        OportunidadeId = oportunidadeId,
+                        MensagemApresentacao = mensagem?.Trim(),
+                        DataCandidatura = DateTime.Now,
+                        Status = "Pendente"
+                    };
+
+                    _context.Candidaturas.Add(candidatura);
+
+                    var Notificacao = new Notificacao
+                    {
+                        Titulo = "Nova Candidatura Recebida",
+                        Mensagem = $"{aluno?.Nome} se candidatou para a vaga: {oportunidade.Titulo}",
+                        Link = $"/Candidatura/Detalhes/{candidatura.Id}",
+                        TipoDestinatario = "Empresa",
+                        DestinatarioId = oportunidade.EmpresaId,
+                        DataCriacao = DateTime.Now,
+                        Lida = false
+                    };
+
+                    _context.Notificacoes.Add(Notificacao);
+                    await _context.SaveChangesAsync();
+
+                    Notificacao.Link = $"/Candidatura/Detalhes/{candidatura.Id}";
+                    await _context.SaveChangesAsync();
+
+                    if (aluno.EhEgresso && custoTokens > 0)
+                    {
+                        await _tokenService.DebitarTokens(aluno.Id, custoTokens, $"Candidatura - {oportunidade.Titulo}");
+                    }
+
+                    await transaction.CommitAsync();
+
+                    TempData["Sucesso"] = "Candidatura enviada com sucesso! A empresa sera notificada.";
+                    return RedirectToAction("Detalhes", "Oportunidade", new { id = oportunidadeId });
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    TempData["Erro"] = "Nao foi possivel concluir sua candidatura. Tente novamente.";
+                    return RedirectToAction("Detalhes", "Oportunidade", new { id = oportunidadeId });
+                }
+            });
         }
 
         // Minhas Candidaturas (Aluno)

@@ -193,6 +193,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
             oportunidade.Modalidade = model.Modalidade;
             oportunidade.Salario = model.Salario;
             oportunidade.Ativa = model.Ativa;
+            oportunidade.CustoCandidatura = model.CustoCandidatura;
 
             await _context.SaveChangesAsync();
 

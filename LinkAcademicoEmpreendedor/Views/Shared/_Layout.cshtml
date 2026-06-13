@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+@using LinkAcademicoEmpreendedor.Data
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext DbContext
+
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
@@ -513,6 +517,19 @@
                         var tipoUsuario = Context.Session.GetString("TipoUsuario");
                         var userName = Context.Session.GetString("UserName");
                         var userFoto = Context.Session.GetString("UserFoto");
+                        var alunoEgressoSession = Context.Session.GetString("AlunoEgresso");
+                        var alunoEgresso = alunoEgressoSession == "true";
+
+                        if (tipoUsuario == "Aluno" && string.IsNullOrWhiteSpace(alunoEgressoSession))
+                        {
+                            var alunoId = Context.Session.GetInt32("UserId");
+                            var aluno = alunoId.HasValue
+                                ? DbContext.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == alunoId.Value)
+                                : null;
+
+                            alunoEgresso = aluno?.EhEgresso == true;
+                            Context.Session.SetString("AlunoEgresso", alunoEgresso ? "true" : "false");
+                        }
 
                         <li class="nav-item d-none d-lg-block">
                             <a class="nav-link position-relative" asp-controller="Notificacao" asp-action="Index">
@@ -541,6 +558,14 @@
                                     <li><a class="dropdown-item" asp-controller="Candidatura" asp-action="MinhasCandidaturas"><i class="bi bi-file-earmark-person"></i> Minhas candidaturas</a></li>
                                     <li><a class="dropdown-item" asp-controller="Projeto" asp-action="Criar"><i class="bi bi-folder-plus"></i> Novo projeto</a></li>
                                     <li><a class="dropdown-item" asp-controller="Aluno" asp-action="EditarPerfil"><i class="bi bi-person-gear"></i> Editar perfil</a></li>
+                                    @if (alunoEgresso)
+                                    {
+                                        <li>
+                                              <a class="dropdown-item bg-warning text-dark fw-semibold" asp-controller="Token" asp-action="PacoteToken">
+                                                  <i class="bi bi-coin"></i> Comprar SkillCoins
+                                              </a>
+                                        </li>
+                                    }
                                 }
                                 else
                                 {
@@ -768,7 +793,7 @@
             function atualizarNotificacoes() {
                 fetch('/Notificacao/ContarNaoLidas')
                     .then(r => r.json())
-                    .then(data => {
+                    .then data => {
                         var badgeDesktop = document.getElementById('notificationBadgeDesktop');
                         var badgeMobile = document.getElementById('notificationBadgeMobile');
 

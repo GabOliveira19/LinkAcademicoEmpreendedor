@@ -1,78 +1,46 @@
-﻿@model List<LinkAcademicoEmpreendedor.Models.PlanoPremium>
+﻿@model LinkAcademicoEmpreendedor.ViewModels.PacotesTokenViewModel
 @inject Microsoft.Extensions.Options.IOptions<LinkAcademicoEmpreendedor.Settings.MercadoPagoSettings> MercadoPagoConfig
 @{
-    ViewData["Title"] = "Planos Premium";
+    ViewData["Title"] = "Pacotes de SkillCoins";
 }
 
 <div class="container py-4">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0"><i class="bi bi-gem"></i> Planos Premium</h4>
-        </div>
-        
-        <form id="formAntiforgery" method="post" class="d-none">
-            @Html.AntiForgeryToken()
-        </form>
-
-        <div class="card-body table-responsive">
-            <table class="table table-bordered align-middle text-center">
-                <thead class="table-light">
-                    <tr>
-                        <th>Recurso</th>
-                        @foreach (var plano in Model)
-                        {
-                            <th>
-                                <h5>@plano.Nome</h5>
-                                @{
-                                    var nivelDoPlano = LinkAcademicoEmpreendedor.Helpers.PremiumHelper.ObterNivelPorNome(plano.Nome);
-                                    int nivelAtual = ViewBag.NivelAtual ?? 0;
-                                }
-                                @if (nivelDoPlano > nivelAtual)
-                                {
-                                    <button class="btn btn-primary btn-sm w-100" 
-                                            data-plano-id="@plano.Id"
-                                            data-plano-valor="@plano.ValorMensal.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)">
-                                        Assinar
-                                    </button>
-                                }
-                                else if (nivelDoPlano == nivelAtual)
-                                {
-                                    <button class="btn btn-success btn-sm w-100" disabled><i class="bi bi-check-circle"></i> Seu Plano</button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-secondary btn-sm w-100" disabled>Indisponível</button>
-                                }
-                            </th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Valor mensal</strong></td>
-                        @foreach (var plano in Model)
-                        {
-                            <td>R$ @plano.ValorMensal.ToString("N2")</td>
-                        }
-                    </tr>
-                    <tr>
-                        <td><strong>Benefícios</strong></td>
-                        @foreach (var plano in Model)
-                        {
-                            <td>@plano.Beneficios</td>
-                        }
-                    </tr>
-                    <tr>
-                        <td><strong>Pagamento Pix</strong></td>
-                        @foreach (var plano in Model)
-                        {
-                            <td><i class="bi bi-check-lg text-success fs-4"></i></td>
-                        }
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="mb-4">
+        <h3 class="mb-1"><i class="bi bi-coin"></i> Pacotes de SkillCoins</h3>
+        <p class="text-muted mb-0">Escolha o pacote ideal para impulsionar suas candidaturas.</p>
     </div>
+
+    <form id="formAntiforgery" method="post" class="d-none">
+        @Html.AntiForgeryToken()
+    </form>
+
+    <div class="row g-4">
+        @foreach (var pacote in Model.Pacotes)
+        {
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title mb-1">@pacote.Nome</h5>
+                        <div class="text-muted small mb-3">@pacote.QuantidadeTokens SkillCoins</div>
+                        <div class="display-6 fw-semibold mb-4">R$ @pacote.Valor.ToString("N2")</div>
+                        <button class="btn btn-primary mt-auto w-100"
+                                type="button"
+                                data-pacote-id="@pacote.Id"
+                                data-pacote-valor="@pacote.Valor.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)">
+                            Comprar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Pacotes.Any())
+    {
+        <div class="alert alert-info mt-4">
+            Nenhum pacote disponível no momento.
+        </div>
+    }
 </div>
 
 <!-- Modal do Payment Brick -->
@@ -80,7 +48,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="paymentModalLabel">Finalizar Pagamento de Assinatura</h5>
+        <h5 class="modal-title" id="paymentModalLabel">Finalizar Pagamento</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -99,12 +67,12 @@
         const bricksBuilder = mp.bricks();
         
         let paymentBrickController = null;
-        let selectedPlanoId = 0;
+        let selectedPacoteId = 0;
         const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
 
-        document.querySelectorAll('[data-plano-id]').forEach(button => {
+        document.querySelectorAll('[data-pacote-id]').forEach(button => {
             button.addEventListener('click', async () => {
-                @if (Context.Session.GetString("TipoUsuario") != "Empresa")
+                @if (Context.Session.GetString("TipoUsuario") != "Aluno")
                 {
                     <text>
                     window.location.href = '@Url.Action("Login", "Account")';
@@ -112,8 +80,8 @@
                     </text>
                 }
 
-                selectedPlanoId = button.getAttribute('data-plano-id');
-                const valor = parseFloat(button.getAttribute('data-plano-valor'));
+                selectedPacoteId = button.getAttribute('data-pacote-id');
+                const valor = parseFloat(button.getAttribute('data-pacote-valor'));
                 
                 await renderPaymentBrick(valor);
                 paymentModal.show();
@@ -143,10 +111,10 @@
                     },
                     onSubmit: ({ selectedPaymentMethod, formData }) => {
                         return new Promise((resolve, reject) => {
-                            // Adiciona planoId no DTO enviado ao backend
-                            formData.PlanoId = selectedPlanoId;
+                            // Adiciona pacoteId no DTO enviado ao backend
+                            formData.PacoteId = selectedPacoteId;
 
-                            fetch('@Url.Action("Assinar", "Premium")', {
+                            fetch('@Url.Action("CriarPagamento", "Token")', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -160,7 +128,7 @@
                                 } else {
                                     response.json().then(data => {
                                         resolve();
-                                        
+
                                         // Salvar QrCode no localStorage para exibir na tela Pendente caso necessário
                                         if (data.qrCode) {
                                             localStorage.setItem('qrCodeBase64_' + data.id, data.qrCodeBase64);
@@ -193,3 +161,4 @@
         };
     </script>
 }
+

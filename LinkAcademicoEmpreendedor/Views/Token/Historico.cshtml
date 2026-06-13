@@ -1,0 +1,57 @@
+﻿@model List<LinkAcademicoEmpreendedor.Models.MovimentacaoToken>
+@{
+    ViewData["Title"] = "Histórico de SkillCoins";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="mb-1"><i class="bi bi-clock-history"></i> Histórico de Movimentações</h3>
+            <p class="text-muted mb-0">Acompanhe créditos e débitos de SkillCoins.</p>
+        </div>
+        <a asp-controller="Aluno" asp-action="Dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Dashboard
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-coin fs-1 text-muted d-block mb-3"></i>
+                    <h5>Nenhuma movimentação registrada</h5>
+                    <p class="text-muted mb-0">Quando houver movimentações, elas aparecerão aqui.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th class="text-end">Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                var classeQuantidade = item.Quantidade >= 0 ? "text-success" : "text-danger";
+                                var sinal = item.Quantidade >= 0 ? "+" : "";
+                                <tr>
+                                    <td>@item.Data.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@item.Tipo</td>
+                                    <td class="text-end fw-semibold @classeQuantidade">
+                                        @sinal@item.Quantidade
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
