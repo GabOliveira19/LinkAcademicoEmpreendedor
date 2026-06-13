@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/LinkAcademicoEmpreendedor/wwwroot/images
+/LinkAcademicoEmpreendedor/appsettings.Development.json
+/LinkAcademicoEmpreendedor/appsettings.json
+/LinkAcademicoEmpreendedor/Program.cs
