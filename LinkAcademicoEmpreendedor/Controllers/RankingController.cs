@@ -14,9 +14,10 @@ namespace LinkAcademicoEmpreendedor.Controllers
         }
 
         // GET: /Ranking/Alunos
-        public async Task<IActionResult> Alunos()
+        public async Task<IActionResult> Alunos(bool somenteNaoContratados = false)
         {
-            var ranking = await _rankingService.ObterRankingAlunosAsync(50);
+            var ranking = await _rankingService.ObterRankingAlunosAsync(50, somenteNaoContratados);
+            ViewBag.SomenteNaoContratados = somenteNaoContratados;
             return View(ranking);
         }
 
