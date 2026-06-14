@@ -53,6 +53,20 @@ namespace LinkAcademicoEmpreendedor.Controllers
             });
         }
 
+        // GET: /Notificacao/ContarNaoLidas
+        [HttpGet]
+        public async Task<IActionResult> ContarNaoLidas()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
+
+            if (userId == null || string.IsNullOrEmpty(tipoUsuario))
+                return Json(new { count = 0 });
+
+            var count = await _NotificacaoService.ContarNaoLidasAsync(userId.Value, tipoUsuario);
+            return Json(new { count });
+        }
+
         // POST: /Notificacao/MarcarLida/5
         [HttpPost]
         public async Task<IActionResult> MarcarLida(int id)
@@ -72,7 +86,31 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 return Unauthorized();
 
             await _NotificacaoService.MarcarTodasComoLidasAsync(userId.Value, tipoUsuario);
-            return Ok();
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return Ok();
+
+            TempData["Sucesso"] = "Todas as notificações foram marcadas como lidas.";
+            return RedirectToAction("Index");
+        }
+
+        // POST: /Notificacao/LimparTodas
+        [HttpPost]
+        public async Task<IActionResult> LimparTodas()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
+
+            if (userId == null || string.IsNullOrEmpty(tipoUsuario))
+                return Unauthorized();
+
+            await _NotificacaoService.LimparTodasAsync(userId.Value, tipoUsuario);
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return Ok();
+
+            TempData["Sucesso"] = "Notificações limpas com sucesso.";
+            return RedirectToAction("Index");
         }
     }
 }

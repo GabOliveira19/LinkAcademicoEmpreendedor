@@ -1,0 +1,97 @@
+@{
+    ViewData["Title"] = "Demonstração - Empresa";
+}
+
+<div class="container py-4">
+    <div class="alert alert-success d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <strong><i class="bi bi-play-circle"></i> Modo demonstração</strong>
+            <div class="small">Esta tela usa dados fictícios e não representa nenhuma empresa cadastrada.</div>
+        </div>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-success">Voltar ao login</a>
+    </div>
+
+    <div class="card shadow mb-4 bg-success text-white">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="bg-white text-success rounded d-flex align-items-center justify-content-center"
+                         style="width: 80px; height: 80px; font-size: 2rem;">
+                        <i class="bi bi-building-fill"></i>
+                    </div>
+                </div>
+                <div class="col">
+                    <h3 class="mb-1">Empresa Demonstração SkillBridge</h3>
+                    <p class="mb-0">Tecnologia e inovação</p>
+                    <div class="d-flex flex-wrap gap-2 mt-2">
+                        <span class="badge bg-warning text-dark"><i class="bi bi-gem"></i> Empresa premium</span>
+                        <span class="badge bg-light text-success"><i class="bi bi-camera-video"></i> Entrevista agendada</span>
+                    </div>
+                </div>
+                <div class="col-auto d-flex gap-2">
+                    <button class="btn btn-light" disabled><i class="bi bi-pencil"></i> Editar perfil</button>
+                    <button class="btn btn-warning" disabled><i class="bi bi-gem"></i> Alterar plano</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-warning mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <span class="badge bg-warning text-dark mb-2"><i class="bi bi-gem"></i> Premium ativo</span>
+                <h5 class="mb-1">Plano Premium: Advanced Plus</h5>
+                <p class="mb-1 text-muted">Destaque máximo; filtros avançados; relatórios; suporte prioritário</p>
+                <small class="text-muted">Válido até 10/07/2026</small>
+                <div class="progress mt-2" style="height: 8px; max-width: 360px;"><div class="progress-bar bg-warning" style="width: 70%"></div></div>
+            </div>
+            <button class="btn btn-outline-secondary" disabled><i class="bi bi-clock-history"></i> Histórico</button>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3"><div class="card border-success h-100"><div class="card-body text-center"><h2 class="text-success">8</h2><p class="mb-0">Vagas publicadas</p></div></div></div>
+        <div class="col-md-4 mb-3"><div class="card border-primary h-100"><div class="card-body text-center"><h2 class="text-primary">42</h2><p class="mb-0">Total de candidaturas</p></div></div></div>
+        <div class="col-md-4 mb-3"><div class="card border-warning h-100"><div class="card-body text-center"><h2 class="text-warning">6</h2><p class="mb-0">Entrevistas marcadas</p></div></div></div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header"><h5 class="mb-0"><i class="bi bi-calendar-event"></i> Próximas entrevistas</h5></div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between"><span>Aluno Demonstração - Dev Front-end</span><span class="badge bg-primary">14/06 15:00</span></div>
+                    <div class="list-group-item d-flex justify-content-between"><span>Marina Demo - Estágio Dados</span><span class="badge bg-primary">15/06 10:30</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header"><h5 class="mb-0"><i class="bi bi-hourglass-split"></i> Candidatos aguardando análise</h5></div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between"><span>Lucas Demo - Estágio UX</span><span class="badge bg-warning text-dark">Pendente</span></div>
+                    <div class="list-group-item d-flex justify-content-between"><span>Ana Demo - Back-end</span><span class="badge bg-info">Visualizada</span></div>
+                    <div class="list-group-item d-flex justify-content-between"><span>Pedro Demo - Suporte</span><span class="badge bg-warning text-dark">Pendente</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header"><h5 class="mb-0"><i class="bi bi-graph-up-arrow"></i> Relatório rápido</h5></div>
+        <div class="card-body">
+            <div class="mb-3">
+                <div class="d-flex justify-content-between small"><span>Dev Front-end Júnior</span><strong>18 candidatos</strong></div>
+                <div class="progress" style="height: 10px;"><div class="progress-bar bg-success" style="width: 100%"></div></div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between small"><span>Estágio em Dados</span><strong>14 candidatos</strong></div>
+                <div class="progress" style="height: 10px;"><div class="progress-bar bg-success" style="width: 78%"></div></div>
+            </div>
+            <div>
+                <div class="d-flex justify-content-between small"><span>Suporte Técnico</span><strong>10 candidatos</strong></div>
+                <div class="progress" style="height: 10px;"><div class="progress-bar bg-success" style="width: 55%"></div></div>
+            </div>
+        </div>
+    </div>
+</div>

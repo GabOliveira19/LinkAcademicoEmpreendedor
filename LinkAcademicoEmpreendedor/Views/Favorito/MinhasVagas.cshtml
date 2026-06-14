@@ -1,0 +1,70 @@
+@model IEnumerable<LinkAcademicoEmpreendedor.Models.FavoritoVaga>
+@{
+    ViewData["Title"] = "Vagas favoritas";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <div>
+            <h2 class="mb-1"><i class="bi bi-star-fill text-warning"></i> Vagas favoritas</h2>
+            <p class="text-muted mb-0">Vagas salvas para acompanhar depois.</p>
+        </div>
+        <a asp-controller="Oportunidade" asp-action="Index" class="btn btn-primary">
+            <i class="bi bi-search"></i> Buscar vagas
+        </a>
+    </div>
+
+    <div class="row">
+        @foreach (var favorito in Model)
+        {
+            var oportunidade = favorito.Oportunidade;
+            if (oportunidade == null)
+            {
+                continue;
+            }
+
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between gap-2">
+                            <div>
+                                <span class="badge bg-success">@oportunidade.Tipo</span>
+                                <span class="badge bg-info">@oportunidade.Modalidade</span>
+                                @if (oportunidade.VagaPremiumEgresso)
+                                {
+                                    <span class="badge bg-dark">
+                                        <i class="bi bi-coin"></i> @oportunidade.CustoMoedasCandidatura moedas
+                                    </span>
+                                }
+                            </div>
+                            <span class="badge @(oportunidade.Ativa ? "bg-success" : "bg-secondary")">
+                                @(oportunidade.Ativa ? "Ativa" : "Encerrada")
+                            </span>
+                        </div>
+                        <h5 class="mt-3">@oportunidade.Titulo</h5>
+                        <p class="text-muted mb-2">
+                            <i class="bi bi-building-fill"></i> @oportunidade.Empresa?.RazaoSocial
+                        </p>
+                        <p class="small text-muted">@oportunidade.Local</p>
+                    </div>
+                    <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Salva em @favorito.CriadoEm.ToString("dd/MM/yyyy")</small>
+                        <a asp-controller="Oportunidade" asp-action="Detalhes" asp-route-id="@oportunidade.Id" class="btn btn-sm btn-outline-primary">
+                            Ver vaga
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-star display-4 text-muted"></i>
+                <p class="text-muted mt-2">Você ainda não salvou nenhuma vaga.</p>
+            </div>
+        </div>
+    }
+</div>

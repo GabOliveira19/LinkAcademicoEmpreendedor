@@ -1,0 +1,164 @@
+@model List<LinkAcademicoEmpreendedor.Models.Candidatura>
+@{
+    ViewData["Title"] = "Candidatos das Vagas";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2><i class="bi bi-people"></i> Candidatos das vagas</h2>
+            <p class="text-muted mb-0">Acompanhe quem se candidatou, o status e as entrevistas agendadas.</p>
+        </div>
+
+        <a asp-controller="Empresa" asp-action="Dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar ao dashboard
+        </a>
+    </div>
+
+    @if (TempData["Sucesso"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Sucesso"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Erro"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["Erro"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center py-5">
+            <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+            <h5>Nenhum candidato encontrado</h5>
+            <p class="mb-0">Quando alunos se candidatarem às suas vagas, eles aparecerão aqui.</p>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Aluno</th>
+                            <th>Vaga</th>
+                            <th>Status</th>
+                            <th>Entrevista</th>
+                            <th class="text-end">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var candidatura in Model)
+                        {
+                            var statusClass = candidatura.Status == "Aprovada" ? "success" :
+                                candidatura.Status == "Pendente" ? "warning" :
+                                candidatura.Status == "Visualizada" ? "info" : "secondary";
+
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        @if (!string.IsNullOrEmpty(candidatura.Aluno?.FotoPerfil))
+                                        {
+                                            <img src="@candidatura.Aluno.FotoPerfil"
+                                                 class="rounded-circle"
+                                                 style="width: 42px; height: 42px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                                 style="width: 42px; height: 42px;">
+                                                @(candidatura.Aluno?.Nome?.Substring(0, 1).ToUpper())
+                                            </div>
+                                        }
+
+                                        <div>
+                                            <strong>@candidatura.Aluno?.Nome</strong>
+                                            <br />
+                                            <small class="text-muted">@candidatura.Aluno?.Curso</small>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <strong>@candidatura.Oportunidade?.Titulo</strong>
+                                    <br />
+                                    <small class="text-muted">
+                                        Candidatou em @candidatura.DataCandidatura.ToString("dd/MM/yyyy HH:mm")
+                                    </small>
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-@statusClass">@candidatura.Status</span>
+                                </td>
+
+                                <td>
+                                    @if (candidatura.Entrevista != null)
+                                    {
+                                        <span class="d-block">
+                                            <i class="bi bi-calendar-event text-primary"></i>
+                                            @candidatura.Entrevista.DataHora.ToString("dd/MM/yyyy HH:mm")
+                                        </span>
+                                        <small class="text-muted">@candidatura.Entrevista.Status</small>
+                                    }
+                                    else if (candidatura.Status == "Aprovada")
+                                    {
+                                        <span class="text-muted">Não agendada</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Disponível após aprovação</span>
+                                    }
+                                </td>
+
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-2 flex-wrap justify-content-end">
+                                        <a asp-action="Detalhes" asp-route-id="@candidatura.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> Ver
+                                        </a>
+
+                                        @if (candidatura.Status == "Pendente" || candidatura.Status == "Visualizada")
+                                        {
+                                            <a asp-action="Aceitar" asp-route-id="@candidatura.Id" asp-route-returnTo="empresa" class="btn btn-sm btn-success">
+                                                <i class="bi bi-check-lg"></i> Aprovar
+                                            </a>
+
+                                            <a asp-action="Rejeitar" asp-route-id="@candidatura.Id" asp-route-returnTo="empresa" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-x-lg"></i> Rejeitar
+                                            </a>
+                                        }
+
+                                        @if (candidatura.Status == "Aprovada")
+                                        {
+                                            @if (candidatura.Entrevista == null)
+                                            {
+                                                <a asp-controller="Entrevista" asp-action="Agendar"
+                                                   asp-route-candidaturaId="@candidatura.Id"
+                                                   class="btn btn-sm btn-warning">
+                                                    <i class="bi bi-camera-video"></i> Marcar entrevista
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a asp-controller="Entrevista" asp-action="Detalhes"
+                                                   asp-route-id="@candidatura.Entrevista.Id"
+                                                   class="btn btn-sm btn-outline-success">
+                                                    <i class="bi bi-camera-video-fill"></i> Ver entrevista
+                                                </a>
+                                            }
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

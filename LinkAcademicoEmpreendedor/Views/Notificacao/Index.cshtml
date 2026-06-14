@@ -13,10 +13,19 @@
         <div class="d-flex gap-2">
             @if (Model.Any(n => !n.Lida))
             {
-                <form asp-action="MarcarTodasLidas" method="post" class="d-inline">
+                <form asp-action="MarcarTodasLidas" method="post" class="d-inline" id="marcarTodasLidasForm">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-outline-primary">
+                    <button type="submit" class="btn btn-outline-primary" id="marcarTodasLidasBtn">
                         <i class="bi bi-check-all"></i> Marcar todas como lidas
+                    </button>
+                </form>
+            }
+            @if (Model.Any())
+            {
+                <form asp-action="LimparTodas" method="post" class="d-inline" id="limparNotificacoesForm">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger" id="limparNotificacoesBtn">
+                        <i class="bi bi-trash"></i> Limpar notificações
                     </button>
                 </form>
             }
@@ -51,6 +60,22 @@
             @foreach (var Notificacao in Model.OrderByDescending(n => n.DataCriacao))
             {
                 var bgClass = Notificacao.Lida ? "" : "bg-light";
+                var titulo = (Notificacao.Titulo ?? "").ToLower();
+                var mensagem = (Notificacao.Mensagem ?? "").ToLower();
+                var icon = titulo.Contains("entrevista") || mensagem.Contains("entrevista") ? "bi-camera-video-fill" :
+                           titulo.Contains("candidatura") || mensagem.Contains("candidatura") ? "bi-file-earmark-person-fill" :
+                           titulo.Contains("avalia") || mensagem.Contains("avalia") ? "bi-star-fill" :
+                           titulo.Contains("pagamento") || mensagem.Contains("pagamento") ? "bi-credit-card-fill" :
+                           titulo.Contains("premium") || mensagem.Contains("premium") ? "bi-gem" :
+                           titulo.Contains("moeda") || mensagem.Contains("moeda") ? "bi-coin" :
+                           "bi-bell-fill";
+                var iconClass = titulo.Contains("entrevista") || mensagem.Contains("entrevista") ? "text-primary" :
+                                titulo.Contains("candidatura") || mensagem.Contains("candidatura") ? "text-success" :
+                                titulo.Contains("avalia") || mensagem.Contains("avalia") ? "text-warning" :
+                                titulo.Contains("pagamento") || mensagem.Contains("pagamento") ? "text-info" :
+                                titulo.Contains("premium") || mensagem.Contains("premium") ? "text-warning" :
+                                titulo.Contains("moeda") || mensagem.Contains("moeda") ? "text-warning" :
+                                "text-secondary";
                 <div class="list-group-item @bgClass">
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="d-flex">
@@ -63,6 +88,9 @@
                                 {
                                     <i class="bi bi-check-circle text-muted"></i>
                                 }
+                            </div>
+                            <div class="me-3 fs-4">
+                                <i class="bi @icon @iconClass"></i>
                             </div>
                             <div>
                                 @if (!string.IsNullOrEmpty(Notificacao.Titulo))
@@ -89,3 +117,132 @@
         </div>
     }
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('marcarTodasLidasForm');
+            const botao = document.getElementById('marcarTodasLidasBtn');
+            const limparForm = document.getElementById('limparNotificacoesForm');
+            const limparBotao = document.getElementById('limparNotificacoesBtn');
+
+            if (form) {
+                form.addEventListener('submit', async function (event) {
+                event.preventDefault();
+
+                if (botao) {
+                    botao.disabled = true;
+                    botao.innerHTML = '<span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span> Marcando...';
+                }
+
+                const token = form.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                try {
+                    const resposta = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'RequestVerificationToken': token,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (!resposta.ok) {
+                        throw new Error('Nao foi possivel marcar as notificacoes.');
+                    }
+
+                    document.querySelectorAll('.list-group-item.bg-light').forEach(function (item) {
+                        item.classList.remove('bg-light');
+                    });
+
+                    document.querySelectorAll('.badge.bg-primary.rounded-pill').forEach(function (badge) {
+                        badge.outerHTML = '<i class="bi bi-check-circle text-muted"></i>';
+                    });
+
+                    const contador = document.querySelector('.text-muted.mb-0');
+                    if (contador) {
+                        contador.textContent = '0 não lida(s)';
+                    }
+
+                    form.remove();
+
+                    if (typeof atualizarNotificacoes === 'function') {
+                        atualizarNotificacoes();
+                    }
+                } catch (erro) {
+                    alert('Não foi possível marcar as notificações como lidas. Tente novamente.');
+
+                    if (botao) {
+                        botao.disabled = false;
+                        botao.innerHTML = '<i class="bi bi-check-all"></i> Marcar todas como lidas';
+                    }
+                }
+            });
+            }
+
+            if (limparForm) {
+                limparForm.addEventListener('submit', async function (event) {
+                    event.preventDefault();
+
+                    if (!confirm('Deseja limpar todas as notificações?')) {
+                        return;
+                    }
+
+                    if (limparBotao) {
+                        limparBotao.disabled = true;
+                        limparBotao.innerHTML = '<span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span> Limpando...';
+                    }
+
+                    const token = limparForm.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                    try {
+                        const resposta = await fetch(limparForm.action, {
+                            method: 'POST',
+                            headers: {
+                                'RequestVerificationToken': token,
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        if (!resposta.ok) {
+                            throw new Error('Nao foi possivel limpar as notificacoes.');
+                        }
+
+                        const contador = document.querySelector('.text-muted.mb-0');
+                        if (contador) {
+                            contador.textContent = '0 não lida(s)';
+                        }
+
+                        const lista = document.querySelector('.list-group');
+                        if (lista) {
+                            lista.outerHTML = `
+                                <div class="card">
+                                    <div class="card-body text-center py-5">
+                                        <i class="bi bi-bell-slash fs-1 text-muted d-block mb-3"></i>
+                                        <h5>Nenhuma Notificação</h5>
+                                        <p class="text-muted">Você não tem notificações no momento.</p>
+                                    </div>
+                                </div>`;
+                        }
+
+                        if (form) {
+                            form.remove();
+                        }
+
+                        limparForm.remove();
+
+                        if (typeof atualizarNotificacoes === 'function') {
+                            atualizarNotificacoes();
+                        }
+                    } catch (erro) {
+                        alert('Não foi possível limpar as notificações. Tente novamente.');
+
+                        if (limparBotao) {
+                            limparBotao.disabled = false;
+                            limparBotao.innerHTML = '<i class="bi bi-trash"></i> Limpar notificações';
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+}

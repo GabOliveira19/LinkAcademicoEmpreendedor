@@ -1,0 +1,81 @@
+@model LinkAcademicoEmpreendedor.Models.Entrevista
+@{
+    ViewData["Title"] = "Agendar Entrevista";
+    var candidatura = ViewBag.Candidatura as LinkAcademicoEmpreendedor.Models.Candidatura;
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-camera-video"></i> Agendar entrevista</h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["Erro"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["Erro"]</div>
+                    }
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-shield-check"></i>
+                        A videochamada será criada dentro da plataforma e ficará disponível somente para a empresa e para o aluno desta candidatura.
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-1">@candidatura?.Aluno?.Nome</h5>
+                        <p class="text-muted mb-0">
+                            Vaga: <strong>@candidatura?.Oportunidade?.Titulo</strong>
+                        </p>
+                    </div>
+
+                    <form asp-action="Agendar" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="candidaturaId" value="@Model.CandidaturaId" />
+
+                        <div class="row">
+                            <div class="col-md-7 mb-3">
+                                <label class="form-label">Data e horário da entrevista</label>
+                                <input name="dataHora"
+                                       type="datetime-local"
+                                       class="form-control"
+                                       value="@Model.DataHora.ToString("yyyy-MM-ddTHH:mm")"
+                                       required />
+                            </div>
+
+                            <div class="col-md-5 mb-3">
+                                <label class="form-label">Duração em minutos</label>
+                                <input name="duracaoMinutos"
+                                       type="number"
+                                       min="15"
+                                       max="180"
+                                       step="15"
+                                       class="form-control"
+                                       value="@Model.DuracaoMinutos"
+                                       required />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Observações para o aluno</label>
+                            <textarea name="observacoes"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="Ex: prepare seu currículo, portfólio ou dúvidas para a entrevista.">@Model.Observacoes</textarea>
+                        </div>
+
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-calendar-check"></i> Agendar entrevista
+                            </button>
+
+                            <a asp-controller="Candidatura" asp-action="Detalhes" asp-route-id="@Model.CandidaturaId" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

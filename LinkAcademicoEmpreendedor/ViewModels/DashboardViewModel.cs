@@ -8,8 +8,10 @@ namespace LinkAcademicoEmpreendedor.ViewModels
         public List<Projeto> MeusProjetos { get; set; } = new List<Projeto>();
         public List<Oportunidade> OportunidadesRecentes { get; set; } = new List<Oportunidade>();
         public List<Candidatura> MinhasCandidaturas { get; set; } = new List<Candidatura>();
+        public List<Entrevista> EntrevistasAgendadas { get; set; } = new List<Entrevista>();
         public int TotalCurtidas { get; set; }
         public int TotalComentarios { get; set; }
+        public int TotalVagasFavoritas { get; set; }
     }
 
     public class DashboardEmpresaViewModel
@@ -21,5 +23,13 @@ namespace LinkAcademicoEmpreendedor.ViewModels
         public int TotalCandidaturas { get; set; }
         public AssinaturaPremium? AssinaturaPremium { get; set; }
         public bool PodeRenovarPremium { get; set; }
+        public int DiasRestantesPremium { get; set; }
+        public bool PremiumVencido { get; set; }
+        public List<Entrevista> EntrevistasAgendadas { get; set; } = new List<Entrevista>();
+        public List<Candidatura> CandidatosAguardandoAnalise { get; set; } = new List<Candidatura>();
+        public List<Oportunidade> VagasMaisMovimentadas { get; set; } = new List<Oportunidade>();
+        public int TotalCandidatosAprovados { get; set; }
+        public int TotalEntrevistasMarcadas { get; set; }
+        public int TotalTalentosFavoritos { get; set; }
     }
 }

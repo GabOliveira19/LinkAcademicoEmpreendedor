@@ -1,0 +1,105 @@
+@model LinkAcademicoEmpreendedor.Models.Entrevista
+@{
+    ViewData["Title"] = "Entrevista";
+    var tipoUsuario = Context.Session.GetString("TipoUsuario");
+    var aconteceHoje = Model.DataHora.Date == DateTime.Today && Model.Status == "Agendada";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            @if (TempData["Sucesso"] != null)
+            {
+                <div class="alert alert-success">@TempData["Sucesso"]</div>
+            }
+            @if (TempData["Erro"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Erro"]</div>
+            }
+
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h4 class="mb-0"><i class="bi bi-camera-video"></i> Entrevista agendada</h4>
+                    <span class="badge @(Model.Status == "Agendada" ? "bg-success" : "bg-secondary") fs-6">
+                        @Model.Status
+                    </span>
+                </div>
+
+                <div class="card-body">
+                    @if (aconteceHoje)
+                    {
+                        <div class="alert alert-warning">
+                            <i class="bi bi-alarm"></i>
+                            Esta entrevista está marcada para hoje. Confira o horário e entre na chamada no momento combinado.
+                        </div>
+                    }
+
+                    <h5>@Model.Oportunidade?.Titulo</h5>
+                    <p class="text-muted mb-4">
+                        <i class="bi bi-building-fill"></i> @Model.Empresa?.RazaoSocial
+                        <span class="mx-2">|</span>
+                        <i class="bi bi-person"></i> @Model.Aluno?.Nome
+                    </p>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="border rounded p-3 h-100">
+                                <small class="text-muted text-uppercase fw-bold">Data e horário</small>
+                                <div class="fs-5">
+                                    <i class="bi bi-calendar-event text-primary"></i>
+                                    @Model.DataHora.ToString("dd/MM/yyyy HH:mm")
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="border rounded p-3 h-100">
+                                <small class="text-muted text-uppercase fw-bold">Duração</small>
+                                <div class="fs-5">
+                                    <i class="bi bi-clock text-primary"></i>
+                                    @Model.DuracaoMinutos minutos
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Observacoes))
+                    {
+                        <div class="bg-light rounded p-3 mb-3">
+                            <strong>Observações:</strong>
+                            <p class="mb-0 mt-2">@Model.Observacoes</p>
+                        </div>
+                    }
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        @if (Model.Status == "Agendada")
+                        {
+                            <a asp-action="Sala" asp-route-id="@Model.Id" class="btn btn-success">
+                                <i class="bi bi-camera-video-fill"></i> Entrar na videochamada
+                            </a>
+                        }
+
+                        @if (tipoUsuario == "Empresa" && Model.Status == "Agendada")
+                        {
+                            <a asp-action="Agendar" asp-route-candidaturaId="@Model.CandidaturaId" class="btn btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Reagendar
+                            </a>
+
+                            <form asp-action="Cancelar" method="post" onsubmit="return confirm('Deseja cancelar esta entrevista?')">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </button>
+                            </form>
+                        }
+
+                        <a asp-controller="Candidatura" asp-action="Detalhes" asp-route-id="@Model.CandidaturaId" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar para candidatura
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

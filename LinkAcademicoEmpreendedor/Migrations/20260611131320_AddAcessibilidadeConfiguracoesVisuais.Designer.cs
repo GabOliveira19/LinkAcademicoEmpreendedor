@@ -4,6 +4,7 @@ using LinkAcademicoEmpreendedor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LinkAcademicoEmpreendedor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260611131320_AddAcessibilidadeConfiguracoesVisuais")]
+    partial class AddAcessibilidadeConfiguracoesVisuais
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,9 +117,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
                     b.Property<string>("TokenRecuperacao")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("TourInicialConcluido")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -616,9 +616,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<bool>("TourInicialConcluido")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Cnpj")
@@ -690,60 +687,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
                     b.HasIndex("OportunidadeId");
 
                     b.ToTable("Entrevistas");
-                });
-
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FavoritoTalento", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AlunoId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EmpresaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AlunoId");
-
-                    b.HasIndex("EmpresaId", "AlunoId")
-                        .IsUnique();
-
-                    b.ToTable("FavoritosTalentos");
-                });
-
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FavoritoVaga", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AlunoId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OportunidadeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OportunidadeId");
-
-                    b.HasIndex("AlunoId", "OportunidadeId")
-                        .IsUnique();
-
-                    b.ToTable("FavoritosVagas");
                 });
 
             modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FieldDefinition", b =>
@@ -1434,44 +1377,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
                     b.Navigation("Oportunidade");
                 });
 
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FavoritoTalento", b =>
-                {
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Aluno", "Aluno")
-                        .WithMany("FavoritadoPorEmpresas")
-                        .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Empresa", "Empresa")
-                        .WithMany("TalentosFavoritos")
-                        .HasForeignKey("EmpresaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Aluno");
-
-                    b.Navigation("Empresa");
-                });
-
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FavoritoVaga", b =>
-                {
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Aluno", "Aluno")
-                        .WithMany("VagasFavoritas")
-                        .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Oportunidade", "Oportunidade")
-                        .WithMany()
-                        .HasForeignKey("OportunidadeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Aluno");
-
-                    b.Navigation("Oportunidade");
-                });
-
             modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FieldDefinition", b =>
                 {
                     b.HasOne("LinkAcademicoEmpreendedor.Models.Area", "Area")
@@ -1545,13 +1450,9 @@ namespace LinkAcademicoEmpreendedor.Migrations
 
                     b.Navigation("Entrevistas");
 
-                    b.Navigation("FavoritadoPorEmpresas");
-
                     b.Navigation("Projetos");
 
                     b.Navigation("RedesSociais");
-
-                    b.Navigation("VagasFavoritas");
                 });
 
             modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.Area", b =>
@@ -1577,8 +1478,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
                     b.Navigation("Oportunidades");
 
                     b.Navigation("RedesSociais");
-
-                    b.Navigation("TalentosFavoritos");
                 });
 
             modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.Oportunidade", b =>

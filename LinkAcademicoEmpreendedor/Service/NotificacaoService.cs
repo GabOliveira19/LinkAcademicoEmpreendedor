@@ -65,6 +65,17 @@ namespace LinkAcademicoEmpreendedor.Services
             await _context.SaveChangesAsync();
         }
 
+        // Limpar todas as Notificacoes do usuario
+        public async Task LimparTodasAsync(int destinatarioId, string tipoDestinatario)
+        {
+            var Notificacoes = await _context.Notificacoes
+                .Where(n => n.DestinatarioId == destinatarioId && n.TipoDestinatario == tipoDestinatario)
+                .ToListAsync();
+
+            _context.Notificacoes.RemoveRange(Notificacoes);
+            await _context.SaveChangesAsync();
+        }
+
         // Criar Notificacao
         public async Task CriarAsync(int destinatarioId, string tipoDestinatario, string titulo, string mensagem, string? link = null)
         {

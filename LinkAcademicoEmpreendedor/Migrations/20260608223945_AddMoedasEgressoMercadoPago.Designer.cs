@@ -4,6 +4,7 @@ using LinkAcademicoEmpreendedor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LinkAcademicoEmpreendedor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260608223945_AddMoedasEgressoMercadoPago")]
+    partial class AddMoedasEgressoMercadoPago
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,9 +117,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
                     b.Property<string>("TokenRecuperacao")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("TourInicialConcluido")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -222,18 +222,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
 
                     b.Property<DateTime>("Inicio")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("MercadoPagoCheckoutUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MercadoPagoPaymentId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MercadoPagoPreferenceId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MetodoPagamento")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PixCopiaECola")
                         .HasColumnType("nvarchar(max)");
@@ -439,57 +427,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
                     b.ToTable("ComprasMoedas");
                 });
 
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.ConfiguracaoVisualUsuario", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AtualizadoEm")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Densidade")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<bool>("ModoDaltonico")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReduzirAnimacoes")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ReduzirCores")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("TamanhoFonte")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Tema")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("TipoUsuario")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId", "TipoUsuario")
-                        .IsUnique();
-
-                    b.ToTable("ConfiguracoesVisuaisUsuario");
-                });
-
             modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.Curtida", b =>
                 {
                     b.Property<int>("Id")
@@ -616,9 +553,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<bool>("TourInicialConcluido")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Cnpj")
@@ -628,122 +562,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
                         .IsUnique();
 
                     b.ToTable("Empresas");
-                });
-
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.Entrevista", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AlunoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CandidaturaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CodigoSala")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)");
-
-                    b.Property<DateTime>("CriadaEm")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataHora")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DuracaoMinutos")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EmpresaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Observacoes")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("OportunidadeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Titulo")
-                        .IsRequired()
-                        .HasMaxLength(160)
-                        .HasColumnType("nvarchar(160)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AlunoId");
-
-                    b.HasIndex("CandidaturaId")
-                        .IsUnique();
-
-                    b.HasIndex("EmpresaId");
-
-                    b.HasIndex("OportunidadeId");
-
-                    b.ToTable("Entrevistas");
-                });
-
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FavoritoTalento", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AlunoId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EmpresaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AlunoId");
-
-                    b.HasIndex("EmpresaId", "AlunoId")
-                        .IsUnique();
-
-                    b.ToTable("FavoritosTalentos");
-                });
-
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FavoritoVaga", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AlunoId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CriadoEm")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OportunidadeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OportunidadeId");
-
-                    b.HasIndex("AlunoId", "OportunidadeId")
-                        .IsUnique();
-
-                    b.ToTable("FavoritosVagas");
                 });
 
             modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FieldDefinition", b =>
@@ -1399,79 +1217,6 @@ namespace LinkAcademicoEmpreendedor.Migrations
                     b.Navigation("Projeto");
                 });
 
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.Entrevista", b =>
-                {
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Aluno", "Aluno")
-                        .WithMany("Entrevistas")
-                        .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Candidatura", "Candidatura")
-                        .WithOne("Entrevista")
-                        .HasForeignKey("LinkAcademicoEmpreendedor.Models.Entrevista", "CandidaturaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Empresa", "Empresa")
-                        .WithMany("Entrevistas")
-                        .HasForeignKey("EmpresaId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Oportunidade", "Oportunidade")
-                        .WithMany()
-                        .HasForeignKey("OportunidadeId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Aluno");
-
-                    b.Navigation("Candidatura");
-
-                    b.Navigation("Empresa");
-
-                    b.Navigation("Oportunidade");
-                });
-
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FavoritoTalento", b =>
-                {
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Aluno", "Aluno")
-                        .WithMany("FavoritadoPorEmpresas")
-                        .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Empresa", "Empresa")
-                        .WithMany("TalentosFavoritos")
-                        .HasForeignKey("EmpresaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Aluno");
-
-                    b.Navigation("Empresa");
-                });
-
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FavoritoVaga", b =>
-                {
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Aluno", "Aluno")
-                        .WithMany("VagasFavoritas")
-                        .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LinkAcademicoEmpreendedor.Models.Oportunidade", "Oportunidade")
-                        .WithMany()
-                        .HasForeignKey("OportunidadeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Aluno");
-
-                    b.Navigation("Oportunidade");
-                });
-
             modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.FieldDefinition", b =>
                 {
                     b.HasOne("LinkAcademicoEmpreendedor.Models.Area", "Area")
@@ -1543,25 +1288,14 @@ namespace LinkAcademicoEmpreendedor.Migrations
 
                     b.Navigation("Curtidas");
 
-                    b.Navigation("Entrevistas");
-
-                    b.Navigation("FavoritadoPorEmpresas");
-
                     b.Navigation("Projetos");
 
                     b.Navigation("RedesSociais");
-
-                    b.Navigation("VagasFavoritas");
                 });
 
             modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.Area", b =>
                 {
                     b.Navigation("Alunos");
-                });
-
-            modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.Candidatura", b =>
-                {
-                    b.Navigation("Entrevista");
                 });
 
             modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.Empresa", b =>
@@ -1572,13 +1306,9 @@ namespace LinkAcademicoEmpreendedor.Migrations
 
                     b.Navigation("Curtidas");
 
-                    b.Navigation("Entrevistas");
-
                     b.Navigation("Oportunidades");
 
                     b.Navigation("RedesSociais");
-
-                    b.Navigation("TalentosFavoritos");
                 });
 
             modelBuilder.Entity("LinkAcademicoEmpreendedor.Models.Oportunidade", b =>

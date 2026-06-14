@@ -1,0 +1,38 @@
+@model LinkAcademicoEmpreendedor.Models.Entrevista
+@{
+    ViewData["Title"] = "Videochamada";
+    var nomeParticipante = ViewBag.NomeParticipante as string ?? "Participante";
+    var nomeCodificado = System.Net.WebUtility.UrlEncode(nomeParticipante);
+    var sala = System.Net.WebUtility.UrlEncode(Model.CodigoSala);
+    var jitsiUrl = $"https://meet.jit.si/{sala}#userInfo.displayName=\"{nomeCodificado}\"&config.prejoinPageEnabled=true&config.disableDeepLinking=true";
+}
+
+<div class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <div>
+            <h4 class="mb-1"><i class="bi bi-camera-video-fill text-success"></i> Videochamada da entrevista</h4>
+            <small class="text-muted">
+                @Model.Oportunidade?.Titulo | @Model.DataHora.ToString("dd/MM/yyyy HH:mm")
+            </small>
+        </div>
+
+        <a asp-action="Detalhes" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+    </div>
+
+    <div class="alert alert-info">
+        <i class="bi bi-shield-lock"></i>
+        A sala é privada dentro da plataforma. O acesso é validado antes de abrir a videochamada.
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body p-0">
+            <iframe src="@jitsiUrl"
+                    style="width: 100%; height: 72vh; border: 0; border-radius: .375rem;"
+                    allow="camera; microphone; fullscreen; display-capture; autoplay; clipboard-write"
+                    allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Demonstração - Aluno";
+}
+
+<div class="container py-4">
+    <div class="alert alert-primary d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <strong><i class="bi bi-play-circle"></i> Modo demonstração</strong>
+            <div class="small">Esta tela usa dados fictícios e não representa nenhum aluno cadastrado.</div>
+        </div>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-primary">Voltar ao login</a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow"
+                         style="width: 80px; height: 80px; font-size: 2rem;">
+                        DS
+                    </div>
+                </div>
+                <div class="col">
+                    <h4 class="mb-1">Aluno Demonstração SkillBridge</h4>
+                    <p class="text-muted mb-0">Ciência da Computação - Universidade Exemplo</p>
+                    <div class="d-flex flex-wrap gap-2 mt-2">
+                        <span class="badge bg-success"><i class="bi bi-bank"></i> Matrícula cadastrada</span>
+                        <span class="badge bg-danger"><i class="bi bi-file-earmark-pdf"></i> Currículo disponível</span>
+                        <span class="badge bg-primary"><i class="bi bi-camera-video"></i> Entrevista agendada</span>
+                    </div>
+                </div>
+                <div class="col-auto d-flex gap-2">
+                    <a class="btn btn-outline-warning disabled"><i class="bi bi-star"></i> Favoritos (3)</a>
+                    <a class="btn btn-outline-primary disabled"><i class="bi bi-pencil"></i> Editar Perfil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card bg-primary text-white shadow h-100"><div class="card-body text-center"><h3>4</h3><p class="mb-0">Projetos</p></div></div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card bg-danger text-white shadow h-100"><div class="card-body text-center"><h3>38</h3><p class="mb-0">Curtidas</p></div></div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card bg-info text-white shadow h-100"><div class="card-body text-center"><h3>12</h3><p class="mb-0">Comentários</p></div></div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+            <div class="card bg-success text-white shadow h-100"><div class="card-body text-center"><h3>7</h3><p class="mb-0">Oportunidades</p></div></div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-camera-video"></i> Entrevista agendada</h5>
+                </div>
+                <div class="card-body">
+                    <span class="badge bg-warning text-dark mb-2"><i class="bi bi-alarm"></i> Amanhã</span>
+                    <h5>Desenvolvedor Front-end Júnior</h5>
+                    <p class="text-muted mb-2">Empresa Exemplo Tecnologia | 14/06/2026 15:00</p>
+                    <button class="btn btn-success btn-sm" disabled><i class="bi bi-camera-video-fill"></i> Entrar na sala</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-clock-history"></i> Candidaturas recentes</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between"><span>Estágio em Dados</span><span class="badge bg-warning text-dark">Pendente</span></div>
+                    <div class="list-group-item d-flex justify-content-between"><span>Dev Front-end Júnior</span><span class="badge bg-success">Aprovada</span></div>
+                    <div class="list-group-item d-flex justify-content-between"><span>Suporte Técnico</span><span class="badge bg-info">Visualizada</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header"><h5 class="mb-0"><i class="bi bi-folder"></i> Projetos demonstrativos</h5></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-3"><div class="border rounded p-3 h-100"><span class="badge bg-secondary mb-2">Tecnologia</span><h6>Portal Acadêmico Inteligente</h6><small class="text-muted">React, ASP.NET, SQL Server</small></div></div>
+                <div class="col-md-4 mb-3"><div class="border rounded p-3 h-100"><span class="badge bg-secondary mb-2">Dados</span><h6>Análise de Evasão Estudantil</h6><small class="text-muted">Python, Power BI</small></div></div>
+                <div class="col-md-4 mb-3"><div class="border rounded p-3 h-100"><span class="badge bg-secondary mb-2">UX</span><h6>Protótipo de Acessibilidade</h6><small class="text-muted">Figma, Pesquisa</small></div></div>
+            </div>
+        </div>
+    </div>
+</div>
