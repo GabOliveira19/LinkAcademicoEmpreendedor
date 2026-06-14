@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LinkAcademicoEmpreendedor.Data;
 using LinkAcademicoEmpreendedor.Models;
 using LinkAcademicoEmpreendedor.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using LinkAcademicoEmpreendedor.Services;
 
 namespace LinkAcademicoEmpreendedor.Controllers
 {
@@ -11,11 +12,13 @@ namespace LinkAcademicoEmpreendedor.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly TokenService _tokenService;
 
-        public AlunoController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public AlunoController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, TokenService tokenService)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _tokenService = tokenService;
         }
 
         public async Task<IActionResult> Dashboard()
@@ -38,10 +41,16 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
             var oportunidades = await _context.Oportunidades
                 .Include(o => o.Empresa)
+                    .ThenInclude(e => e.AssinaturasPremium)
+                        .ThenInclude(a => a.PlanoPremium)
                 .Where(o => o.Ativa)
                 .OrderByDescending(o => o.DataPublicacao)
                 .Take(5)
                 .ToListAsync();
+
+            var saldoTokens = aluno.EhEgresso
+                ? await _tokenService.ConsultarSaldo(aluno.Id)
+                : 0;
 
             var viewModel = new DashboardAlunoViewModel
             {
@@ -49,7 +58,8 @@ namespace LinkAcademicoEmpreendedor.Controllers
                 MeusProjetos = aluno.Projetos.ToList(),
                 OportunidadesRecentes = oportunidades,
                 TotalCurtidas = aluno.Projetos.Sum(p => p.Curtidas.Count),
-                TotalComentarios = aluno.Projetos.Sum(p => p.Comentarios.Count)
+                TotalComentarios = aluno.Projetos.Sum(p => p.Comentarios.Count),
+                SaldoTokens = saldoTokens
             };
 
             return View(viewModel);
@@ -220,6 +230,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
             await _context.SaveChangesAsync();
 
             HttpContext.Session.SetString("UserName", aluno.Nome);
+            HttpContext.Session.SetString("AlunoEgresso", aluno.EhEgresso ? "true" : "false");
             TempData["Sucesso"] = "Perfil atualizado com sucesso!";
             return RedirectToAction("Dashboard");
         }

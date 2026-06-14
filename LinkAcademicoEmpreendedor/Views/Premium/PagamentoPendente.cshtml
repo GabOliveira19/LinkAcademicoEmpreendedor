@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "Pagamento Pendente";
+}
+
+<div class="container py-5 text-center">
+    <div class="card shadow border-warning mx-auto" style="max-width: 500px;">
+        <div class="card-body py-5">
+            <i class="bi bi-clock-history text-warning" style="font-size: 5rem;"></i>
+            <h2 class="mt-4">Pagamento Pendente</h2>
+            <p class="lead text-muted">Aguardando a confirmação do Mercado Pago.</p>
+            <p>Seu pagamento está sendo processado. Assim que for aprovado, os benefícios do seu plano Premium serão ativados automaticamente.</p>
+            
+            <div class="mt-4">
+                <a asp-controller="Empresa" asp-action="Dashboard" class="btn btn-warning btn-lg">
+                    <i class="bi bi-building"></i> Voltar ao Dashboard
+                </a>
+            </div>
+
+            <!-- Area do PIX (Oculta por padrao) -->
+            <div id="pixContainer" class="mt-4 p-3 border rounded bg-light d-none">
+                <h5 class="text-success"><i class="bi bi-qr-code-scan"></i> Pague com Pix</h5>
+                <p class="small text-muted mb-2">Escaneie o QR Code abaixo no app do seu banco ou copie o código Pix.</p>
+                <img id="pixQrCode" src="" alt="QR Code Pix" class="img-fluid mb-3" style="max-width: 200px;" />
+                
+                <div class="input-group input-group-sm mb-3">
+                    <input type="text" id="pixCodeString" class="form-control" readonly>
+                    <button class="btn btn-outline-secondary" type="button" id="btnCopyPix">
+                        <i class="bi bi-clipboard"></i> Copiar
+                    </button>
+                </div>
+            </div>
+            
+            <p class="text-muted small mt-4">ID da Assinatura: @ViewBag.AssinaturaId</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const mpId = urlParams.get('mpId');
+            
+            if (mpId) {
+                const qrCodeBase64 = localStorage.getItem('qrCodeBase64_' + mpId);
+                const qrCodeString = localStorage.getItem('qrCodeString_' + mpId);
+
+                if (qrCodeBase64 && qrCodeString) {
+                    document.getElementById('pixQrCode').src = "data:image/png;base64," + qrCodeBase64;
+                    document.getElementById('pixCodeString').value = qrCodeString;
+                    document.getElementById('pixContainer').classList.remove('d-none');
+                    
+                    document.getElementById('btnCopyPix').addEventListener('click', () => {
+                        const copyText = document.getElementById("pixCodeString");
+                        copyText.select();
+                        copyText.setSelectionRange(0, 99999); 
+                        navigator.clipboard.writeText(copyText.value);
+                        alert("Código Pix copiado!");
+                    });
+                }
+            }
+
+            // Recarregar a página a cada 5 segundos para checar o status
+            setTimeout(() => {
+                window.location.reload();
+            }, 5000);
+        });
+    </script>
+}

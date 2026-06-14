@@ -24,6 +24,11 @@ namespace LinkAcademicoEmpreendedor.Data
         public DbSet<RedeSocial> RedesSociais { get; set; }
         public DbSet<PlanoPremium> PlanosPremium { get; set; }
         public DbSet<AssinaturaPremium> AssinaturasPremium { get; set; }
+        public DbSet<PacoteToken> PacotesToken { get; set; } 
+        public DbSet<CarteiraToken> CarteirasToken { get; set; }
+        public DbSet<MovimentacaoToken> MovimentacoesToken { get; set; }
+        public DbSet<CompraToken> ComprasToken { get; set; }
+        public DbSet<ConfiguracaoVisualUsuario> ConfiguracoesVisuaisUsuario { get; set; }
 
         public DbSet<FieldDefinition> FieldDefinitions { get; set; }
 
@@ -49,6 +54,10 @@ namespace LinkAcademicoEmpreendedor.Data
 
             modelBuilder.Entity<Candidatura>()
                 .HasIndex(c => new { c.AlunoId, c.OportunidadeId })
+                .IsUnique();
+
+            modelBuilder.Entity<ConfiguracaoVisualUsuario>()
+                .HasIndex(c => new { c.UsuarioId, c.TipoUsuario })
                 .IsUnique();
 
             modelBuilder.Entity<Projeto>()
@@ -141,6 +150,18 @@ namespace LinkAcademicoEmpreendedor.Data
                 .HasForeignKey(r => r.EmpresaId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+             modelBuilder.Entity<CompraToken>()
+                .HasOne(ct => ct.Usuario)
+                .WithMany(a => a.ComprasToken)
+                .HasForeignKey(ct => ct.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CompraToken>()
+                .HasOne(ct => ct.PacoteToken)
+                .WithMany()
+                .HasForeignKey(ct => ct.PacoteTokenId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             modelBuilder.Entity<AssinaturaPremium>()
     .HasOne(a => a.Empresa)
     .WithMany(e => e.AssinaturasPremium)
@@ -180,6 +201,40 @@ namespace LinkAcademicoEmpreendedor.Data
        }
    );
 
+            modelBuilder.Entity<PacoteToken>().HasData(
+                new PacoteToken
+                {
+                    Id = 1,
+                    Nome = "Básico",
+                    QuantidadeTokens = 500,
+                    Valor = 9.90m,
+                    Ativo = true
+                },
+                new PacoteToken
+                {
+                    Id = 2,
+                    Nome = "Intermediário",
+                    QuantidadeTokens = 1000,
+                    Valor = 17.90m,
+                    Ativo = true
+                },
+                new PacoteToken
+                {
+                    Id = 3,
+                    Nome = "Profissional",
+                    QuantidadeTokens = 2500,
+                    Valor = 39.90m,
+                    Ativo = true
+                },
+                new PacoteToken
+                {
+                    Id = 4,
+                    Nome = "Premium",
+                    QuantidadeTokens = 5000,
+                    Valor = 69.90m,
+                    Ativo = true
+                }
+            );
 
             modelBuilder.Entity<Area>().HasData(
                 new Area { Id = 1, Nome = "Interdisciplinar", Descricao = "Área padrão / multiáreas" },

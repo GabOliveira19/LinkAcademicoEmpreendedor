@@ -1,0 +1,12 @@
+@model int
+
+@if (Model > 0)
+{
+    var tooltipPlan = Model == 3 ? "Advanced Plus" : Model == 2 ? "Advanced" : "Core";
+    <img src="~/images/premium-badge.svg" 
+         alt="Premium @tooltipPlan" 
+         class="premium-badge ms-1" 
+         title="Empresa Premium @tooltipPlan"
+         style="width: 20px; height: 20px; vertical-align: text-bottom;" 
+         onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<span class=\'badge bg-warning text-dark ms-1 premium-badge-fallback\' title=\'Premium @tooltipPlan\'><i class=\'bi bi-gem\'></i></span>');" />
+}

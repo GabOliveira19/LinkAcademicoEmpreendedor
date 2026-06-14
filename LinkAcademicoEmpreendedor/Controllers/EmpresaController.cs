@@ -27,7 +27,7 @@ namespace LinkAcademicoEmpreendedor.Controllers
 
             var empresa = await _context.Empresas
                 .Include(e => e.Oportunidades)
-                    .ThenInclude(o => o.Candidaturas)
+                .ThenInclude(o => o.Candidaturas)
                 .FirstOrDefaultAsync(e => e.Id == userId);
 
             if (empresa == null)

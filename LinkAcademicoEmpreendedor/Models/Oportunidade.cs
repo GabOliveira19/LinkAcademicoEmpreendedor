@@ -35,6 +35,8 @@ namespace LinkAcademicoEmpreendedor.Models
 
         public bool Ativa { get; set; } = true;
 
+        public CustoCandidatura CustoCandidatura { get; set; } = CustoCandidatura.Gratuita;
+
         public int EmpresaId { get; set; }
 
         [ForeignKey("EmpresaId")]

@@ -12,6 +12,7 @@ namespace LinkAcademicoEmpreendedor.ViewModels
         public int TotalCurtidas { get; set; }
         public int TotalComentarios { get; set; }
         public int TotalVagasFavoritas { get; set; }
+        public int SaldoTokens { get; set; }
     }
 
     public class DashboardEmpresaViewModel
